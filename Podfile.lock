@@ -1,0 +1,20 @@
+PODS:
+  - Alamofire (4.7.3)
+  - SpotifyLogin (0.1.6)
+
+DEPENDENCIES:
+  - Alamofire (~> 4.7)
+  - SpotifyLogin (~> 0.1)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Alamofire
+    - SpotifyLogin
+
+SPEC CHECKSUMS:
+  Alamofire: c7287b6e5d7da964a70935e5db17046b7fde6568
+  SpotifyLogin: 9cdf82ff13e5f37e5ddc7fd07cf9793a9ebd1124
+
+PODFILE CHECKSUM: 50c236d1904aaf92e785b58c3b9aba028129c5b8
+
+COCOAPODS: 1.5.3
