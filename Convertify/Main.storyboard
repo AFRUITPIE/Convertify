@@ -32,7 +32,7 @@
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <connections>
-                                            <action selector="convertLink:" destination="BYZ-38-t0r" eventType="touchUpInside" id="QNJ-cc-7zZ"/>
+                                            <action selector="openSong:" destination="BYZ-38-t0r" eventType="touchUpInside" id="QNJ-cc-7zZ"/>
                                         </connections>
                                     </button>
                                 </subviews>

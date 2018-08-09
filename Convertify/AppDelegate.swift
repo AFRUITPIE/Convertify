@@ -57,6 +57,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // Update the button
         viewController.changeButtonAppearance()
+        viewController.handleLink()
     }
 }
 
