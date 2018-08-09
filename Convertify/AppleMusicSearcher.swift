@@ -55,10 +55,10 @@ public class appleMusicSearcher {
     }
     
     func search(name: String, type: String) -> DataRequest? {
-        let term = name.replacingOccurrences(of: " ", with: "+")
+        let safeName = name.replacingOccurrences(of: "&", with: "and").replacingOccurrences(of: " ", with: "+")
         let headers = ["Authorization": "Bearer \(Authentication.appleMusicKey)"]
-        let appleMusicType = convertSpotifyTypeToAppleMusicType(type: type)
-        return Alamofire.request("https://api.music.apple.com/v1/catalog/us/search?term=\(term)&types=\(appleMusicType)", headers: headers).responseJSON { response in
+        let appleMusicType = convertTypeToAppleMusicType(type: type)
+        return Alamofire.request("https://api.music.apple.com/v1/catalog/us/search?term=\(safeName)&types=\(appleMusicType)", headers: headers).responseJSON { response in
             if let result = response.result.value {
                 let JSON = result as! NSDictionary
                 // Get the URL from the returned data
@@ -75,9 +75,8 @@ public class appleMusicSearcher {
         if (url != nil) {
             UIApplication.shared.openURL(URL(string: url!)!)
         }
-    }
-    
-    private func convertSpotifyTypeToAppleMusicType(type: String) -> String {
+    } 
+    private func convertTypeToAppleMusicType(type: String) -> String {
         switch type {
         case "track":
             return "songs"

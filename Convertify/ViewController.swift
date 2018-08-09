@@ -97,9 +97,11 @@ class ViewController: UIViewController {
             // Get the Apple Music version if the link is Spotify
             if spotify.token != nil {
                 spotify.search(link: link!)!.responseJSON { response in
-                    if let result = response.result.value {
+                    if response.result.value != nil {
                         let query = self.spotify.name! + " by " + self.spotify.artist!
                         self.titleLabel.text = query
+                        
+                        // TODO: Use the response to activate the link button
                         self.appleMusic.search(name: query, type: self.spotify.type!)
                     }
                 }
@@ -108,9 +110,11 @@ class ViewController: UIViewController {
             }
         } else if (link?.contains("https://itunes.apple.com/") ?? false) {
             appleMusic.search(link: link!)!.responseJSON { response in
-                if let result = response.result.value {
+                if response.result.value != nil {
                     let query = self.appleMusic.name! + " by " + self.appleMusic.artist!
                     self.titleLabel.text = query
+                    
+                    // TODO: Use the response to activate the link button
                     self.spotify.search(name: query, type: self.appleMusic.type!)
                 }
             }
