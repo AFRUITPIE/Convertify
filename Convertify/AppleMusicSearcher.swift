@@ -12,12 +12,12 @@ import Alamofire
 func openInAppleMusic(name: String, type: String) {
     let term = name.replacingOccurrences(of: " ", with: "+")
     print(term)
-    let headers = ["Authorization": "Bearer \(Authentication.musicKey)"]
+    let headers = ["Authorization": "Bearer \(Authentication.appleMusicKey)"]
     let appleMusicType = convertSpotifyTypeToAppleMusicType(type: type)
     Alamofire.request("https://api.music.apple.com/v1/catalog/us/search?term=\(term)&types=\(appleMusicType)", headers: headers).responseJSON { response in
         if let result = response.result.value {
             let JSON = result as! NSDictionary
-            print(JSON)
+            
             // Get the URL from the returned data
             let url = (((((JSON.object(forKey: "results") as AnyObject)
                 .object(forKey: appleMusicType) as AnyObject)

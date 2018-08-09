@@ -18,38 +18,32 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="qSK-BA-mJS">
-                                <rect key="frame" x="8" y="285.5" width="359" height="96.5"/>
+                                <rect key="frame" x="8" y="304.5" width="359" height="58.5"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Convertify" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0XO-Fd-cok">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Convertify" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0XO-Fd-cok">
                                         <rect key="frame" x="0.0" y="0.0" width="359" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <nil key="textColor"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Paste Spotify or Apple Music Link Here" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="aDh-oT-ITu">
-                                        <rect key="frame" x="0.0" y="28.5" width="359" height="30"/>
-                                        <nil key="textColor"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
-                                    </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HOe-RL-qXu">
-                                        <rect key="frame" x="0.0" y="66.5" width="359" height="30"/>
-                                        <state key="normal" title="Convert Link"/>
+                                        <rect key="frame" x="0.0" y="28.5" width="359" height="30"/>
+                                        <state key="normal">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
                                         <connections>
                                             <action selector="convertLink:" destination="BYZ-38-t0r" eventType="touchUpInside" id="QNJ-cc-7zZ"/>
                                         </connections>
                                     </button>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="aDh-oT-ITu" secondAttribute="trailing" id="6rM-uS-OMf"/>
                                     <constraint firstItem="0XO-Fd-cok" firstAttribute="centerX" secondItem="qSK-BA-mJS" secondAttribute="centerX" id="GCq-QJ-aZE"/>
                                     <constraint firstItem="0XO-Fd-cok" firstAttribute="centerX" secondItem="qSK-BA-mJS" secondAttribute="centerX" id="J4F-gI-Vbz"/>
-                                    <constraint firstItem="aDh-oT-ITu" firstAttribute="leading" secondItem="qSK-BA-mJS" secondAttribute="leading" id="X3h-0z-DXl"/>
                                     <constraint firstItem="HOe-RL-qXu" firstAttribute="centerX" secondItem="qSK-BA-mJS" secondAttribute="centerX" id="ene-XI-gFQ"/>
                                 </constraints>
                             </stackView>
                         </subviews>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
                         <constraints>
                             <constraint firstItem="qSK-BA-mJS" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="059-UI-cGu"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="qSK-BA-mJS" secondAttribute="trailing" constant="8" id="Lj5-fz-NP3"/>
@@ -61,7 +55,6 @@
                     </view>
                     <connections>
                         <outlet property="convertButton" destination="HOe-RL-qXu" id="QXy-PV-ZBr"/>
-                        <outlet property="linkField" destination="aDh-oT-ITu" id="7oX-qc-GyF"/>
                         <outlet property="titleLabel" destination="0XO-Fd-cok" id="a6n-CB-v0z"/>
                     </connections>
                 </viewController>

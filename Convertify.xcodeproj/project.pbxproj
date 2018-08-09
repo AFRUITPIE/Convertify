@@ -10,12 +10,12 @@
 		72C20DCC917DE0045F5F8C2B /* Pods_Convertify.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 610E311BD96CB1008C4EEC48 /* Pods_Convertify.framework */; };
 		CF01DBC4211A67750065376C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF01DBC3211A67750065376C /* AppDelegate.swift */; };
 		CF01DBC6211A67750065376C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF01DBC5211A67750065376C /* ViewController.swift */; };
-		CF01DBCB211A67770065376C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CF01DBCA211A67770065376C /* Assets.xcassets */; };
 		CF01DBCE211A67770065376C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CF01DBCC211A67770065376C /* LaunchScreen.storyboard */; };
-		CF681FCC211A687000EE2CCC /* Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF681FC9211A687000EE2CCC /* Auth.swift */; };
+		CF5A3E85211BB2F400FD0A1E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CF5A3E84211BB2F400FD0A1E /* Assets.xcassets */; };
 		CF681FCD211A687000EE2CCC /* SpotifySearcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF681FCA211A687000EE2CCC /* SpotifySearcher.swift */; };
 		CF681FCE211A687000EE2CCC /* AppleMusicSearcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF681FCB211A687000EE2CCC /* AppleMusicSearcher.swift */; };
 		CF681FD0211A687C00EE2CCC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CF681FCF211A687C00EE2CCC /* Main.storyboard */; };
+		CFA77271211BA46F00AA52E4 /* Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFA77270211BA46F00AA52E4 /* Auth.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,13 +24,13 @@
 		CF01DBC0211A67750065376C /* Convertify.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Convertify.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF01DBC3211A67750065376C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CF01DBC5211A67750065376C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		CF01DBCA211A67770065376C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CF01DBCD211A67770065376C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CF01DBCF211A67770065376C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		CF681FC9211A687000EE2CCC /* Auth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Auth.swift; sourceTree = "<group>"; };
+		CF5A3E84211BB2F400FD0A1E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CF681FCA211A687000EE2CCC /* SpotifySearcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotifySearcher.swift; sourceTree = "<group>"; };
 		CF681FCB211A687000EE2CCC /* AppleMusicSearcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppleMusicSearcher.swift; sourceTree = "<group>"; };
 		CF681FCF211A687C00EE2CCC /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		CFA77270211BA46F00AA52E4 /* Auth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Auth.swift; sourceTree = "<group>"; };
 		F7A4A84CAC32E7A9B829629B /* Pods-Convertify.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Convertify.release.xcconfig"; path = "Pods/Target Support Files/Pods-Convertify/Pods-Convertify.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -90,8 +90,8 @@
 				CF01DBCC211A67770065376C /* LaunchScreen.storyboard */,
 				CF681FCB211A687000EE2CCC /* AppleMusicSearcher.swift */,
 				CF681FCA211A687000EE2CCC /* SpotifySearcher.swift */,
-				CF01DBCA211A67770065376C /* Assets.xcassets */,
-				CF681FC9211A687000EE2CCC /* Auth.swift */,
+				CFA77270211BA46F00AA52E4 /* Auth.swift */,
+				CF5A3E84211BB2F400FD0A1E /* Assets.xcassets */,
 				CF01DBCF211A67770065376C /* Info.plist */,
 			);
 			path = Convertify;
@@ -158,8 +158,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				CF681FD0211A687C00EE2CCC /* Main.storyboard in Resources */,
+				CF5A3E85211BB2F400FD0A1E /* Assets.xcassets in Resources */,
 				CF01DBCE211A67770065376C /* LaunchScreen.storyboard in Resources */,
-				CF01DBCB211A67770065376C /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -211,9 +211,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CFA77271211BA46F00AA52E4 /* Auth.swift in Sources */,
 				CF01DBC6211A67750065376C /* ViewController.swift in Sources */,
 				CF01DBC4211A67750065376C /* AppDelegate.swift in Sources */,
-				CF681FCC211A687000EE2CCC /* Auth.swift in Sources */,
 				CF681FCD211A687000EE2CCC /* SpotifySearcher.swift in Sources */,
 				CF681FCE211A687000EE2CCC /* AppleMusicSearcher.swift in Sources */,
 			);

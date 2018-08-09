@@ -28,12 +28,21 @@ func handleSpotifyID(id: String, type: String, token: String) {
     var name: String?;
     var artist: String?;
     let headers = ["Authorization": "Bearer \(token)"]
+    
+    // Creates the request
     Alamofire.request("https://api.spotify.com/v1/\(type)s/\(id)", headers: headers).responseJSON { response in
         if let result = response.result.value {
             let JSON = result as! NSDictionary
+            
+            // Gets the name of the content
             name = JSON.object(forKey: "name") as? String
-            artist = ((JSON.object(forKey: "artists") as! NSArray)[0] as AnyObject)
-                .object(forKey: "name") as? String
+            
+            // Skips finding artist when matching artist links
+            if (type != "artist") {
+                artist = ((JSON.object(forKey: "artists") as! NSArray)[0] as AnyObject).object(forKey: "name") as? String
+            }
+            
+            // Finally, open this in Apple Music
             openInAppleMusic(name: "\(name ?? "") \(artist ?? "")", type: type)
         }
     }
