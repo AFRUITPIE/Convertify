@@ -46,10 +46,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
+    
 
+    /// Update the appearance of the app before it launches.
+    /// Also begins searches
     private func updateAppearance() {
+        // Get the viewController
         let viewController = window?.rootViewController as! ViewController
 
+        // Set the link in the ViewController to be the pasteboard
         if let pasteBoardValue = UIPasteboard.general.string {
             viewController.link = pasteBoardValue
         }
@@ -57,6 +62,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Update the button
         viewController.changeButtonAppearance()
 
+        // Begin the searching for whatever is in the clioboard
         try viewController.handleLink()
     }
 }

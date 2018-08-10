@@ -10,6 +10,7 @@ import Alamofire
 import Foundation
 import SpotifyLogin
 
+/// Handles Spotify querying and maintains information about Spo
 public class spotifySearcher {
     var id: String?
     var name: String?
@@ -17,7 +18,11 @@ public class spotifySearcher {
     var type: String?
     var url: String?
     var token: String?
-
+    
+    /// Searches the Spotify API from a link and extracs the information from it
+    ///
+    /// - Parameter link: Link to search for within the Spotify API
+    /// - Returns: DataRequest from querying the Spotify API
     func search(link: String) -> DataRequest? {
         // Reset the variables
         id = nil
@@ -38,7 +43,13 @@ public class spotifySearcher {
         }
         return nil
     }
-
+    
+    /// Searches Spotify for the name and type
+    ///
+    /// - Parameters:
+    ///   - name: Name of resource to search for
+    ///   - type: Type of resource to search for
+    /// - Returns: DataRequest from the Spotify API
     func search(name: String, type: String) -> DataRequest {
         let safeName = name.replacingOccurrences(of: "&", with: "and")
             .replacingOccurrences(of: " ", with: "%20")
@@ -56,6 +67,11 @@ public class spotifySearcher {
         }
     }
 
+    
+    /// Converts the type from Apple Music to Spotify
+    ///
+    /// - Parameter type: the type from Apple Music (example: song vs. track)
+    /// - Returns: the type for Spotify
     private func convertTypeToSpotify(type: String) -> String {
         switch type {
         case "song":
@@ -65,16 +81,24 @@ public class spotifySearcher {
         case "artist":
             return "artist"
         default:
-            return type + "s"
+            return type
         }
     }
-
+    
+    
+    /// Opens the URL
     func open() {
         if url != nil {
             UIApplication.shared.openURL(URL(string: url!)!)
         }
     }
 
+    /// Handles the "dirty work" setting the name, type, and artist
+    ///
+    /// - Parameters:
+    ///   - id: identifierof the Spotify resource
+    ///   - type: Type of the Spotify resource (Example: "artist")
+    /// - Returns: The DataRequest made using the Spotify API
     private func handleSpotifyID(id: String, type: String) -> DataRequest {
         let headers = ["Authorization": "Bearer \(token ?? "")"]
         // Creates the request
@@ -88,6 +112,8 @@ public class spotifySearcher {
                 if type != "artist" {
                     self.artist = ((JSON.object(forKey: "artists") as! NSArray)[0] as AnyObject).object(forKey: "name") as? String
                 }
+                
+                // Sets the type
                 self.type = type
             }
         }
