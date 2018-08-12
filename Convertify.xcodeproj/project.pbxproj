@@ -3,11 +3,12 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		72C20DCC917DE0045F5F8C2B /* Pods_Convertify.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 610E311BD96CB1008C4EEC48 /* Pods_Convertify.framework */; };
+		3B0A18E7334EDBC094707F50 /* Pods_Convertify.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46636A07AA7BCF8BF91A56E6 /* Pods_Convertify.framework */; };
+		5BAAB5AFE9CB2B898DB5E79D /* Pods_Convertify_ConvertifyTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9635F4296EE995E22FEC6F12 /* Pods_Convertify_ConvertifyTests.framework */; };
 		CF01DBC4211A67750065376C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF01DBC3211A67750065376C /* AppDelegate.swift */; };
 		CF01DBC6211A67750065376C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF01DBC5211A67750065376C /* ViewController.swift */; };
 		CF01DBCE211A67770065376C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CF01DBCC211A67770065376C /* LaunchScreen.storyboard */; };
@@ -15,12 +16,29 @@
 		CF681FCD211A687000EE2CCC /* SpotifySearcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF681FCA211A687000EE2CCC /* SpotifySearcher.swift */; };
 		CF681FCE211A687000EE2CCC /* AppleMusicSearcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF681FCB211A687000EE2CCC /* AppleMusicSearcher.swift */; };
 		CF681FD0211A687C00EE2CCC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CF681FCF211A687C00EE2CCC /* Main.storyboard */; };
+		CF935F29211E3CD2006973BD /* Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFA77270211BA46F00AA52E4 /* Auth.swift */; };
 		CFA77271211BA46F00AA52E4 /* Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFA77270211BA46F00AA52E4 /* Auth.swift */; };
+		CFC723D2211E1EF600CA2319 /* ConvertifyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFC723D1211E1EF600CA2319 /* ConvertifyTests.swift */; };
+		CFC723D9211E20DF00CA2319 /* SpotifySearcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF681FCA211A687000EE2CCC /* SpotifySearcher.swift */; };
+		CFC723DA211E20E200CA2319 /* AppleMusicSearcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF681FCB211A687000EE2CCC /* AppleMusicSearcher.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		CFC723D4211E1EF600CA2319 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CF01DBB8211A67750065376C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CF01DBBF211A67750065376C;
+			remoteInfo = Convertify;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
-		610E311BD96CB1008C4EEC48 /* Pods_Convertify.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Convertify.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		A35710DBA074C05B428E3758 /* Pods-Convertify.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Convertify.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Convertify/Pods-Convertify.debug.xcconfig"; sourceTree = "<group>"; };
+		101878488555E1D720D54433 /* Pods-Convertify-ConvertifyTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Convertify-ConvertifyTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Convertify-ConvertifyTests/Pods-Convertify-ConvertifyTests.release.xcconfig"; sourceTree = "<group>"; };
+		46636A07AA7BCF8BF91A56E6 /* Pods_Convertify.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Convertify.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		828129F257EB6DDB12D2A624 /* Pods-Convertify.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Convertify.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Convertify/Pods-Convertify.debug.xcconfig"; sourceTree = "<group>"; };
+		9635F4296EE995E22FEC6F12 /* Pods_Convertify_ConvertifyTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Convertify_ConvertifyTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C79DBC6B0BBEA6C5196270EE /* Pods-Convertify.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Convertify.release.xcconfig"; path = "Pods/Target Support Files/Pods-Convertify/Pods-Convertify.release.xcconfig"; sourceTree = "<group>"; };
 		CF01DBC0211A67750065376C /* Convertify.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Convertify.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF01DBC3211A67750065376C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CF01DBC5211A67750065376C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -31,7 +49,11 @@
 		CF681FCB211A687000EE2CCC /* AppleMusicSearcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppleMusicSearcher.swift; sourceTree = "<group>"; };
 		CF681FCF211A687C00EE2CCC /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		CFA77270211BA46F00AA52E4 /* Auth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Auth.swift; sourceTree = "<group>"; };
-		F7A4A84CAC32E7A9B829629B /* Pods-Convertify.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Convertify.release.xcconfig"; path = "Pods/Target Support Files/Pods-Convertify/Pods-Convertify.release.xcconfig"; sourceTree = "<group>"; };
+		CFC723CF211E1EF600CA2319 /* ConvertifyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ConvertifyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CFC723D1211E1EF600CA2319 /* ConvertifyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConvertifyTests.swift; sourceTree = "<group>"; };
+		CFC723D3211E1EF600CA2319 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CFEF8290211E39DF00CF98C5 /* Alamofire.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Alamofire.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EE3D0CA0462AD316DF2C9AC9 /* Pods-Convertify-ConvertifyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Convertify-ConvertifyTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Convertify-ConvertifyTests/Pods-Convertify-ConvertifyTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -39,7 +61,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				72C20DCC917DE0045F5F8C2B /* Pods_Convertify.framework in Frameworks */,
+				3B0A18E7334EDBC094707F50 /* Pods_Convertify.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CFC723CC211E1EF600CA2319 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5BAAB5AFE9CB2B898DB5E79D /* Pods_Convertify_ConvertifyTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -49,16 +79,20 @@
 		29A25DFF3462B2D418C99BF1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				610E311BD96CB1008C4EEC48 /* Pods_Convertify.framework */,
+				CFEF8290211E39DF00CF98C5 /* Alamofire.framework */,
+				46636A07AA7BCF8BF91A56E6 /* Pods_Convertify.framework */,
+				9635F4296EE995E22FEC6F12 /* Pods_Convertify_ConvertifyTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		7F42F5C618D1AF9FB6E4EC32 /* Pods */ = {
+		CB9640885C45FC8E3DCF5606 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				A35710DBA074C05B428E3758 /* Pods-Convertify.debug.xcconfig */,
-				F7A4A84CAC32E7A9B829629B /* Pods-Convertify.release.xcconfig */,
+				828129F257EB6DDB12D2A624 /* Pods-Convertify.debug.xcconfig */,
+				C79DBC6B0BBEA6C5196270EE /* Pods-Convertify.release.xcconfig */,
+				EE3D0CA0462AD316DF2C9AC9 /* Pods-Convertify-ConvertifyTests.debug.xcconfig */,
+				101878488555E1D720D54433 /* Pods-Convertify-ConvertifyTests.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -67,9 +101,10 @@
 			isa = PBXGroup;
 			children = (
 				CF01DBC2211A67750065376C /* Convertify */,
+				CFC723D0211E1EF600CA2319 /* ConvertifyTests */,
 				CF01DBC1211A67750065376C /* Products */,
-				7F42F5C618D1AF9FB6E4EC32 /* Pods */,
 				29A25DFF3462B2D418C99BF1 /* Frameworks */,
+				CB9640885C45FC8E3DCF5606 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -77,6 +112,7 @@
 			isa = PBXGroup;
 			children = (
 				CF01DBC0211A67750065376C /* Convertify.app */,
+				CFC723CF211E1EF600CA2319 /* ConvertifyTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -97,6 +133,15 @@
 			path = Convertify;
 			sourceTree = "<group>";
 		};
+		CFC723D0211E1EF600CA2319 /* ConvertifyTests */ = {
+			isa = PBXGroup;
+			children = (
+				CFC723D1211E1EF600CA2319 /* ConvertifyTests.swift */,
+				CFC723D3211E1EF600CA2319 /* Info.plist */,
+			);
+			path = ConvertifyTests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -104,11 +149,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CF01DBD2211A67770065376C /* Build configuration list for PBXNativeTarget "Convertify" */;
 			buildPhases = (
-				A6B146D41F11ABF4D37BE391 /* [CP] Check Pods Manifest.lock */,
+				5DCB7BEDF94F9075DD04CB36 /* [CP] Check Pods Manifest.lock */,
 				CF01DBBC211A67750065376C /* Sources */,
 				CF01DBBD211A67750065376C /* Frameworks */,
 				CF01DBBE211A67750065376C /* Resources */,
-				E5799173CA190A22C2A19979 /* [CP] Embed Pods Frameworks */,
+				04B283F063385232DAD219E7 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -118,6 +163,26 @@
 			productName = Convertify;
 			productReference = CF01DBC0211A67750065376C /* Convertify.app */;
 			productType = "com.apple.product-type.application";
+		};
+		CFC723CE211E1EF600CA2319 /* ConvertifyTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CFC723D6211E1EF600CA2319 /* Build configuration list for PBXNativeTarget "ConvertifyTests" */;
+			buildPhases = (
+				1B48C9610B57D5AA21D6CC56 /* [CP] Check Pods Manifest.lock */,
+				CFC723CB211E1EF600CA2319 /* Sources */,
+				CFC723CC211E1EF600CA2319 /* Frameworks */,
+				CFC723CD211E1EF600CA2319 /* Resources */,
+				2F15308256B35520033DDCDA /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CFC723D5211E1EF600CA2319 /* PBXTargetDependency */,
+			);
+			name = ConvertifyTests;
+			productName = ConvertifyTests;
+			productReference = CFC723CF211E1EF600CA2319 /* ConvertifyTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -132,10 +197,14 @@
 					CF01DBBF211A67750065376C = {
 						CreatedOnToolsVersion = 10.0;
 					};
+					CFC723CE211E1EF600CA2319 = {
+						CreatedOnToolsVersion = 10.0;
+						TestTargetID = CF01DBBF211A67750065376C;
+					};
 				};
 			};
 			buildConfigurationList = CF01DBBB211A67750065376C /* Build configuration list for PBXProject "Convertify" */;
-			compatibilityVersion = "Xcode 10.0";
+			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -148,6 +217,7 @@
 			projectRoot = "";
 			targets = (
 				CF01DBBF211A67750065376C /* Convertify */,
+				CFC723CE211E1EF600CA2319 /* ConvertifyTests */,
 			);
 		};
 /* End PBXProject section */
@@ -163,28 +233,17 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-/* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		A6B146D41F11ABF4D37BE391 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
+		CFC723CD211E1EF600CA2319 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Convertify-checkManifestLockResult.txt",
-			);
 			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
 		};
-		E5799173CA190A22C2A19979 /* [CP] Embed Pods Frameworks */ = {
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		04B283F063385232DAD219E7 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -204,6 +263,62 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Convertify/Pods-Convertify-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		1B48C9610B57D5AA21D6CC56 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Convertify-ConvertifyTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		2F15308256B35520033DDCDA /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Convertify-ConvertifyTests/Pods-Convertify-ConvertifyTests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/SpotifyLogin/SpotifyLogin.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SpotifyLogin.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Convertify-ConvertifyTests/Pods-Convertify-ConvertifyTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5DCB7BEDF94F9075DD04CB36 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Convertify-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -219,7 +334,26 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CFC723CB211E1EF600CA2319 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CFC723D2211E1EF600CA2319 /* ConvertifyTests.swift in Sources */,
+				CFC723DA211E20E200CA2319 /* AppleMusicSearcher.swift in Sources */,
+				CFC723D9211E20DF00CA2319 /* SpotifySearcher.swift in Sources */,
+				CF935F29211E3CD2006973BD /* Auth.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		CFC723D5211E1EF600CA2319 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CF01DBBF211A67750065376C /* Convertify */;
+			targetProxy = CFC723D4211E1EF600CA2319 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		CF01DBCC211A67770065376C /* LaunchScreen.storyboard */ = {
@@ -351,13 +485,16 @@
 		};
 		CF01DBD3211A67770065376C /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A35710DBA074C05B428E3758 /* Pods-Convertify.debug.xcconfig */;
+			baseConfigurationReference = 828129F257EB6DDB12D2A624 /* Pods-Convertify.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = K4M2TD6G2A;
 				INFOPLIST_FILE = Convertify/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.haydenhong.Convertify;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
@@ -367,17 +504,62 @@
 		};
 		CF01DBD4211A67770065376C /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F7A4A84CAC32E7A9B829629B /* Pods-Convertify.release.xcconfig */;
+			baseConfigurationReference = C79DBC6B0BBEA6C5196270EE /* Pods-Convertify.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = K4M2TD6G2A;
 				INFOPLIST_FILE = Convertify/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.haydenhong.Convertify;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		CFC723D7211E1EF600CA2319 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = EE3D0CA0462AD316DF2C9AC9 /* Pods-Convertify-ConvertifyTests.debug.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = K4M2TD6G2A;
+				INFOPLIST_FILE = ConvertifyTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.haydenhong.ConvertifyTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Convertify.app/Convertify";
+			};
+			name = Debug;
+		};
+		CFC723D8211E1EF600CA2319 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 101878488555E1D720D54433 /* Pods-Convertify-ConvertifyTests.release.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = K4M2TD6G2A;
+				INFOPLIST_FILE = ConvertifyTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.haydenhong.ConvertifyTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Convertify.app/Convertify";
 			};
 			name = Release;
 		};
@@ -398,6 +580,15 @@
 			buildConfigurations = (
 				CF01DBD3211A67770065376C /* Debug */,
 				CF01DBD4211A67770065376C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CFC723D6211E1EF600CA2319 /* Build configuration list for PBXNativeTarget "ConvertifyTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CFC723D7211E1EF600CA2319 /* Debug */,
+				CFC723D8211E1EF600CA2319 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -17,7 +17,6 @@ public class appleMusicSearcher {
     var type: String?
     var url: String?
     
-    
     /// Searches Apple Music from a link and parses the data accordingly
     ///
     /// - Parameter link: Apple Music link to search
@@ -78,7 +77,7 @@ public class appleMusicSearcher {
     ///   - name: Name of the thing to search for in Apple Music
     ///   - type: Type to search for (example: artist)
     /// - Returns: DataRequest made from querying Apple Music
-    func search(name: String, type: String) -> DataRequest? {
+    func search(name: String, type: String) -> DataRequest {
         self.url = nil;
         let safeName = name.replacingOccurrences(of: "&", with: "and").replacingOccurrences(of: " ", with: "+")
         let headers = ["Authorization": "Bearer \(Authentication.appleMusicKey)"]
@@ -100,7 +99,7 @@ public class appleMusicSearcher {
     /// Opens the URL in Apple Music
     func open() {
         if url != nil {
-            UIApplication.shared.openURL(URL(string: url!)!)
+            UIApplication.shared.open(URL(string: url!)!, options: [:])
         }
     }
     

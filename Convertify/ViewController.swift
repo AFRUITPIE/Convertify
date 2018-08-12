@@ -131,6 +131,10 @@ class ViewController: UIViewController {
 
                         // TODO: Use the response to activate the link button
                         self.appleMusic.search(name: self.spotify.name! + " " + (self.spotify.artist ?? ""), type: self.spotify.type!)
+                            .validate()
+                            .responseJSON { response in
+                                self.changeButtonAppearance()
+                        }
                     }
                 }
             } else {
@@ -149,8 +153,14 @@ class ViewController: UIViewController {
                     
                     // TODO: Use the response to activate the link button
                     self.spotify.search(name: self.appleMusic.name! + " " + (self.appleMusic.artist ?? ""), type: self.appleMusic.type!)
+                        .validate()
+                        .responseJSON { response in
+                            self.changeButtonAppearance()
+                    }
                 }
             }
+        } else {
+            changeButtonAppearance()
         }
     }
 

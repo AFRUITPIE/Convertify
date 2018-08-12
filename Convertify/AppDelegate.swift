@@ -59,10 +59,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             viewController.link = pasteBoardValue
         }
 
-        // Update the button
-        viewController.changeButtonAppearance()
-
         // Begin the searching for whatever is in the clioboard
-        try viewController.handleLink()
+        viewController.handleLink()
     }
 }

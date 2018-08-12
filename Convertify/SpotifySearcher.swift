@@ -89,7 +89,7 @@ public class spotifySearcher {
     /// Opens the URL
     func open() {
         if url != nil {
-            UIApplication.shared.openURL(URL(string: url!)!)
+            UIApplication.shared.open(URL(string: url!)!, options: [:])
         }
     }
 
