@@ -1,3 +1,5 @@
+![Convertify-Logo-Header](./Docs/images/Logo-Header.png)
+
 # Convertify
 
 A new iOS app that open Spotify links in Apple Music and Apple Music links in Spotify like magic!
