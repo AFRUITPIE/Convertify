@@ -14,23 +14,23 @@ class ViewController: UIViewController {
     private var appleMusic = appleMusicSearcher()
     private var spotify = spotifySearcher()
     var link: String?
-
+    
     // Mark: Properties
     @IBOutlet var convertButton: UIButton!
     @IBOutlet var titleLabel: UILabel!
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
-
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         NotificationCenter.default.addObserver(self, selector: #selector(setupSpotifyCredentials), name: .SpotifyLoginSuccessful, object: nil)
-
+        
         // Ensures Spotify is logged in
         setupSpotifyCredentials()
     }
-
+    
     // FIXME: Probably best to handle this in the meat of the app so errors are more clear
     /// Changes the appearance of the app and button based on the link
     @objc func changeButtonAppearance() {
@@ -44,7 +44,7 @@ class ViewController: UIViewController {
             setConvertButton(title: "No link found in clipboard", color: UIColor.gray, enabled: false)
         }
     }
-
+    
     /// Animates the color conversion in the app
     ///
     /// - Parameters:
@@ -53,17 +53,17 @@ class ViewController: UIViewController {
     ///   - enabled: Whether or not the convert button should be shown
     private func setConvertButton(title: String, color: UIColor, enabled: Bool) {
         convertButton.setTitle(title, for: .normal)
-
+        
         // Animate color shift
         UIView.animate(withDuration: 3.0, delay: 0.0, animations: {
             self.titleLabel.textColor = UIColor.white
             self.view.backgroundColor = color
             self.convertButton.setTitleColor(UIColor.white, for: .normal)
         }, completion: nil)
-
+        
         convertButton.isEnabled = enabled
     }
-
+    
     // FIXME: Is this too similar to finishLogin()?
     /// Sets up Spotify credentials
     @objc func setupSpotifyCredentials() {
@@ -79,7 +79,7 @@ class ViewController: UIViewController {
                 }))
                 self.present(alert, animated: true, completion: nil)
             }
-
+            
             if error != nil {
                 print(error ?? "")
             }
@@ -107,7 +107,7 @@ class ViewController: UIViewController {
             }
         }
     }
-
+    
     /// "Connects" Apple Music and Spotify for searching between them. Finds matching
     /// data from opposite source and allows the user to open links in opposite app.
     func handleLink() {
@@ -120,50 +120,60 @@ class ViewController: UIViewController {
         } else if link?.contains("https://open.spotify.com/") ?? false {
             // Get the Apple Music version if the link is Spotify
             if spotify.token != nil {
-                spotify.search(link: link!)!.responseJSON { response in
-                    // Sets the text of the label to the content that was found
-                    if response.result.value != nil {
-                        if self.spotify.artist != nil {
-                            self.titleLabel.text = self.spotify.name! + " by " + self.spotify.artist!
-                        } else {
-                            self.titleLabel.text = self.spotify.name!
+                spotify.search(link: link!)?
+                    .validate()
+                    .responseJSON { response in
+                        // Sets the text of the label to the content that was found
+                        if (response.error != nil) {
+                            self.titleLabel.text = "Error getting Spotify data"
+                            self.setConvertButton(title: "Link might be formatted incorrectly", color: UIColor.red, enabled: false)
+                        } else if response.result.value != nil {
+                            if self.spotify.artist != nil {
+                                self.titleLabel.text = self.spotify.name! + " by " + self.spotify.artist!
+                            } else {
+                                self.titleLabel.text = self.spotify.name!
+                            }
+                            
+                            // TODO: Use the response to activate the link button
+                            self.appleMusic.search(name: self.spotify.name! + " " + (self.spotify.artist ?? ""), type: self.spotify.type!)
+                                .validate()
+                                .responseJSON { response in
+                                    self.changeButtonAppearance()
+                            }
                         }
-
-                        // TODO: Use the response to activate the link button
-                        self.appleMusic.search(name: self.spotify.name! + " " + (self.spotify.artist ?? ""), type: self.spotify.type!)
-                            .validate()
-                            .responseJSON { response in
-                                self.changeButtonAppearance()
-                        }
-                    }
                 }
             } else {
                 setupSpotifyCredentials()
             }
         } else if link?.contains("https://itunes.apple.com/") ?? false {
             // Gets the Spotify version of something if the link is Apple Music
-            appleMusic.search(link: link!)!.responseJSON { response in
-                // Sets the text of the label to the content that was found
-                if response.result.value != nil {
-                    if self.appleMusic.artist != nil {
-                        self.titleLabel.text = self.appleMusic.name! + " by " + self.appleMusic.artist!
-                    } else {
-                        self.titleLabel.text = self.appleMusic.name!
+            appleMusic.search(link: link!)?
+                .validate()
+                .responseJSON { response in
+                    // Sets the text of the label to the content that was found
+                    if (response.error != nil) {
+                        self.titleLabel.text = "Error getting Apple Music data"
+                        self.setConvertButton(title: "Link might be formatted incorrectly", color: UIColor.red, enabled: false)
+                    } else if response.result.value != nil {
+                        if self.appleMusic.artist != nil {
+                            self.titleLabel.text = self.appleMusic.name! + " by " + self.appleMusic.artist!
+                        } else {
+                            self.titleLabel.text = self.appleMusic.name!
+                        }
+                        
+                        // TODO: Use the response to activate the link button
+                        self.spotify.search(name: self.appleMusic.name! + " " + (self.appleMusic.artist ?? ""), type: self.appleMusic.type!)
+                            .validate()
+                            .responseJSON { response in
+                                self.changeButtonAppearance()
+                        }
                     }
-                    
-                    // TODO: Use the response to activate the link button
-                    self.spotify.search(name: self.appleMusic.name! + " " + (self.appleMusic.artist ?? ""), type: self.appleMusic.type!)
-                        .validate()
-                        .responseJSON { response in
-                            self.changeButtonAppearance()
-                    }
-                }
             }
         } else {
             changeButtonAppearance()
         }
     }
-
+    
     // Mark: Actions
     
     /// Opens the link in the opposite app
