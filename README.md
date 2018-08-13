@@ -1,4 +1,4 @@
-![Convertify-Logo-Header](./Docs/images/Logo-Header.png)
+![Convertify-Logo-Header](https://user-images.githubusercontent.com/20470485/44062049-b0e8792c-9f0f-11e8-81b0-73d65235c958.png)
 
 # Convertify
 
