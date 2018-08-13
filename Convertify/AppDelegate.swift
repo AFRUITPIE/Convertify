@@ -19,7 +19,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(_: UIApplication, open url: URL, options _: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
-        let handled = SpotifyLogin.shared.applicationOpenURL(url) { error in print(error!) }
+        let handled = SpotifyLogin.shared.applicationOpenURL(url) { error in
+            if (error != nil) {
+                print(error!)
+            }
+        }
         return handled
     }
 
