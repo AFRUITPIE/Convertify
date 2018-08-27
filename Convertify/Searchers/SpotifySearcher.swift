@@ -18,7 +18,7 @@ public class spotifySearcher {
     var type: String?
     var url: String?
     var token: String?
-    
+
     /// Searches the Spotify API from a link and extracs the information from it
     ///
     /// - Parameter link: Link to search for within the Spotify API
@@ -30,7 +30,7 @@ public class spotifySearcher {
         artist = nil
         type = nil
 
-        let linkData = link.replacingOccurrences(of: "https://open.spotify.com/", with: "").split(separator: "/")
+        let linkData = link.replacingOccurrences(of: SearcherURL.spotify, with: "").split(separator: "/")
         if linkData.count != 2 {
             print("It looks like the link was formatted incorrectly (link = \(link)")
         } else {
@@ -43,7 +43,7 @@ public class spotifySearcher {
         }
         return nil
     }
-    
+
     /// Searches Spotify for the name and type
     ///
     /// - Parameters:
@@ -67,7 +67,6 @@ public class spotifySearcher {
         }
     }
 
-    
     /// Converts the type from Apple Music to Spotify
     ///
     /// - Parameter type: the type from Apple Music (example: song vs. track)
@@ -84,8 +83,7 @@ public class spotifySearcher {
             return type
         }
     }
-    
-    
+
     /// Opens the URL
     func open() {
         if url != nil {
@@ -112,7 +110,7 @@ public class spotifySearcher {
                 if type != "artist" {
                     self.artist = ((JSON.object(forKey: "artists") as! NSArray)[0] as AnyObject).object(forKey: "name") as? String
                 }
-                
+
                 // Sets the type
                 self.type = type
             }

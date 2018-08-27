@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_: UIApplication, open url: URL, options _: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
         let handled = SpotifyLogin.shared.applicationOpenURL(url) { error in
-            if (error != nil) {
+            if error != nil {
                 print(error!)
             }
         }
@@ -39,31 +39,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillEnterForeground(_: UIApplication) {
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
-        updateAppearance()
+        restartMusicSearch()
     }
 
     func applicationDidBecomeActive(_: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-        updateAppearance()
+        restartMusicSearch()
     }
 
     func applicationWillTerminate(_: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
-    
 
     /// Update the appearance of the app before it launches.
     /// Also begins searches
-    private func updateAppearance() {
+    private func restartMusicSearch() {
         // Get the viewController
         let viewController = window?.rootViewController as! ViewController
 
         // Set the link in the ViewController to be the pasteboard
         if let pasteBoardValue = UIPasteboard.general.string {
-            viewController.link = pasteBoardValue
+            viewController.handleLink(link: pasteBoardValue)
         }
-
-        // Begin the searching for whatever is in the clioboard
-        viewController.handleLink()
     }
 }
