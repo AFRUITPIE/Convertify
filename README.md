@@ -18,11 +18,13 @@ These instructions will get you a copy of the project up and running on your loc
 
 - [Cocoapods](https://cocoapods.org)
 - [Spotify Account](https://www.spotify.com/) (Premium **not** required, app not required)
+- [Apple developer account](https://developer.apple.com)
 
 ### Installing
 
 1. `pod install` inside the repository directory
 2. Open `Convertify.xcworkspace`
+3. Complete `Stores/Auth.swift` with your information from Spotify's developer console and Apple Developer's web console. Remember to use the JWT from Apple Music. I used [this tool](https://github.com/pelauimagineering/apple-music-token-generator)) to get the JWT.
 
 ## Running the tests
 
