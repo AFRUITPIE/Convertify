@@ -22,13 +22,10 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        // Ensures Spotify is logged in
-        getSpotifyToken()
-    }
+            }
     
     // Mark: Functions
     
@@ -67,7 +64,6 @@ class ViewController: UIViewController {
             
             if error != nil {
                 print(error ?? "")
-                // self.getSpotifyToken()
             }
         }
     }
@@ -81,36 +77,36 @@ class ViewController: UIViewController {
         titleLabel.text = "Convertify"
         self.link = link
         
-        // Decides what to do with the link
-        switch true {
-        // Ignores playlists
-        case link.contains("playlist"):
-            updateAppearance(title: "I cannot convert playlists ☹️", color: UIColor.red, enabled: false)
-            break
-            
-        // Ignores radio stations
-        case link.contains("/station/"):
-            updateAppearance(title: "I cannot convert radio stations ☹️", color: UIColor.red, enabled: false)
-            break
-            
-        // Extracts Spotify data and searches for Apple Music links when it includes a Spotify link
-        case link.contains(SearcherURL.spotify):
-            // Get the Apple Music version if the link is Spotify, double check for Spotify login
-            if spotify.token != nil {
+        if spotify.token == nil {
+            getSpotifyToken()
+        } else {
+            // Decides what to do with the link
+            switch true {
+            // Ignores playlists
+            case link.contains("playlist"):
+                updateAppearance(title: "I cannot convert playlists ☹️", color: UIColor.red, enabled: false)
+                break
+                
+            // Ignores radio stations
+            case link.contains("/station/"):
+                updateAppearance(title: "I cannot convert radio stations ☹️", color: UIColor.red, enabled: false)
+                break
+                
+            // Extracts Spotify data and searches for Apple Music links when it includes a Spotify link
+            case link.contains(SearcherURL.spotify):
+                // Get the Apple Music version if the link is Spotify, double check for Spotify login
                 handleSpotifySearching(link: link)
-            } else {
-                getSpotifyToken()
+                break
+                
+            // Extracts Apple Music data and searches for Spotify links when it includes an Apple Music link
+            case link.contains(SearcherURL.appleMusic):
+                handleAppleMusicSearching(link: link)
+                break
+                
+            // Lets the user know I don't know how to handle whatever is in their clipboard
+            default:
+                updateAppearance(title: "No Spotify or Apple Music link found in clipboard", color: UIColor.gray, enabled: false)
             }
-            break
-            
-        // Extracts Apple Music data and searches for Spotify links when it includes an Apple Music link
-        case link.contains(SearcherURL.appleMusic):
-            handleAppleMusicSearching(link: link)
-            break
-            
-        // Lets the user know I don't know how to handle whatever is in their clipboard
-        default:
-            updateAppearance(title: "No Spotify or Apple Music link found in clipboard", color: UIColor.gray, enabled: false)
         }
     }
     
