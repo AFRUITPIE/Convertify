@@ -16,3 +16,4 @@ Pods/
 
 # Auth files
 Auth.swift
+Convertify/Stores/Auth.swift
