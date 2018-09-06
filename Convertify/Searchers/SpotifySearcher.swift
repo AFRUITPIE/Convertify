@@ -11,7 +11,10 @@ import Foundation
 import SpotifyLogin
 
 /// Handles Spotify querying and maintains information about Spo
-public class spotifySearcher {
+public class spotifySearcher: MusicSearcher {
+    let serviceName: String = "Spotify"
+    let serviceColor: UIColor = UIColor(red: 0.52, green: 0.74, blue: 0.00, alpha: 1.0)
+
     var id: String?
     var name: String?
     var artist: String?

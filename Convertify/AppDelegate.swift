@@ -46,9 +46,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(_: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        resetAppLink()
     }
 
     func applicationWillTerminate(_: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    }
+
+    private func resetAppLink() {
+        let viewController = window?.rootViewController as! ViewController
+
+        // Set the link in the ViewController to be the pasteboard
+        if let pasteBoardValue = UIPasteboard.general.string {
+            viewController.setLink(link: pasteBoardValue)
+        }
+
+        if viewController.spotifyTokenValid {
+            viewController.initializeApp()
+        }
     }
 }

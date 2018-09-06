@@ -11,13 +11,19 @@ import SpotifyLogin
 import UIKit
 
 class ViewController: UIViewController {
-    private var appleMusic = appleMusicSearcher()
-    private var spotify = spotifySearcher()
+    var spotifyTokenValid = false
+
+    private var appleMusic: MusicSearcher = appleMusicSearcher()
+    private var spotify: MusicSearcher = spotifySearcher()
     private var link: String?
 
     // Mark: Properties
+
     @IBOutlet var convertButton: UIButton!
     @IBOutlet var titleLabel: UILabel!
+    @IBOutlet var logoutButton: UIButton!
+
+    // Mark: Functions
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,12 +37,17 @@ class ViewController: UIViewController {
         initializeApp()
     }
 
-    
     /// Handles ensuring that Spotify is logged in before handling the clipboard link
     @objc func initializeApp() {
+        logoutButton.isHidden = true
         getSpotifyToken { error in
             if error == nil {
+                self.spotifyTokenValid = true
                 self.handleLink(link: self.link ?? "")
+                self.logoutButton.isHidden = false
+
+            } else {
+                self.spotifyTokenValid = false
             }
         }
     }
@@ -47,8 +58,6 @@ class ViewController: UIViewController {
     func setLink(link: String) {
         self.link = link
     }
-
-    // Mark: Functions
 
     /// Animates the color conversion in the app
     ///
@@ -86,7 +95,7 @@ class ViewController: UIViewController {
                     title: NSLocalizedString("Login", comment: "Open Spotify Login"), style: .default, handler: { _ in
                         // Open the Spotify login prompt
                         SpotifyLoginPresenter.login(from: self, scopes: [])
-                        
+
                         // Adds a listener that retries the Spotify login and link handling when successfully logged in
                         NotificationCenter.default.addObserver(self, selector: #selector(self.initializeApp), name: .SpotifyLoginSuccessful, object: nil)
                         // completion(NSError())
@@ -110,9 +119,6 @@ class ViewController: UIViewController {
     func handleLink(link: String) {
         // Resets the label text while converting
         titleLabel.text = "Convertify"
-        self.link = link
-
-        print(self.link ?? "")
 
         // Decides what to do with the link
         switch true {
@@ -120,80 +126,49 @@ class ViewController: UIViewController {
         case link.contains("playlist"):
             updateAppearance(title: "I cannot convert playlists ☹️", color: UIColor.red, enabled: false)
             break
-
         // Ignores radio stations
         case link.contains("/station/"):
             updateAppearance(title: "I cannot convert radio stations ☹️", color: UIColor.red, enabled: false)
             break
-
         // Extracts Spotify data and searches for Apple Music links when it includes a Spotify link
         case link.contains(SearcherURL.spotify):
             // Get the Apple Music version if the link is Spotify, double check for Spotify login
-            handleSpotifySearching(link: link)
+            handleSearching(link: link, source: spotify, destination: appleMusic)
             break
-
         // Extracts Apple Music data and searches for Spotify links when it includes an Apple Music link
         case link.contains(SearcherURL.appleMusic):
-            handleAppleMusicSearching(link: link)
+            handleSearching(link: link, source: appleMusic, destination: spotify)
             break
-
         // Lets the user know I don't know how to handle whatever is in their clipboard
         default:
             updateAppearance(title: "No Spotify or Apple Music link found in clipboard", color: UIColor.gray, enabled: false)
         }
     }
 
-    /// Handles searching Apple Music
+    /// Handles searching between the source and destination
     ///
-    /// - Parameter link: Apple Music compatible link to extract data from
-    private func handleAppleMusicSearching(link: String) {
-        // Gets the Spotify version of something if the link is Apple Music
-        appleMusic.search(link: link)?
+    /// - Parameters:
+    ///   - link: link to search with
+    ///   - source: Source service of the link
+    ///   - destination: Destination to open the search result in
+    private func handleSearching(link: String, source: MusicSearcher, destination: MusicSearcher) {
+        source.search(link: link)?
             .validate()
             .responseJSON { response in
-                // Sets the text of the label to the content that was found
                 if response.error != nil {
-                    self.titleLabel.text = "Error getting Apple Music data"
+                    self.titleLabel.text = "Error getting \(source.serviceName) data"
                     self.updateAppearance(title: "Link might be formatted incorrectly", color: UIColor.red, enabled: false)
                 } else if response.result.value != nil {
-                    if self.appleMusic.artist != nil {
-                        self.titleLabel.text = self.appleMusic.name! + " by " + self.appleMusic.artist!
+                    if source.artist != nil {
+                        self.titleLabel.text = source.name! + " by " + source.artist!
                     } else {
-                        self.titleLabel.text = self.appleMusic.name!
+                        self.titleLabel.text = source.name!
                     }
 
-                    self.spotify.search(name: self.appleMusic.name! + " " + (self.appleMusic.artist ?? ""), type: self.appleMusic.type!)
+                    destination.search(name: source.name! + " " + (source.artist ?? ""), type: source.type!)
                         .validate()
                         .responseJSON { _ in
-                            self.updateAppearance(title: "Open in Spotify", color: UIColor(red: 0.52, green: 0.74, blue: 0.00, alpha: 1.0), enabled: true)
-                        }
-                }
-            }
-    }
-
-    /// Handles searching Spotify
-    ///
-    /// - Parameter link: Spotify link to extract data from
-    private func handleSpotifySearching(link: String) {
-        spotify.search(link: link)?
-            .validate()
-            .responseJSON { response in
-                // Sets the text of the label to the content that was found
-                if response.error != nil {
-                    self.titleLabel.text = "Error getting Spotify data"
-                    self.updateAppearance(title: "Link might be formatted incorrectly", color: UIColor.red, enabled: false)
-                } else if response.result.value != nil {
-                    if self.spotify.artist != nil {
-                        self.titleLabel.text = self.spotify.name! + " by " + self.spotify.artist!
-                    } else {
-                        self.titleLabel.text = self.spotify.name!
-                    }
-
-                    // TODO: Use the response to activate the link button
-                    self.appleMusic.search(name: self.spotify.name! + " " + (self.spotify.artist ?? ""), type: self.spotify.type!)
-                        .validate()
-                        .responseJSON { _ in
-                            self.updateAppearance(title: "Open in Apple Music", color: UIColor(red: 0.98, green: 0.34, blue: 0.76, alpha: 1.0), enabled: true)
+                            self.updateAppearance(title: "Open in \(destination.serviceName)", color: destination.serviceColor, enabled: true)
                         }
                 }
             }
@@ -208,5 +183,15 @@ class ViewController: UIViewController {
         } else if link?.contains(SearcherURL.appleMusic) ?? false {
             spotify.open()
         }
+    }
+
+    /// Logs user out of Spotify
+    @IBAction func logoutSpotify(_: Any) {
+        spotify.token = nil
+        SpotifyLogin.shared.logout()
+        spotifyTokenValid = false
+        logoutButton.isHidden = true
+        updateAppearance(title: "", color: UIColor.black, enabled: false)
+        initializeApp()
     }
 }

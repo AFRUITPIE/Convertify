@@ -10,26 +10,38 @@ import Alamofire
 import Foundation
 
 /// Handles Apple Music querying and maintains information about Apple Music
-public class appleMusicSearcher {
+public class appleMusicSearcher: MusicSearcher {
+    let serviceName: String = "Apple Music"
+    let serviceColor: UIColor = UIColor(red: 0.98, green: 0.34, blue: 0.76, alpha: 1.0)
+
     var id: String?
     var name: String?
     var artist: String?
     var type: String?
     var url: String?
+    var token: String?
+
+    init() {
+        token = Authentication.appleMusicKey
+    }
 
     /// Searches Apple Music from a link and parses the data accordingly
     ///
     /// - Parameter link: Apple Music link to search
     /// - Returns: DataRequest from querying Apple Music
     func search(link: String) -> DataRequest? {
+        // Reset these fields
         id = nil
         name = nil
         artist = nil
         type = nil
 
+        // Get the data out of the link, since many links include names to data
         parseLinkData(link: link)
 
-        let headers = ["Authorization": "Bearer \(Authentication.appleMusicKey)"]
+        let headers = ["Authorization": "Bearer \(self.token ?? "")"]
+
+        // Request the search results from Apple Music
         return Alamofire.request("https://api.music.apple.com/v1/catalog/us/\(type!)s/\(id ?? "")", headers: headers).responseJSON { response in
             if let result = response.result.value {
                 // Gets the meaty data that we want from the JSON
