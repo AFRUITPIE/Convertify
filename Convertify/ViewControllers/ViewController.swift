@@ -22,6 +22,7 @@ class ViewController: UIViewController {
     @IBOutlet var convertButton: UIButton!
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var logoutButton: UIButton!
+    @IBOutlet var activityMonitor: UIActivityIndicatorView!
 
     // Mark: Functions
 
@@ -141,6 +142,9 @@ class ViewController: UIViewController {
         // Lets the user know I don't know how to handle whatever is in their clipboard
         default:
             updateAppearance(title: "No Spotify or Apple Music link found in clipboard", color: UIColor.gray, enabled: false)
+            activityMonitor.stopAnimating()
+            activityMonitor.isHidden = true
+            convertButton.isHidden = false
         }
     }
 
@@ -151,9 +155,15 @@ class ViewController: UIViewController {
     ///   - source: Source service of the link
     ///   - destination: Destination to open the search result in
     private func handleSearching(link: String, source: MusicSearcher, destination: MusicSearcher) {
+        activityMonitor.startAnimating()
+        activityMonitor.isHidden = false
+        convertButton.isHidden = true
         source.search(link: link)?
             .validate()
             .responseJSON { response in
+                self.activityMonitor.stopAnimating()
+                self.activityMonitor.isHidden = true
+                self.convertButton.isHidden = false
                 if response.error != nil {
                     self.titleLabel.text = "Error getting \(source.serviceName) data"
                     self.updateAppearance(title: "Link might be formatted incorrectly", color: UIColor.red, enabled: false)
