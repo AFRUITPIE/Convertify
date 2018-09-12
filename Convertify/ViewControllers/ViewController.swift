@@ -98,7 +98,6 @@ class ViewController: UIViewController {
 
                         // Adds a listener that retries the Spotify login and link handling when successfully logged in
                         NotificationCenter.default.addObserver(self, selector: #selector(self.initializeApp), name: .SpotifyLoginSuccessful, object: nil)
-                        // completion(NSError())
                     }
                 ))
 
