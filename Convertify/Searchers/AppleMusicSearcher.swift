@@ -87,21 +87,29 @@ public class appleMusicSearcher: MusicSearcher {
     ///   - name: Name of the thing to search for in Apple Music
     ///   - type: Type to search for (example: artist)
     /// - Returns: DataRequest made from querying Apple Music
-    func search(name: String, type: String) -> DataRequest {
+    func search(name: String, type: String, completion: @escaping (Error?) -> Void) {
         url = nil
         let safeName = name.replacingOccurrences(of: "&", with: "and").replacingOccurrences(of: " ", with: "+")
         let headers = ["Authorization": "Bearer \(Authentication.appleMusicKey)"]
         let appleMusicType = convertTypeToAppleMusicType(type: type)
-        return Alamofire.request("https://api.music.apple.com/v1/catalog/us/search?term=\(safeName)&types=\(appleMusicType)", headers: headers).responseJSON { response in
+
+        Alamofire.request("https://api.music.apple.com/v1/catalog/us/search?term=\(safeName)&types=\(appleMusicType)", headers: headers).responseJSON { response in
             if let result = response.result.value {
                 let JSON = result as! NSDictionary
 
-                // Get the URL from the JSON
-                self.url = (((((JSON.object(forKey: "results") as AnyObject)
-                        .object(forKey: appleMusicType) as AnyObject)
-                        .object(forKey: "data") as! NSArray)[0] as AnyObject)
-                    .object(forKey: "attributes") as AnyObject)
-                    .object(forKey: "url") as? String
+                let results = JSON.object(forKey: "results") as! NSDictionary
+
+                // Ensures there are search results
+                if results.value(forKey: appleMusicType) != nil {
+                    self.url = ((((results
+                            .object(forKey: appleMusicType) as AnyObject)
+                            .object(forKey: "data") as! NSArray)[0] as AnyObject)
+                        .object(forKey: "attributes") as AnyObject)
+                        .object(forKey: "url") as? String
+                    completion(nil)
+                } else {
+                    completion(MusicSearcherErrors.noSearchResultsError)
+                }
             }
         }
     }

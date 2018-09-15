@@ -81,16 +81,25 @@ class ConvertifyTests: XCTestCase {
 
     private func testSpotifyQuery(name: String, type: String, url: String) {
         let spt = spotifySearcher()
-        spt.search(name: name, type: type).validate().responseJSON { _ in
+        spt.search(name: name, type: type, completion: { error in
+            XCTAssertNil(error)
             XCTAssertEqual(spt.url, url)
-        }
+        })
     }
 
     private func testAppleMusicQuery(name: String, type: String, url: String) {
         let am = appleMusicSearcher()
-        am.search(name: name, type: type).validate().responseJSON { _ in
+        am.search(name: name, type: type, completion: { error in
+            XCTAssertNil(error)
             XCTAssertEqual(am.url, url)
-        }
+        })
+    }
+
+    func testSpotifyError() {
+        let spt = spotifySearcher()
+        spt.search(name: "THERE IS NO POSSIBLE WAY THIS WILL EVER BE AN ALBUM NAME", type: "album", completion: { error in
+            XCTAssertNotNil(error)
+        })
     }
 
     func testSpotifyQueryAlbum() {
@@ -109,6 +118,13 @@ class ConvertifyTests: XCTestCase {
         testSpotifyQuery(name: "Tiny Dancer",
                          type: "song",
                          url: "https://open.spotify.com/track/2TVxnKdb3tqe1nhQWwwZCO")
+    }
+
+    func testAppleMusicError() {
+        let am = appleMusicSearcher()
+        am.search(name: "THERE IS NO POSSIBLE WAY THIS WILL EVER BE AN ALBUM NAME", type: "album", completion: { error in
+            XCTAssertNotNil(error)
+        })
     }
 
     func testAppleQueryAlbum() {
