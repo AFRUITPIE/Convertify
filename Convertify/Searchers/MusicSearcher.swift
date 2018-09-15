@@ -29,6 +29,10 @@ protocol MusicSearcher {
     func search(link: String) -> DataRequest?
 
     // Search using the name and type to get the link of it
-    func search(name: String, type: String) -> DataRequest
+    func search(name: String, type: String, completion: @escaping (Error?) -> Void)
     func open()
+}
+
+enum MusicSearcherErrors: Error {
+    case noSearchResultsError
 }

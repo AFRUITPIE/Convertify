@@ -53,19 +53,29 @@ public class spotifySearcher: MusicSearcher {
     ///   - name: Name of resource to search for
     ///   - type: Type of resource to search for
     /// - Returns: DataRequest from the Spotify API
-    func search(name: String, type: String) -> DataRequest {
+    func search(name: String, type: String, completion: @escaping (Error?) -> Void) {
         let safeName = name.replacingOccurrences(of: "&", with: "and")
             .replacingOccurrences(of: " ", with: "%20")
         self.type = convertTypeToSpotify(type: type)
         let headers = ["Authorization": "Bearer \(self.token ?? "")"]
-        return Alamofire.request("https://api.spotify.com/v1/search?q=\(safeName)&type=\(self.type ?? "")", headers: headers).responseJSON { response in
+        Alamofire.request("https://api.spotify.com/v1/search?q=\(safeName)&type=\(self.type ?? "")", headers: headers).responseJSON { response in
             if let result = response.result.value {
+                // Gets the JSON value
                 let JSON = result as! NSDictionary
+
+                // Gets the data of the type from the JSON
                 let data = JSON.object(forKey: (self.type ?? "") + "s") as AnyObject
-                let items = (data.object(forKey: "items") as! NSArray)[0] as AnyObject
-                self.url = (items.object(forKey: "external_urls") as AnyObject).object(forKey: "spotify") as? String
-                // self.name = items.object(forKey: "name") as? String
-                // self.artist = ((items.object(forKey: "artists") as! NSArray)[0] as AnyObject).object(forKey:"name") as? String
+
+                // Ensures there actually are search results
+                if (data.object(forKey: "total") as! Int) > 0 {
+                    // Gets the first search result
+                    let items = (data.object(forKey: "items") as! NSArray)[0] as AnyObject
+                    // Gets and sets the URL of the first search result
+                    self.url = (items.object(forKey: "external_urls") as AnyObject).object(forKey: "spotify") as? String
+                    completion(nil)
+                } else {
+                    completion(MusicSearcherErrors.noSearchResultsError)
+                }
             }
         }
     }

@@ -46,7 +46,6 @@ class ViewController: UIViewController {
                 self.spotifyTokenValid = true
                 self.handleLink(link: self.link ?? "")
                 self.logoutButton.isHidden = false
-
             } else {
                 self.spotifyTokenValid = false
             }
@@ -174,11 +173,13 @@ class ViewController: UIViewController {
                         self.titleLabel.text = source.name!
                     }
 
-                    destination.search(name: source.name! + " " + (source.artist ?? ""), type: source.type!)
-                        .validate()
-                        .responseJSON { _ in
+                    destination.search(name: source.name! + " " + (source.artist ?? ""), type: source.type!, completion: { error in
+                        if error == nil {
                             self.updateAppearance(title: "Open in \(destination.serviceName)", color: destination.serviceColor, enabled: true)
+                        } else {
+                            self.updateAppearance(title: "Error getting \(destination.serviceName) data", color: UIColor.red, enabled: false)
                         }
+                    })
                 }
             }
     }
