@@ -127,6 +127,10 @@ class ConvertifyTests: XCTestCase {
         })
     }
 
+    func testAppleMusicCanadianStorefront() {
+        testAppleMusicQuery(name: "Better", type: "album", url: "https://itunes.apple.com/ca/album/better/1435943031?i=1435943033")
+    }
+
     func testAppleQueryAlbum() {
         testAppleMusicQuery(name: "Blonde",
                             type: "album",

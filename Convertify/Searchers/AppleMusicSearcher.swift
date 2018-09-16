@@ -20,6 +20,7 @@ public class appleMusicSearcher: MusicSearcher {
     var type: String?
     var url: String?
     var token: String?
+    private var storefront: String?
 
     init() {
         token = Authentication.appleMusicKey
@@ -35,6 +36,7 @@ public class appleMusicSearcher: MusicSearcher {
         name = nil
         artist = nil
         type = nil
+        storefront = nil
 
         // Get the data out of the link, since many links include names to data
         parseLinkData(link: link)
@@ -42,7 +44,7 @@ public class appleMusicSearcher: MusicSearcher {
         let headers = ["Authorization": "Bearer \(self.token ?? "")"]
 
         // Request the search results from Apple Music
-        return Alamofire.request("https://api.music.apple.com/v1/catalog/us/\(type!)s/\(id ?? "")", headers: headers).responseJSON { response in
+        return Alamofire.request("https://api.music.apple.com/v1/catalog/\(storefront ?? "us")/\(type!)s/\(id ?? "")", headers: headers).responseJSON { response in
             if let result = response.result.value {
                 // Gets the meaty data that we want from the JSON
                 let data: AnyObject = ((((result as! NSDictionary)
@@ -65,8 +67,15 @@ public class appleMusicSearcher: MusicSearcher {
     /// - Parameter link: link to parse data from
     private func parseLinkData(link: String) {
         url = link
-        let linkData = link.replacingOccurrences(of: "\(SearcherURL.appleMusic)us/", with: "").split(separator: "/")
+        // Get the storefront
+        storefront = String(link.replacingOccurrences(of: SearcherURL.appleMusic, with: "").split(separator: "/")[0])
+
+        // Gets the "meat" of the URL
+        let linkData = link.replacingOccurrences(of: "\(SearcherURL.appleMusic)\(storefront ?? "us")/", with: "").split(separator: "/")
+
+        // Gets type
         type = String(linkData[0])
+
         // Handles "album" and "album -> song" issue
         if type == "artist" {
             id = String(linkData[2])
@@ -86,14 +95,14 @@ public class appleMusicSearcher: MusicSearcher {
     /// - Parameters:
     ///   - name: Name of the thing to search for in Apple Music
     ///   - type: Type to search for (example: artist)
-    /// - Returns: DataRequest made from querying Apple Music
+    ///   - completion: Function to run after search is complete
     func search(name: String, type: String, completion: @escaping (Error?) -> Void) {
         url = nil
         let safeName = name.replacingOccurrences(of: "&", with: "and").replacingOccurrences(of: " ", with: "+")
         let headers = ["Authorization": "Bearer \(Authentication.appleMusicKey)"]
         let appleMusicType = convertTypeToAppleMusicType(type: type)
 
-        Alamofire.request("https://api.music.apple.com/v1/catalog/us/search?term=\(safeName)&types=\(appleMusicType)", headers: headers).responseJSON { response in
+        Alamofire.request("https://api.music.apple.com/v1/catalog/\(storefront ?? "us")/search?term=\(safeName)&types=\(appleMusicType)", headers: headers).responseJSON { response in
             if let result = response.result.value {
                 let JSON = result as! NSDictionary
 
