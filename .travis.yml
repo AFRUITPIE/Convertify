@@ -8,7 +8,7 @@ before_install:
   - gem install cocoapods
   - pod repo update
   - pod install
-  - echo secure > "Convertify/Stores/Auth.swift"
+  - echo auth > "Convertify/Stores/Auth.swift"
 podfile: Podfile
 xcode_workspace: Convertify.xcworkspace
 xcode_scheme: Convertify
