@@ -1,0 +1,5 @@
+language: swift
+xcode_workspace: Convertify.xcworkspace
+xcode_scheme: ConvertifyTests
+podfile: .
+xcode_destination: platform=iOS Simulator,OS=12.0,name=iPhone X

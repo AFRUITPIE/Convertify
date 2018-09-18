@@ -8,7 +8,6 @@
 
 import Alamofire
 import Foundation
-import SpotifyLogin
 
 /// Handles Spotify querying and maintains information about Spo
 public class spotifySearcher: MusicSearcher {
@@ -21,6 +20,27 @@ public class spotifySearcher: MusicSearcher {
     var type: String?
     var url: String?
     var token: String?
+
+    init(completion: @escaping (Error?) -> Void) {
+        let parameters = ["client_id": Authentication.spotifyClientID,
+                          "client_secret": Authentication.spotifyClientSecret,
+                          "grant_type": "client_credentials"]
+
+        Alamofire.request("https://accounts.spotify.com/api/token", method: .post, parameters: parameters, headers: nil).responseJSON { response in
+            switch response.result {
+            case .success: do {
+                let result = response.result.value as! NSDictionary
+                self.token = result.value(forKey: "access_token") as? String
+                completion(nil)
+            }
+
+            case .failure: do {
+                // FIXME: Add a real error here
+                completion(MusicSearcherErrors.noSearchResultsError)
+            }
+            }
+        }
+    }
 
     /// Searches the Spotify API from a link and extracs the information from it
     ///

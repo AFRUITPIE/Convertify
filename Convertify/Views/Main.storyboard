@@ -47,34 +47,20 @@
                                     <constraint firstItem="HOe-RL-qXu" firstAttribute="centerX" secondItem="qSK-BA-mJS" secondAttribute="centerX" id="ene-XI-gFQ"/>
                                 </constraints>
                             </stackView>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vnn-4J-DED">
-                                <rect key="frame" x="0.0" y="430" width="320" height="30"/>
-                                <state key="normal" title="Logout Spotify">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <connections>
-                                    <action selector="logoutSpotify:" destination="BYZ-38-t0r" eventType="touchUpInside" id="RfV-Mb-jcp"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
                         <constraints>
                             <constraint firstItem="qSK-BA-mJS" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="059-UI-cGu"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="qSK-BA-mJS" secondAttribute="trailing" constant="8" id="Lj5-fz-NP3"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Vnn-4J-DED" secondAttribute="trailing" id="U95-en-rNZ"/>
-                            <constraint firstItem="Vnn-4J-DED" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="aSL-hZ-uxH"/>
                             <constraint firstItem="qSK-BA-mJS" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="fw5-N8-9ml"/>
                             <constraint firstItem="qSK-BA-mJS" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="h9Y-fx-YJs"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Vnn-4J-DED" secondAttribute="bottom" constant="20" id="iVD-wz-Kti"/>
                             <constraint firstItem="qSK-BA-mJS" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="8" id="jXh-Qi-Zob"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Vnn-4J-DED" secondAttribute="bottom" constant="20" id="yz8-lq-UkB"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
                         <outlet property="activityMonitor" destination="Gna-dI-SVW" id="1gz-6a-V0T"/>
                         <outlet property="convertButton" destination="HOe-RL-qXu" id="QXy-PV-ZBr"/>
-                        <outlet property="logoutButton" destination="Vnn-4J-DED" id="uAA-lt-PNy"/>
                         <outlet property="titleLabel" destination="0XO-Fd-cok" id="a6n-CB-v0z"/>
                     </connections>
                 </viewController>

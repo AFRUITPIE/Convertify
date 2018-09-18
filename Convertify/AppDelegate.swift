@@ -6,7 +6,6 @@
 //  Copyright © 2018 Hayden Hong. All rights reserved.
 //
 
-import SpotifyLogin
 import UIKit
 
 @UIApplicationMain
@@ -14,19 +13,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_: UIApplication, didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        SpotifyLogin.shared.configure(clientID: Authentication.spotifyClientID, clientSecret: Authentication.spotifyClientSecret, redirectURL: Authentication.spotifyRedirectURL)
-
         return true
-    }
-
-    func application(_: UIApplication, open url: URL, options _: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
-        let handled = SpotifyLogin.shared.applicationOpenURL(url) { error in
-            if error != nil {
-                print(error!)
-            }
-        }
-
-        return handled
     }
 
     func applicationWillResignActive(_: UIApplication) {
@@ -41,7 +28,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillEnterForeground(_: UIApplication) {
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
-        // initializeApp()
     }
 
     func applicationDidBecomeActive(_: UIApplication) {
@@ -58,11 +44,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         // Set the link in the ViewController to be the pasteboard
         if let pasteBoardValue = UIPasteboard.general.string {
-            viewController.setLink(link: pasteBoardValue)
-        }
-
-        if viewController.spotifyTokenValid {
-            viewController.initializeApp()
+            viewController.initApp(link: pasteBoardValue)
         }
     }
 }

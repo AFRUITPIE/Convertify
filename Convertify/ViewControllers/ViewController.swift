@@ -7,56 +7,45 @@
 //
 
 import Alamofire
-import SpotifyLogin
 import UIKit
 
 class ViewController: UIViewController {
-    var spotifyTokenValid = false
+    private var appleMusic: MusicSearcher!
+    private var spotify: MusicSearcher!
 
-    private var appleMusic: MusicSearcher = appleMusicSearcher()
-    private var spotify: MusicSearcher = spotifySearcher()
     private var link: String?
 
     // Mark: Properties
 
     @IBOutlet var convertButton: UIButton!
     @IBOutlet var titleLabel: UILabel!
-    @IBOutlet var logoutButton: UIButton!
     @IBOutlet var activityMonitor: UIActivityIndicatorView!
 
     // Mark: Functions
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        if let pasteBoardValue = UIPasteboard.general.string {
-            setLink(link: pasteBoardValue)
-        }
     }
 
     override func viewDidAppear(_: Bool) {
         super.viewDidAppear(true)
-        initializeApp()
     }
 
-    /// Handles ensuring that Spotify is logged in before handling the clipboard link
-    @objc func initializeApp() {
-        logoutButton.isHidden = true
-        getSpotifyToken { error in
-            if error == nil {
-                self.spotifyTokenValid = true
-                self.handleLink(link: self.link ?? "")
-                self.logoutButton.isHidden = false
-            } else {
-                self.spotifyTokenValid = false
-            }
-        }
-    }
-
-    /// Updates the link
-    ///
-    /// - Parameter link: link to set this object to
-    func setLink(link: String) {
+    func initApp(link: String) {
         self.link = link
+        activityMonitor.startAnimating()
+        spotify = spotifySearcher(completion: { error in
+            if error == nil {
+                self.appleMusic = appleMusicSearcher()
+
+                self.handleLink(link: self.link ?? "")
+            } else {
+                self.activityMonitor.stopAnimating()
+                self.activityMonitor.isHidden = true
+                self.updateAppearance(title: "Error getting Spotify credentials", color: UIColor.red, enabled: false)
+                self.convertButton.isHidden = false
+            }
+        })
     }
 
     /// Animates the color conversion in the app
@@ -75,40 +64,6 @@ class ViewController: UIViewController {
         }, completion: nil)
 
         convertButton.isEnabled = enabled
-    }
-
-    /// Ensures the Spotify token is valid
-    private func getSpotifyToken(completion: @escaping (Error?) -> Void) {
-        SpotifyLogin.shared.getAccessToken { accessToken, error in
-            // Set the token if possible, initialize login flow if not possible
-            if accessToken != nil {
-                self.spotify.token = accessToken
-                completion(nil)
-            } else {
-                // Alert users to needing Spotify login
-                let alert = UIAlertController(title: "Spotify Login Not Found",
-                                              message: "This app requires a Spotify account. Please login now.",
-                                              preferredStyle: .alert)
-
-                // Action to add to the alert
-                alert.addAction(UIAlertAction(
-                    title: NSLocalizedString("Login", comment: "Open Spotify Login"), style: .default, handler: { _ in
-                        // Open the Spotify login prompt
-                        SpotifyLoginPresenter.login(from: self, scopes: [])
-
-                        // Adds a listener that retries the Spotify login and link handling when successfully logged in
-                        NotificationCenter.default.addObserver(self, selector: #selector(self.initializeApp), name: .SpotifyLoginSuccessful, object: nil)
-                    }
-                ))
-
-                // Present the alert, user MUST click login to continue
-                self.present(alert, animated: true, completion: nil)
-            }
-
-            if error != nil {
-                print(error ?? "")
-            }
-        }
     }
 
     /// "Connects" Apple Music and Spotify for searching between them. Finds matching
@@ -193,15 +148,5 @@ class ViewController: UIViewController {
         } else if link?.contains(SearcherURL.appleMusic) ?? false {
             spotify.open()
         }
-    }
-
-    /// Logs user out of Spotify
-    @IBAction func logoutSpotify(_: Any) {
-        spotify.token = nil
-        SpotifyLogin.shared.logout()
-        spotifyTokenValid = false
-        logoutButton.isHidden = true
-        updateAppearance(title: "", color: UIColor.black, enabled: false)
-        initializeApp()
     }
 }
