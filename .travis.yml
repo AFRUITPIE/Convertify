@@ -11,5 +11,5 @@ before_install:
   - echo secure > "Convertify/Stores/Auth.swift"
 podfile: Podfile
 xcode_workspace: Convertify.xcworkspace
-xcode_scheme: ConvertifyTests
+xcode_scheme: Convertify
 xcode_destination: platform=iOS Simulator,OS=11.4,name=iPad Pro (9.7-inch)
