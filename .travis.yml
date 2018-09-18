@@ -1,10 +1,15 @@
 language: swift
+
+env:
+  global:
+    secure: Z28gXoZmF2la4gB4mWBCUaFXkOVit5RV/rxSXD7uTxjqPSCZN2Lo4vM22wllB3bTslwMozICyGOi8jCjGGMUbGBXT4aPFUShOcyi2Dgt/t4iw35FktWdQO2xzPu422FNC4qMav+UZvcMrGWxQksV9wzvyZz18KD/1V6bhKVQfpD9TXqAr61+bhpxV9fUBndd9JThcH3Bf4Qbh5bEurZwL0avjAVOextZShzh9OFrBAhaAV7SkIYITk2WQxXPpmHz8z5uhaxuQSqugsD4vF0lY2bf/Zxm13gF8YE7TMsMQN+Quh7PXhG8l13Z4V1Kwzf3CElOtWPUG1rJflDXtHXXts5VTB9SNl6ORmPNXaWYRoTSC8pYq2Bz9cfo/VPLlcTryb1KJ+BSWbisvqcKq/DWUQBHEakoQpKqgcCjzNNI0BWyld2gA04Kwf7nzbl1OGRrqrRzi/xzBzQMGpJuQUSSuxe7TxkrPs8miMm6/61ZHcJP+XwOBU1af6rRadUutEJTZeSwoj/CDiwy1PkAPdWZizgVCrgVgtgVEUGzKtfQr9peUDt5Wcm5B3pEXxroH+juYYaNuCJmZdexa6AktaqFO/qmChK57JrN8e2BdqVBPVFUKc+mj5jC6qcXeB9OSd1bPSkfsKlNsw5VTw89K+quE04EtykAQKiDgLKigeZMhB0=
+
 before_install:
-  - gem install cocoapods # Since Travis is not always on latest version
+  - gem install cocoapods
   - pod repo update
   - pod install
-  - echo "ApAUtB1L3d232CLW4C0WeMCPuK+L4S2XZX1l/jW1RmcaZ3ivpLFRwBNXMYDtC38onWHxh8PIfSesHZWi0XbfoAY23jHureB919kQok1RjYshL8Xxur+znUbElmg/2YeFKzQVnfMm0cwEjRvGK+Ozm2TzQcOr2PMu2wnG+0nyRmwlOTGVHxMwRhz+/sTSU1SKQ/AihagtzbqtRbpM1OyZz1Oq37y9t4XSOECAbeCP436Ne40Ojv1AXFMibdv9MlXSsz6a/GomlqmTTfYgwPkyKGSpZ8kOuNGb1DOUBv56+BCwzrm6axx/tTxVDBKZdMhhjBdu+n1t4JaeiMDdViZ9BdI8hUgz2HEgf6ddNafwL6TfZl5h5GiQ9vSTPZJcj6beuC5XGs9zmv0HyTWKcIWvMpBlfukoA5Vw699JLfZYSavZtY42syjbQQI0UARa/Qgd4qYPw3fYBoOJwxlx+IBA7D7/+FH2tjxzcNQrMjRVMh1nTespYLb5GW92RtTz3fOJ1JdZUgS6IURlSstETVXbBDOHVE6EGulDF4NaaMKy2h7NhgTJuK2Rngn+hMa84qKN26qUMtzGFFmLla3UfVlBlgync8L7cToTDRiTTUBtKQGw8aFO2BYo2BreARQ7c+Pu/T2amTs2LX/LpSIeHgAhjEgvuhJRRqc8ews0RJG/vTA=" > "Convertify/Stores/Auth.swift"
+  - echo secure > "Convertify/Stores/Auth.swift"
 podfile: Podfile
 xcode_workspace: Convertify.xcworkspace
 xcode_scheme: ConvertifyTests
-xcode_destination: platform=iOS Simulator,OS=11.4, name=iPhone X
+xcode_destination: platform=iOS Simulator,OS=11.4,name=iPad Pro (9.7-inch)
