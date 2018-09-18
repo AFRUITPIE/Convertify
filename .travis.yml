@@ -1,14 +1,10 @@
 language: swift
 
-env:
-  global:
-    secure: Z28gXoZmF2la4gB4mWBCUaFXkOVit5RV/rxSXD7uTxjqPSCZN2Lo4vM22wllB3bTslwMozICyGOi8jCjGGMUbGBXT4aPFUShOcyi2Dgt/t4iw35FktWdQO2xzPu422FNC4qMav+UZvcMrGWxQksV9wzvyZz18KD/1V6bhKVQfpD9TXqAr61+bhpxV9fUBndd9JThcH3Bf4Qbh5bEurZwL0avjAVOextZShzh9OFrBAhaAV7SkIYITk2WQxXPpmHz8z5uhaxuQSqugsD4vF0lY2bf/Zxm13gF8YE7TMsMQN+Quh7PXhG8l13Z4V1Kwzf3CElOtWPUG1rJflDXtHXXts5VTB9SNl6ORmPNXaWYRoTSC8pYq2Bz9cfo/VPLlcTryb1KJ+BSWbisvqcKq/DWUQBHEakoQpKqgcCjzNNI0BWyld2gA04Kwf7nzbl1OGRrqrRzi/xzBzQMGpJuQUSSuxe7TxkrPs8miMm6/61ZHcJP+XwOBU1af6rRadUutEJTZeSwoj/CDiwy1PkAPdWZizgVCrgVgtgVEUGzKtfQr9peUDt5Wcm5B3pEXxroH+juYYaNuCJmZdexa6AktaqFO/qmChK57JrN8e2BdqVBPVFUKc+mj5jC6qcXeB9OSd1bPSkfsKlNsw5VTw89K+quE04EtykAQKiDgLKigeZMhB0=
-
 before_install:
   - gem install cocoapods
   - pod repo update
   - pod install
-  - echo auth > "Convertify/Stores/Auth.swift"
+  - echo $auth > "Convertify/Stores/Auth.swift"
 podfile: Podfile
 xcode_workspace: Convertify.xcworkspace
 xcode_scheme: Convertify
