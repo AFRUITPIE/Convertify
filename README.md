@@ -1,6 +1,9 @@
 ![Convertify-Logo-Header](https://user-images.githubusercontent.com/20470485/44062049-b0e8792c-9f0f-11e8-81b0-73d65235c958.png)
+# Convertify 
 
-# Convertify
+ <a href="https://itunes.apple.com/us/app/convertify-share-music/id1424728187"><img src="https://user-images.githubusercontent.com/20470485/45723747-a3dd1200-bb67-11e8-9eca-eeec88a833ca.png" height="40px"></img></a>
+ 
+![Travis-CI-Status](https://travis-ci.org/AFRUITPIE/Convertify.svg?branch=master)
 
 A new iOS app that open Spotify links in Apple Music and Apple Music links in Spotify like magic!
 
