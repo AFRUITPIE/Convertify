@@ -57,12 +57,24 @@ public class spotifySearcher: MusicSearcher {
         if linkData.count != 2 {
             print("It looks like the link was formatted incorrectly (link = \(link)")
         } else {
-            let type = String(linkData[0])
-            let id = String(String(linkData[1]).split(separator: "?")[0])
-            print("Getting \(type)")
+            type = String(linkData[0])
+            id = String(String(linkData[1]).split(separator: "?")[0])
+            let headers: HTTPHeaders = ["Authorization": "Bearer \(token!)"]
 
-            // Get a lot of the data from it
-            return handleSpotifyID(id: id, type: type)
+            // Creates the request
+            return Alamofire.request("https://api.spotify.com/v1/\(type!)s/\(id!)", headers: headers).responseJSON { response in
+                if let result = response.result.value {
+                    let JSON = result as! NSDictionary
+
+                    // Gets the name of the content
+                    self.name = JSON.object(forKey: "name") as? String
+
+                    // Skips finding artist when matching artist links
+                    if self.type != "artist" {
+                        self.artist = ((JSON.object(forKey: "artists") as! NSArray)[0] as AnyObject).object(forKey: "name") as? String
+                    }
+                }
+            }
         }
         return nil
     }
@@ -74,14 +86,17 @@ public class spotifySearcher: MusicSearcher {
     ///   - type: Type of resource to search for
     /// - Returns: DataRequest from the Spotify API
     func search(name: String, type: String, completion: @escaping (Error?) -> Void) {
-        let safeName = name.replacingOccurrences(of: "&", with: "and")
-            .replacingOccurrences(of: " ", with: "%20")
-        self.type = convertTypeToSpotify(type: type)
-        let headers = ["Authorization": "Bearer \(self.token ?? "")"]
-        Alamofire.request("https://api.spotify.com/v1/search?q=\(safeName)&type=\(self.type ?? "")", headers: headers).responseJSON { response in
+        self.type = type == "song" ? "track" : type
+
+        let headers: HTTPHeaders = ["Authorization": "Bearer \(self.token ?? "")"]
+        let parameters: Parameters = ["q": name, "type": self.type!]
+
+        Alamofire.request("https://api.spotify.com/v1/search/", parameters: parameters, headers: headers).responseJSON { response in
             if let result = response.result.value {
                 // Gets the JSON value
                 let JSON = result as! NSDictionary
+
+                print(JSON)
 
                 // Gets the data of the type from the JSON
                 let data = JSON.object(forKey: (self.type ?? "") + "s") as AnyObject
@@ -97,23 +112,6 @@ public class spotifySearcher: MusicSearcher {
                     completion(MusicSearcherErrors.noSearchResultsError)
                 }
             }
-        }
-    }
-
-    /// Converts the type from Apple Music to Spotify
-    ///
-    /// - Parameter type: the type from Apple Music (example: song vs. track)
-    /// - Returns: the type for Spotify
-    private func convertTypeToSpotify(type: String) -> String {
-        switch type {
-        case "song":
-            return "track"
-        case "album":
-            return "album"
-        case "artist":
-            return "artist"
-        default:
-            return type
         }
     }
 

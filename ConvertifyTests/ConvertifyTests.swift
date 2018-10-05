@@ -95,8 +95,7 @@ class ConvertifyTests: XCTestCase {
                  artist: "Mac Miller",
                  source: spotify,
                  destination: appleMusic)
-        waitForExpectations(timeout: 10, handler: nil)
-    }
+        waitForExpectations(timeout: 10, handler: nil) }
 
     func testAppleLinkAlbum() {
         testLink(link: "https://itunes.apple.com/us/artist/saba/1140260329",
@@ -108,6 +107,7 @@ class ConvertifyTests: XCTestCase {
         waitForExpectations(timeout: 10, handler: nil)
     }
 
+    // FIXME: These are flipped ^^
     func testAppleLinkArtist() {
         testLink(link: "https://itunes.apple.com/us/album/redemption/1395741818",
                  name: "Redemption",
@@ -161,8 +161,7 @@ class ConvertifyTests: XCTestCase {
         testSpotifyQuery(name: "Freudian",
                          type: "album",
                          url: "https://open.spotify.com/album/3xybjP7r2VsWzwvDQipdM0")
-        waitForExpectations(timeout: 10, handler: nil)
-    }
+        waitForExpectations(timeout: 10, handler: nil) }
 
     func testSpotifyQueryArtist() {
         testSpotifyQuery(name: "Simon & Garfunkel",
