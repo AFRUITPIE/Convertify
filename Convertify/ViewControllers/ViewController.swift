@@ -37,10 +37,11 @@ class ViewController: UIViewController {
         activityMonitor.startAnimating()
         spotify = spotifySearcher(completion: { error in
             if error == nil {
+                // Start the search using the new Apple Music object
                 self.appleMusic = appleMusicSearcher()
-
                 self.handleLink(link: self.link ?? "")
             } else {
+                // Display an error for logging in
                 self.activityMonitor.stopAnimating()
                 self.activityMonitor.isHidden = true
                 self.updateAppearance(title: "Error getting Spotify credentials", color: UIColor.red, enabled: false)
@@ -110,34 +111,39 @@ class ViewController: UIViewController {
     ///   - source: Source service of the link
     ///   - destination: Destination to open the search result in
     private func handleSearching(link: String, source: MusicSearcher, destination: MusicSearcher) {
+        // Update some of the visible parts of the app to show it IS loading
         activityMonitor.startAnimating()
         activityMonitor.isHidden = false
         convertButton.isHidden = true
-        source.search(link: link)?
-            .validate()
-            .responseJSON { response in
-                self.activityMonitor.stopAnimating()
-                self.activityMonitor.isHidden = true
-                self.convertButton.isHidden = false
-                if response.error != nil {
-                    self.titleLabel.text = "Error getting \(source.serviceName) data"
-                    self.updateAppearance(title: "Link might be formatted incorrectly", color: UIColor.red, enabled: false)
-                } else if response.result.value != nil {
-                    if source.artist != nil {
-                        self.titleLabel.text = source.name! + " by " + source.artist!
-                    } else {
-                        self.titleLabel.text = source.name!
-                    }
 
-                    destination.search(name: source.name! + " " + (source.artist ?? ""), type: source.type!, completion: { error in
-                        if error == nil {
-                            self.updateAppearance(title: "Open in \(destination.serviceName)", color: destination.serviceColor, enabled: true)
-                        } else {
-                            self.updateAppearance(title: "Error getting \(destination.serviceName) data", color: UIColor.red, enabled: false)
-                        }
-                    })
-                }
+        // Search the source
+        source.search(link: link) { error in
+            print("Searching \(source.serviceName) \(error == nil ? "successful" : "failed")")
+
+            if error == nil {
+                self.titleLabel.text = source.artist == nil ? source.name! : source.name! + " by " + source.artist!
+
+                destination.search(name: source.name! + " " + (source.artist ?? ""), type: source.type!, completion: { error in
+                    print("Searching \(destination.serviceName) \(error == nil ? "successful" : "failed")")
+
+                    // Update some of the visible parts of the app to show it is NOT loading
+                    self.activityMonitor.stopAnimating()
+                    self.activityMonitor.isHidden = true
+                    self.convertButton.isHidden = false
+
+                    if error == nil {
+                        self.updateAppearance(title: "Open in \(destination.serviceName)", color: destination.serviceColor, enabled: true)
+                    } else {
+                        self.updateAppearance(title: "Error getting \(destination.serviceName) data", color: UIColor.red, enabled: false)
+                    }
+                })
+
+            } else {
+                // Display the error
+                self.titleLabel.text = "Error getting \(source.serviceName) data"
+                self.updateAppearance(title: "Link might be formatted incorrectly", color: UIColor.red, enabled: false)
             }
+        }
     }
 
     // Mark: Actions

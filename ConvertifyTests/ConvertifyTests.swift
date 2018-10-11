@@ -42,28 +42,22 @@ class ConvertifyTests: XCTestCase {
     private func testLink(link: String, name: String, type: String, artist: String?, source: MusicSearcher, destination: MusicSearcher) {
         let expectation = self.expectation(description: "HTTP request for searching")
 
-        source.search(link: link)?.responseJSON { response in
-            switch response.result {
-            case .success: do {
-                // Verify data from source is correct
-                XCTAssertEqual(source.name?.lowercased() ?? nil, name.lowercased())
-                XCTAssertEqual(source.type?.lowercased() ?? nil, type.lowercased())
-                XCTAssertEqual(source.artist?.lowercased(), artist?.lowercased() ?? nil)
+        source.search(link: link) { error in
+            XCTAssertNil(error)
 
-                // Verify data from destination is correct
-                destination.search(name: source.name ?? "", type: source.type ?? "", completion: { error in
-                    if error == nil {
-                        // Searching was successful both times, fulfill the expectation
-                        expectation.fulfill()
+            // Verify data from source is correct
+            XCTAssertEqual(source.name?.lowercased() ?? nil, name.lowercased())
+            XCTAssertEqual(source.type?.lowercased() ?? nil, type.lowercased())
+            XCTAssertEqual(source.artist?.lowercased(), artist?.lowercased() ?? nil)
 
-                        // Check destination's data
-                        XCTAssertNotNil(destination.url)
-                    }
-                })
-            }
-            case .failure: do {
-                XCTFail()
-            }
+            // Verify data from destination is correct
+            destination.search(name: source.name ?? "", type: source.type ?? "") { error in
+                XCTAssertNil(error)
+
+                expectation.fulfill()
+
+                // Check destination's data
+                XCTAssertNotNil(destination.url)
             }
         }
     }

@@ -2,6 +2,8 @@
 //  AppleMusicSearcher.swift
 //  Spotify to Apple Music
 //
+//  Handles Spotify querying and maintains information about Spotify
+//
 //  Created by Hayden Hong on 8/6/18.
 //  Copyright © 2018 Hayden Hong. All rights reserved.
 //
@@ -9,7 +11,6 @@
 import Alamofire
 import Foundation
 
-/// Handles Apple Music querying and maintains information about Apple Music
 public class appleMusicSearcher: MusicSearcher {
     let serviceName: String = "Apple Music"
     let serviceColor: UIColor = UIColor(red: 0.98, green: 0.34, blue: 0.76, alpha: 1.0)
@@ -30,7 +31,7 @@ public class appleMusicSearcher: MusicSearcher {
     ///
     /// - Parameter link: Apple Music link to search
     /// - Returns: DataRequest from querying Apple Music
-    func search(link: String) -> DataRequest? {
+    func search(link: String, completion: @escaping (Error?) -> Void) {
         // Reset these fields
         id = nil
         name = nil
@@ -44,25 +45,35 @@ public class appleMusicSearcher: MusicSearcher {
         let headers = ["Authorization": "Bearer \(self.token ?? "")"]
 
         // Request the search results from Apple Music
-        return Alamofire.request("https://api.music.apple.com/v1/catalog/\(storefront ?? "us")/\(type!)s/\(id!)", headers: headers).responseJSON { response in
-            if let result = response.result.value {
-                let JSON = result as! NSDictionary
-                print(JSON)
+        Alamofire.request("https://api.music.apple.com/v1/catalog/\(storefront ?? "us")/\(type!)s/\(id!)", headers: headers)
+            .validate()
+            .responseJSON { response in
 
-                // Gets the meaty data that we want from the JSON
-                let data: AnyObject = ((((result as! NSDictionary)
-                        .object(forKey: "data") as! NSArray)[0]) as AnyObject)
-                    .object(forKey: "attributes") as AnyObject
+                switch response.result {
+                case .success: do {
+                    let json = response.result.value as! NSDictionary
 
-                // Gets the name from the JSON
-                self.name = data.object(forKey: "name") as? String
+                    // Gets the meaty data that we want from the JSON
+                    let data: AnyObject = (((json.object(forKey: "data") as! NSArray)[0]) as AnyObject)
+                        .object(forKey: "attributes") as AnyObject
 
-                // Gets the artist from the JSON
-                if self.type != "artist" {
-                    self.artist = data.object(forKey: "artistName") as? String
+                    // Gets the name from the JSON
+                    self.name = data.object(forKey: "name") as? String
+
+                    // Gets the artist from the JSON
+                    if self.type != "artist" {
+                        self.artist = data.object(forKey: "artistName") as? String
+                    }
+
+                    // Finally, run the completion with no errors
+                    completion(nil)
+                }
+
+                case let .failure(error): do {
+                    completion(error)
+                }
                 }
             }
-        }
     }
 
     /// Parses data such as id, type, and url from an Apple Music link
@@ -109,27 +120,33 @@ public class appleMusicSearcher: MusicSearcher {
                                       "types": appleMusicType]
         let headers: HTTPHeaders = ["Authorization": "Bearer \(Authentication.appleMusicKey)"]
 
-        Alamofire.request("https://api.music.apple.com/v1/catalog/\(storefront ?? "us")/search", parameters: parameters, headers: headers).responseJSON { response in
-            if let result = response.result.value {
-                let JSON = result as! NSDictionary
-                print(JSON)
+        Alamofire.request("https://api.music.apple.com/v1/catalog/\(storefront ?? "us")/search", parameters: parameters, headers: headers)
+            .validate()
+            .responseJSON { response in
+                switch response.result {
+                case .success: do {
+                    let json = response.result.value as! NSDictionary
 
-                let results = JSON.object(forKey: "results") as! NSDictionary
+                    let results = json.object(forKey: "results") as! NSDictionary
 
-                // Ensures there are search results
-                if results.value(forKey: appleMusicType) != nil {
-                    self.url = ((((results
-                            .object(forKey: appleMusicType) as AnyObject)
-                            .object(forKey: "data") as! NSArray)[0] as AnyObject)
-                        .object(forKey: "attributes") as AnyObject)
-                        .object(forKey: "url") as? String
+                    // Ensures there are search results
+                    if results.value(forKey: appleMusicType) != nil {
+                        self.url = ((((results
+                                .object(forKey: appleMusicType) as AnyObject)
+                                .object(forKey: "data") as! NSArray)[0] as AnyObject)
+                            .object(forKey: "attributes") as AnyObject)
+                            .object(forKey: "url") as? String
+                        completion(nil)
+                    } else {
+                        completion(MusicSearcherErrors.noSearchResultsError)
+                    }
+                }
 
-                    completion(nil)
-                } else {
-                    completion(MusicSearcherErrors.noSearchResultsError)
+                case let .failure(error): do {
+                    completion(error)
+                }
                 }
             }
-        }
     }
 
     /// Opens the URL in Apple Music

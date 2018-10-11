@@ -19,6 +19,7 @@ protocol MusicSearcher {
     // Authentication token of the service
     var token: String? { get set }
 
+    // Metadata for current searcher results
     var id: String? { get }
     var name: String? { get }
     var artist: String? { get }
@@ -26,7 +27,7 @@ protocol MusicSearcher {
     var url: String? { get }
 
     // Search using a link to get the data from it
-    func search(link: String) -> DataRequest?
+    func search(link: String, completion: @escaping (Error?) -> Void)
 
     // Search using the name and type to get the link of it
     func search(name: String, type: String, completion: @escaping (Error?) -> Void)
