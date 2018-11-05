@@ -29,7 +29,6 @@ class ViewController: UIViewController {
 
     override func viewDidAppear(_: Bool) {
         super.viewDidAppear(true)
-        initApp(link: link ?? "")
     }
 
     func initApp(link: String) {

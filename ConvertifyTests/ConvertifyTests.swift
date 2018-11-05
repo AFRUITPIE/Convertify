@@ -29,7 +29,7 @@ class ConvertifyTests: XCTestCase {
             expectation.fulfill()
         }
 
-        waitForExpectations(timeout: 5, handler: nil)
+        waitForExpectations(timeout: 10, handler: nil)
     }
 
     /// Test searching across services
@@ -92,10 +92,10 @@ class ConvertifyTests: XCTestCase {
         waitForExpectations(timeout: 10, handler: nil) }
 
     func testAppleLinkAlbum() {
-        testLink(link: "https://itunes.apple.com/us/artist/saba/1140260329",
-                 name: "Saba",
-                 type: "Artist",
-                 artist: nil,
+        testLink(link: "https://itunes.apple.com/us/album/redemption/1395741818",
+                 name: "Redemption",
+                 type: "Album",
+                 artist: "Jay Rock",
                  source: appleMusic,
                  destination: spotify)
         waitForExpectations(timeout: 10, handler: nil)
@@ -103,10 +103,10 @@ class ConvertifyTests: XCTestCase {
 
     // FIXME: These are flipped ^^
     func testAppleLinkArtist() {
-        testLink(link: "https://itunes.apple.com/us/album/redemption/1395741818",
-                 name: "Redemption",
-                 type: "Album",
-                 artist: "Jay Rock",
+        testLink(link: "https://itunes.apple.com/us/artist/saba/1140260329",
+                 name: "Saba",
+                 type: "Artist",
+                 artist: nil,
                  source: appleMusic,
                  destination: spotify)
         waitForExpectations(timeout: 10, handler: nil)
@@ -126,29 +126,20 @@ class ConvertifyTests: XCTestCase {
 
     private func testSpotifyQuery(name: String, type: String, url: String) {
         let expectation = self.expectation(description: "Testing Spotify query for url: \(url)")
-        spotify.search(name: name, type: type, completion: { error in
+        spotify.search(name: name, type: type) { error in
             XCTAssertNil(error)
             XCTAssertEqual(self.spotify.url, url)
             expectation.fulfill()
-        })
+        }
     }
 
     private func testAppleMusicQuery(name: String, type: String, url: String) {
         let expectation = self.expectation(description: "Testing Apple Music query for url: \(url)")
-        appleMusic.search(name: name, type: type, completion: { error in
+        appleMusic.search(name: name, type: type) { error in
             XCTAssertNil(error)
             XCTAssertEqual(self.appleMusic.url, url)
             expectation.fulfill()
-        })
-    }
-
-    func testSpotifyError() {
-        let expectation = self.expectation(description: "Spotify error")
-        spotify.search(name: "THERE IS NO POSSIBLE WAY THIS WILL EVER BE AN ALBUM NAME", type: "album", completion: { error in
-            XCTAssertNotNil(error)
-            expectation.fulfill()
-        })
-        waitForExpectations(timeout: 10, handler: nil)
+        }
     }
 
     func testSpotifyQueryAlbum() {
@@ -198,4 +189,38 @@ class ConvertifyTests: XCTestCase {
                             url: "https://itunes.apple.com/us/album/hurt-feelings/1408996052?i=1408996054")
         waitForExpectations(timeout: 10, handler: nil)
     }
+
+    private func testErrorUrl(url: String, searcher: MusicSearcher) {
+        let expectation = self.expectation(description: "Testing failure on incorrect URL")
+
+        searcher.search(link: url) { error in
+            XCTAssertNotNil(error)
+            expectation.fulfill()
+        }
+
+        waitForExpectations(timeout: 10) { error in
+            if let error = error {
+                XCTFail("timeout errored: \(error)")
+            }
+        }
+    }
+
+    private func testErrorName(name: String, searcher: MusicSearcher) {
+        let expectation = self.expectation(description: "Testing failure on incorrect name")
+
+        searcher.search(name: name, type: "album") { error in
+            XCTAssertNotNil(error)
+            expectation.fulfill()
+        }
+
+        waitForExpectations(timeout: 10) { error in
+            if let error = error {
+                XCTFail("timeout errored: \(error)")
+            }
+        }
+    }
+
+    func testErrorAppleMusic() {}
+
+    func testErrorSpotify() {}
 }
