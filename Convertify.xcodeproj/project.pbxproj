@@ -12,6 +12,7 @@
 		CF01DBC4211A67750065376C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF01DBC3211A67750065376C /* AppDelegate.swift */; };
 		CF01DBC6211A67750065376C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF01DBC5211A67750065376C /* ViewController.swift */; };
 		CF01DBCE211A67770065376C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CF01DBCC211A67770065376C /* LaunchScreen.storyboard */; };
+		CF2C54AC219148CB0040B383 /* ConvertifyUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF2C54AB219148CB0040B383 /* ConvertifyUITests.swift */; };
 		CF4CB0EB2141A46000860CBB /* MusicSearcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF4CB0EA2141A46000860CBB /* MusicSearcher.swift */; };
 		CF4CB0EC2141A46000860CBB /* MusicSearcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF4CB0EA2141A46000860CBB /* MusicSearcher.swift */; };
 		CF4CB1D621249516000D9D2F /* SearcherURLs.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF4CB1D521249516000D9D2F /* SearcherURLs.swift */; };
@@ -28,6 +29,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		CF2C54AE219148CB0040B383 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CF01DBB8211A67750065376C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CF01DBBF211A67750065376C;
+			remoteInfo = Convertify;
+		};
 		CFC723D4211E1EF600CA2319 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CF01DBB8211A67750065376C /* Project object */;
@@ -60,6 +68,9 @@
 		CF01DBC5211A67750065376C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		CF01DBCD211A67770065376C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CF01DBCF211A67770065376C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CF2C54A9219148CA0040B383 /* ConvertifyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ConvertifyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CF2C54AB219148CB0040B383 /* ConvertifyUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConvertifyUITests.swift; sourceTree = "<group>"; };
+		CF2C54AD219148CB0040B383 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CF4CB0EA2141A46000860CBB /* MusicSearcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicSearcher.swift; sourceTree = "<group>"; };
 		CF4CB1D521249516000D9D2F /* SearcherURLs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearcherURLs.swift; sourceTree = "<group>"; };
 		CF5A3E84211BB2F400FD0A1E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -81,6 +92,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				B3A2F7AD1A888F5FC38853C1 /* Pods_Convertify.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CF2C54A6219148CA0040B383 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -121,6 +139,7 @@
 			children = (
 				CF01DBC2211A67750065376C /* Convertify */,
 				CFC723D0211E1EF600CA2319 /* ConvertifyTests */,
+				CF2C54AA219148CB0040B383 /* ConvertifyUITests */,
 				CF01DBC1211A67750065376C /* Products */,
 				29A25DFF3462B2D418C99BF1 /* Frameworks */,
 				CB95E1E66E1A71C73BB3EDDF /* Pods */,
@@ -132,6 +151,7 @@
 			children = (
 				CF01DBC0211A67750065376C /* Convertify.app */,
 				CFC723CF211E1EF600CA2319 /* ConvertifyTests.xctest */,
+				CF2C54A9219148CA0040B383 /* ConvertifyUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -148,6 +168,15 @@
 				CF4CB1D121249182000D9D2F /* Stores */,
 			);
 			path = Convertify;
+			sourceTree = "<group>";
+		};
+		CF2C54AA219148CB0040B383 /* ConvertifyUITests */ = {
+			isa = PBXGroup;
+			children = (
+				CF2C54AB219148CB0040B383 /* ConvertifyUITests.swift */,
+				CF2C54AD219148CB0040B383 /* Info.plist */,
+			);
+			path = ConvertifyUITests;
 			sourceTree = "<group>";
 		};
 		CF4CB1CF21249142000D9D2F /* Views */ = {
@@ -219,6 +248,24 @@
 			productReference = CF01DBC0211A67750065376C /* Convertify.app */;
 			productType = "com.apple.product-type.application";
 		};
+		CF2C54A8219148CA0040B383 /* ConvertifyUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CF2C54B0219148CB0040B383 /* Build configuration list for PBXNativeTarget "ConvertifyUITests" */;
+			buildPhases = (
+				CF2C54A5219148CA0040B383 /* Sources */,
+				CF2C54A6219148CA0040B383 /* Frameworks */,
+				CF2C54A7219148CA0040B383 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CF2C54AF219148CB0040B383 /* PBXTargetDependency */,
+			);
+			name = ConvertifyUITests;
+			productName = ConvertifyUITests;
+			productReference = CF2C54A9219148CA0040B383 /* ConvertifyUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		CFC723CE211E1EF600CA2319 /* ConvertifyTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = CFC723D6211E1EF600CA2319 /* Build configuration list for PBXNativeTarget "ConvertifyTests" */;
@@ -245,12 +292,16 @@
 		CF01DBB8211A67750065376C /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1000;
+				LastSwiftUpdateCheck = 1010;
 				LastUpgradeCheck = 1000;
 				ORGANIZATIONNAME = "Hayden Hong";
 				TargetAttributes = {
 					CF01DBBF211A67750065376C = {
 						CreatedOnToolsVersion = 10.0;
+					};
+					CF2C54A8219148CA0040B383 = {
+						CreatedOnToolsVersion = 10.1;
+						TestTargetID = CF01DBBF211A67750065376C;
 					};
 					CFC723CE211E1EF600CA2319 = {
 						CreatedOnToolsVersion = 10.0;
@@ -273,6 +324,7 @@
 			targets = (
 				CF01DBBF211A67750065376C /* Convertify */,
 				CFC723CE211E1EF600CA2319 /* ConvertifyTests */,
+				CF2C54A8219148CA0040B383 /* ConvertifyUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -285,6 +337,13 @@
 				CF681FD0211A687C00EE2CCC /* Main.storyboard in Resources */,
 				CF5A3E85211BB2F400FD0A1E /* Assets.xcassets in Resources */,
 				CF01DBCE211A67770065376C /* LaunchScreen.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CF2C54A7219148CA0040B383 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -421,6 +480,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CF2C54A5219148CA0040B383 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CF2C54AC219148CB0040B383 /* ConvertifyUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CFC723CB211E1EF600CA2319 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -437,6 +504,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		CF2C54AF219148CB0040B383 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CF01DBBF211A67750065376C /* Convertify */;
+			targetProxy = CF2C54AE219148CB0040B383 /* PBXContainerItemProxy */;
+		};
 		CFC723D5211E1EF600CA2319 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = CF01DBBF211A67750065376C /* Convertify */;
@@ -612,6 +684,46 @@
 			};
 			name = Release;
 		};
+		CF2C54B1219148CB0040B383 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = K4M2TD6G2A;
+				INFOPLIST_FILE = ConvertifyUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.haydenhong.ConvertifyUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Convertify;
+			};
+			name = Debug;
+		};
+		CF2C54B2219148CB0040B383 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = K4M2TD6G2A;
+				INFOPLIST_FILE = ConvertifyUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.haydenhong.ConvertifyUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Convertify;
+			};
+			name = Release;
+		};
 		CFC723D7211E1EF600CA2319 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F35F481FDB83F67E331CD527 /* Pods-Convertify-ConvertifyTests.debug.xcconfig */;
@@ -671,6 +783,15 @@
 			buildConfigurations = (
 				CF01DBD3211A67770065376C /* Debug */,
 				CF01DBD4211A67770065376C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CF2C54B0219148CB0040B383 /* Build configuration list for PBXNativeTarget "ConvertifyUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CF2C54B1219148CB0040B383 /* Debug */,
+				CF2C54B2219148CB0040B383 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

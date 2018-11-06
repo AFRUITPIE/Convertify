@@ -41,10 +41,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     private func resetAppLink() {
         let viewController = window?.rootViewController as! ViewController
-
-        // Set the link in the ViewController to be the pasteboard
-        if let pasteBoardValue = UIPasteboard.general.string {
-            viewController.initApp(link: pasteBoardValue)
-        }
+        let pasteBoardValue = UIPasteboard.general.string
+        viewController.initApp(link: pasteBoardValue ?? "")
     }
 }
