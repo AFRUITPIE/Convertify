@@ -219,8 +219,4 @@ class ConvertifyTests: XCTestCase {
             }
         }
     }
-
-    func testErrorAppleMusic() {}
-
-    func testErrorSpotify() {}
 }

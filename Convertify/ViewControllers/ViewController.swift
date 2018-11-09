@@ -34,7 +34,7 @@ class ViewController: UIViewController {
     func initApp(link: String) {
         self.link = link
         activityMonitor.startAnimating()
-        spotify = spotifySearcher(completion: { error in
+        spotify = spotifySearcher { error in
             if error == nil {
                 // Start the search using the new Apple Music object
                 self.appleMusic = appleMusicSearcher()
@@ -46,7 +46,7 @@ class ViewController: UIViewController {
                 self.updateAppearance(title: "Error getting Spotify credentials", color: UIColor.red, enabled: false)
                 self.convertButton.isHidden = false
             }
-        })
+        }
     }
 
     /// Animates the color conversion in the app
@@ -62,7 +62,7 @@ class ViewController: UIViewController {
             self.titleLabel.textColor = UIColor.white
             self.view.backgroundColor = color
             self.convertButton.setTitleColor(UIColor.white, for: .normal)
-        }, completion: nil)
+        })
 
         convertButton.isEnabled = enabled
     }
@@ -75,15 +75,22 @@ class ViewController: UIViewController {
         // Resets the label text while converting
         titleLabel.text = "Convertify"
 
+        // TODO: There is probably a better way to fix the playlists and radio stations
         // Decides what to do with the link
         switch true {
         // Ignores playlists
         case link.contains("playlist"):
             updateAppearance(title: "I cannot convert playlists ☹️", color: UIColor.red, enabled: false)
+            activityMonitor.stopAnimating()
+            activityMonitor.isHidden = true
+            convertButton.isHidden = false
             break
         // Ignores radio stations
         case link.contains("/station/"):
             updateAppearance(title: "I cannot convert radio stations ☹️", color: UIColor.red, enabled: false)
+            activityMonitor.stopAnimating()
+            activityMonitor.isHidden = true
+            convertButton.isHidden = false
             break
         // Extracts Spotify data and searches for Apple Music links when it includes a Spotify link
         case link.contains(SearcherURL.spotify):
@@ -115,6 +122,10 @@ class ViewController: UIViewController {
         activityMonitor.isHidden = false
         convertButton.isHidden = true
 
+        // Create feedback generator for stuff
+        var feedbackGenerator: UINotificationFeedbackGenerator? = UINotificationFeedbackGenerator()
+        feedbackGenerator?.prepare()
+
         // Search the source
         source.search(link: link) { error in
             print("Searching \(source.serviceName) \(error == nil ? "successful" : "failed")")
@@ -122,7 +133,7 @@ class ViewController: UIViewController {
             if error == nil {
                 self.titleLabel.text = source.artist == nil ? source.name! : source.name! + " by " + source.artist!
 
-                destination.search(name: source.name! + " " + (source.artist ?? ""), type: source.type!, completion: { error in
+                destination.search(name: source.name! + " " + (source.artist ?? ""), type: source.type!) { error in
                     print("Searching \(destination.serviceName) \(error == nil ? "successful" : "failed")")
 
                     // Update some of the visible parts of the app to show it is NOT loading
@@ -132,16 +143,22 @@ class ViewController: UIViewController {
 
                     if error == nil {
                         self.updateAppearance(title: "Open in \(destination.serviceName)", color: destination.serviceColor, enabled: true)
+                        feedbackGenerator?.notificationOccurred(.success)
                     } else {
                         self.updateAppearance(title: "Error getting \(destination.serviceName) data", color: UIColor.red, enabled: false)
+                        feedbackGenerator?.notificationOccurred(.error)
                     }
-                })
+                }
 
             } else {
                 // Display the error
                 self.titleLabel.text = "Error getting \(source.serviceName) data"
                 self.updateAppearance(title: "Link might be formatted incorrectly", color: UIColor.red, enabled: false)
+                feedbackGenerator?.notificationOccurred(.error)
             }
+
+            // Deallocate feedbackGenerator
+            feedbackGenerator = nil
         }
     }
 
