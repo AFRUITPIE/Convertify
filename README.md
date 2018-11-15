@@ -9,9 +9,7 @@ A new iOS app that open Spotify links in Apple Music and Apple Music links in Sp
 
 ## How to use
 
-Open Convertify after installing and follow the prompts for logging into Spotify. Spotify login is required for searching Spotify
-
-Simply copy a link to an Apple Music or Spotify album, artist, or song, and open Convertify. It will automatically detect the link and allow you to open it in the opposite app.
+Simply copy a link to an Apple Music or Spotify album, artist, or song, and open Convertify. It will automatically detect the link and allow you to open it in the opposite app. Cool!
 
 ## Getting Started
 
@@ -20,7 +18,7 @@ These instructions will get you a copy of the project up and running on your loc
 ### Prerequisites
 
 - [Cocoapods](https://cocoapods.org)
-- [Spotify Account](https://www.spotify.com/) (Premium **not** required, app not required)
+- [Spotify Account](https://www.spotify.com/) (Premium **not** required, app not required. Developer console IS required)
 - [Apple developer account](https://developer.apple.com)
 
 ### Installing
@@ -31,12 +29,11 @@ These instructions will get you a copy of the project up and running on your loc
 
 ## Running the tests
 
-Test within Xcode using the `ConvertifyTests`. These tests **must** be run on a device or simulator that has logged into Spotify.
+Test within Xcode. The included tests must be run on a device/simulator of iOS version 11.4 or higher.
 
 ## Built With
 
 - [AlamoFire](https://github.com/Alamofire/Alamofire) - For the HTTP requests to both Apple Music and Spotify
-- [SpotifyLogin](https://github.com/spotify/SpotifyLogin) - For handling Spotify Authentication and credentials
 - [Apple Music Token Generator](https://github.com/pelauimagineering/apple-music-token-generator) - For generating the Apple Music tokens securely
 
 ## Authors
