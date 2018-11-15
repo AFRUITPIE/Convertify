@@ -14,6 +14,9 @@ class ConvertifyUITests: XCTestCase {
 
     let appleMusicButton: String = "Open in Apple Music"
     let spotifyButton: String = "Open in Spotify"
+    let playlistError: String = "I cannot convert playlists ☹️"
+    let radioError: String = "I cannot convert radio stations ☹️"
+    let noLinkError: String = "No Spotify or Apple Music link found in clipboard"
 
     override func setUp() {
         // In UI tests it is usually best to stop immediately when a failure occurs.
@@ -23,11 +26,20 @@ class ConvertifyUITests: XCTestCase {
     }
 
     override func tearDown() {
+        // wait 5 seconds
         sleep(5)
+
+        // close the app
         app.terminate()
     }
 
-    private func testAppUI(labelName: String, buttonLabel: String) {
+    /// Framework for testing the application's ui
+    ///
+    /// - Parameters:
+    ///   - labelName: name of the label
+    ///   - buttonLabel: name of the button
+    ///   - buttonEnabled: whether or not the button should be clickable
+    private func testAppUI(labelName: String, buttonLabel: String, buttonEnabled: Bool) {
         app.launch()
 
         // Allow app to "think", process http requests
@@ -38,36 +50,75 @@ class ConvertifyUITests: XCTestCase {
 
         // Ensure the button is shown
         XCTAssertNotNil(app.buttons[buttonLabel])
-        XCTAssertTrue(app.buttons[buttonLabel].isEnabled)
+        XCTAssertEqual(app.buttons[buttonLabel].isEnabled, buttonEnabled)
     }
+
+    /*
+
+     Apple Music searches
+
+     */
 
     func testAppleMusicSearchArtist() {
         UIPasteboard.general.string = "https://itunes.apple.com/us/artist/saba/1140260329"
-        testAppUI(labelName: "Saba", buttonLabel: spotifyButton)
+        testAppUI(labelName: "Saba", buttonLabel: spotifyButton, buttonEnabled: true)
     }
 
     func testAppleMusicSearchAlbum() {
         UIPasteboard.general.string = "https://itunes.apple.com/us/album/blonde/1146195596"
-        testAppUI(labelName: "Blonde by Frank Ocean", buttonLabel: spotifyButton)
+        testAppUI(labelName: "Blonde by Frank Ocean", buttonLabel: spotifyButton, buttonEnabled: true)
     }
 
     func testAppleMusicSearchSong() {
         UIPasteboard.general.string = "https://itunes.apple.com/us/album/hurt-feelings/1408996052?i=1408996054"
-        testAppUI(labelName: "Hurt Feelings by Mac Miller", buttonLabel: spotifyButton)
+        testAppUI(labelName: "Hurt Feelings by Mac Miller", buttonLabel: spotifyButton, buttonEnabled: true)
     }
+
+    func testAppleMusicSearchStation() {
+        UIPasteboard.general.string = "https://itunes.apple.com/us/station/under-the-covers-feat-emma-sameth/ra.1160002338"
+        testAppUI(labelName: "Convertify", buttonLabel: radioError, buttonEnabled: false)
+    }
+
+    func testAppleMusicSearchPlaylist() {
+        UIPasteboard.general.string = "https://itunes.apple.com/us/playlist/pure-focus/pl.dbd712beded846dca273d5d3259d28aa"
+        testAppUI(labelName: "Convertify", buttonLabel: playlistError, buttonEnabled: false)
+    }
+
+    /*
+
+     Spotify searches
+
+     */
 
     func testSpotifyArtist() {
         UIPasteboard.general.string = "https://open.spotify.com/artist/70cRZdQywnSFp9pnc2WTCE"
-        testAppUI(labelName: "Simon & Garfunkel", buttonLabel: appleMusicButton)
+        testAppUI(labelName: "Simon & Garfunkel", buttonLabel: appleMusicButton, buttonEnabled: true)
     }
 
     func testSpotifyAlbum() {
         UIPasteboard.general.string = "https://open.spotify.com/album/3xybjP7r2VsWzwvDQipdM0"
-        testAppUI(labelName: "Freudian by Daniel Caesar", buttonLabel: appleMusicButton)
+        testAppUI(labelName: "Freudian by Daniel Caesar", buttonLabel: appleMusicButton, buttonEnabled: true)
     }
 
     func testSpotifySearchSong() {
         UIPasteboard.general.string = "https://open.spotify.com/track/2TVxnKdb3tqe1nhQWwwZCO"
-        testAppUI(labelName: "Tiny Dancer by Elton John", buttonLabel: appleMusicButton)
+        testAppUI(labelName: "Tiny Dancer by Elton John", buttonLabel: appleMusicButton, buttonEnabled: true)
+    }
+
+    func testSpotifySearchPlaylist() {
+        UIPasteboard.general.string = "https://open.spotify.com/user/spotify/playlist/37i9dQZF1DWZ0OzPeadl0h"
+        testAppUI(labelName: "Convertify", buttonLabel: playlistError, buttonEnabled: false)
+    }
+
+    /*
+
+     Other errors here:
+
+     */
+
+    func testSearchNil() {
+        // Nil the pasteboard
+        UIPasteboard.general.items = []
+        testAppUI(labelName: "Convertify", buttonLabel: noLinkError, buttonEnabled: false)
     }
 }

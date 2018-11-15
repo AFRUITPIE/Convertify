@@ -79,7 +79,7 @@ class ViewController: UIViewController {
         // Decides what to do with the link
         switch true {
         // Ignores playlists
-        case link.contains("playlist"):
+        case link.contains("/playlist/"):
             updateAppearance(title: "I cannot convert playlists ☹️", color: UIColor.red, enabled: false)
             activityMonitor.stopAnimating()
             activityMonitor.isHidden = true

@@ -44,8 +44,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let viewController = window?.rootViewController as! ViewController
         let pasteBoardValue = UIPasteboard.general.string
 
-        // Only re-do calls if it's a new value
-        if link != pasteBoardValue {
+        // Only redoes search with new links, doesn't attempt searching when there is no string in pasteboard
+        if pasteBoardValue == nil {
+            viewController.initApp(link: "")
+        } else if link != pasteBoardValue {
             link = pasteBoardValue
             viewController.initApp(link: pasteBoardValue ?? "")
         }
