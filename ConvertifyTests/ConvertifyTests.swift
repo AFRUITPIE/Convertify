@@ -63,7 +63,7 @@ class ConvertifyTests: XCTestCase {
     }
 
     func testSpotifyLinkArtist() {
-        testLink(link: "https://open.spotify.com/artist/68kEuyFKyqrdQQLLsmiatm?si=149GzNXcSZ2izP9mRCpCuQ",
+        testLink(link: SpotifyLinks.Artist.rawValue,
                  name: "Vince Staples",
                  type: "artist",
                  artist: nil,
@@ -73,7 +73,7 @@ class ConvertifyTests: XCTestCase {
     }
 
     func testSpotifyLinkAlbum() {
-        testLink(link: "https://open.spotify.com/album/3xybjP7r2VsWzwvDQipdM0?si=c0eZiEk9RpS15Y7vYlcqGA",
+        testLink(link: SpotifyLinks.Album.rawValue,
                  name: "Freudian",
                  type: "album",
                  artist: "Daniel Caesar",
@@ -83,7 +83,7 @@ class ConvertifyTests: XCTestCase {
     }
 
     func testSpotifyLinkSong() {
-        testLink(link: "https://open.spotify.com/track/5p7GiBZNL1afJJDUrOA6C8?si=TstqlH0ZSxOkp436_-gl3A",
+        testLink(link: SpotifyLinks.Song.rawValue,
                  name: "Hurt Feelings",
                  type: "track",
                  artist: "Mac Miller",
@@ -92,7 +92,7 @@ class ConvertifyTests: XCTestCase {
         waitForExpectations(timeout: 10, handler: nil) }
 
     func testAppleLinkAlbum() {
-        testLink(link: "https://itunes.apple.com/us/album/redemption/1395741818",
+        testLink(link: AppleMusicLinks.Album.rawValue,
                  name: "Redemption",
                  type: "Album",
                  artist: "Jay Rock",
@@ -101,9 +101,8 @@ class ConvertifyTests: XCTestCase {
         waitForExpectations(timeout: 10, handler: nil)
     }
 
-    // FIXME: These are flipped ^^
     func testAppleLinkArtist() {
-        testLink(link: "https://itunes.apple.com/us/artist/saba/1140260329",
+        testLink(link: AppleMusicLinks.Artist.rawValue,
                  name: "Saba",
                  type: "Artist",
                  artist: nil,
@@ -113,7 +112,7 @@ class ConvertifyTests: XCTestCase {
     }
 
     func testAppleLinkSong() {
-        testLink(link: "https://itunes.apple.com/us/album/room-in-here-feat-the-game-sonyae-elise/1065681363?i=1065681767",
+        testLink(link: AppleMusicLinks.Song.rawValue,
                  name: "Room in Here (feat. The Game & Sonyae Elise)",
                  type: "song",
                  artist: "Anderson .Paak",
@@ -179,14 +178,14 @@ class ConvertifyTests: XCTestCase {
     func testAppleQueryArtist() {
         testAppleMusicQuery(name: "Saba",
                             type: "artist",
-                            url: "https://itunes.apple.com/us/artist/saba/1140260329")
+                            url: AppleMusicLinks.Artist.rawValue)
         waitForExpectations(timeout: 10, handler: nil)
     }
 
     func testAppleQuerySong() {
-        testAppleMusicQuery(name: "Hurt Feelings",
+        testAppleMusicQuery(name: "Room in Here (feat. The Game & Sonyae Elise)",
                             type: "track",
-                            url: "https://itunes.apple.com/us/album/hurt-feelings/1408996052?i=1408996054")
+                            url: AppleMusicLinks.Song.rawValue)
         waitForExpectations(timeout: 10, handler: nil)
     }
 
