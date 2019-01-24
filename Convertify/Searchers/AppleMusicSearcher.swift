@@ -24,7 +24,7 @@ public class appleMusicSearcher: MusicSearcher {
     private var storefront: String?
 
     init() {
-        token = Authentication.appleMusicKey
+        token = Auth.appleMusicKey
     }
 
     /// Searches Apple Music from a link and parses the data accordingly
@@ -118,7 +118,7 @@ public class appleMusicSearcher: MusicSearcher {
         let appleMusicType = type == "track" ? "songs" : "\(type)s"
         let parameters: Parameters = ["term": name,
                                       "types": appleMusicType]
-        let headers: HTTPHeaders = ["Authorization": "Bearer \(Authentication.appleMusicKey)"]
+        let headers: HTTPHeaders = ["Authorization": "Bearer \(Auth.appleMusicKey)"]
 
         Alamofire.request("https://api.music.apple.com/v1/catalog/\(storefront ?? "us")/search", parameters: parameters, headers: headers)
             .validate()

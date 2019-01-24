@@ -23,8 +23,8 @@ public class spotifySearcher: MusicSearcher {
     var token: String?
 
     init(completion: @escaping (Error?) -> Void) {
-        let parameters = ["client_id": Authentication.spotifyClientID,
-                          "client_secret": Authentication.spotifyClientSecret,
+        let parameters = ["client_id": Auth.spotifyClientID,
+                          "client_secret": Auth.spotifyClientSecret,
                           "grant_type": "client_credentials"]
 
         Alamofire.request("https://accounts.spotify.com/api/token", method: .post, parameters: parameters, headers: nil)
