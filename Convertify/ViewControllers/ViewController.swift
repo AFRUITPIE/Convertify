@@ -79,11 +79,12 @@ class ViewController: UIViewController {
         // Decides what to do with the link
         switch true {
         // Ignores playlists
-        case link.contains("/playlist/"):
-            updateAppearance(title: "I cannot convert playlists ☹️", color: UIColor.red, enabled: false)
-            activityMonitor.stopAnimating()
-            activityMonitor.isHidden = true
-            convertButton.isHidden = false
+        case link.contains("/playlist/") && link.contains(SearcherURL.appleMusic):
+            updateAppearance(title: "Let's do this lol", color: UIColor.blue, enabled: false)
+
+//            activityMonitor.stopAnimating()
+//            activityMonitor.isHidden = true
+//            convertButton.isHidden = false
             break
         // Ignores radio stations
         case link.contains("/station/"):
