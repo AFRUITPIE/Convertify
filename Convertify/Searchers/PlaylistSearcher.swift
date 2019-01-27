@@ -10,5 +10,5 @@ import Alamofire
 import Foundation
 
 protocol PlaylistSearcher {
-    func getTrackList(link: String, completion: @escaping (Array<String>?, Error?) -> Void)
+    func getTrackList(link: String, completion: @escaping ([String: String]?, Error?) -> Void)
 }

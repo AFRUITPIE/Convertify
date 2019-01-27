@@ -8,13 +8,14 @@
 
 import Alamofire
 import Foundation
+import SwiftyJSON
 
 class AppleMusicPlaylistSearcher: PlaylistSearcher {
     private let token: String = Auth.appleMusicKey
     private var storefront: String = "us"
     private var playlistID: String?
 
-    func getTrackList(link: String, completion: @escaping (Array<String>?, Error?) -> Void) {
+    func getTrackList(link: String, completion: @escaping ([String: String]?, Error?) -> Void) {
         parseLinkData(link: link)
 
         let headers = ["Authorization": "Bearer \(self.token)"]
@@ -23,23 +24,23 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
             .responseJSON { response in
                 switch response.result {
                 case .success: do {
-                    let json = response.result.value as! NSDictionary
+                    let data = JSON(response.result.value!)
 
-                    var trackList: Array<String> = []
+                    // Gets array of track objects
+                    let trackObjects = data["data"][0]["relationships"]["tracks"]["data"].array
 
-                    // Gets array of track objects from the JSON
-                    let trackObjects: NSArray = (((((json
-                            .object(forKey: "data") as! NSArray)[0]) as AnyObject)
-                            .object(forKey: "relationships") as AnyObject)
-                        .object(forKey: "tracks") as AnyObject)
-                        .object(forKey: "data") as! NSArray
+                    var trackList: [String: String] = [:]
 
                     // Adds the tracks to the tracklist
-                    for track in trackObjects {
-                        let trackName: String = ((track as AnyObject)
-                            .object(forKey: "attributes") as AnyObject)
-                            .object(forKey: "name") as! String
-                        trackList.append(trackName)
+                    for track in trackObjects! {
+                        let trackName: String = track["attributes"]["name"].stringValue
+                        let artistName: String = track["attributes"]["artistName"].stringValue
+
+                        if trackList[trackName] == nil {
+                            trackList[trackName] = artistName
+                        } else {
+                            print("Duplicate track found: \(trackName)")
+                        }
                     }
 
                     completion(trackList, nil)

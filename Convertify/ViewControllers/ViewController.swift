@@ -75,16 +75,15 @@ class ViewController: UIViewController {
         // Resets the label text while converting
         titleLabel.text = "Convertify"
 
-        // TODO: There is probably a better way to fix the playlists and radio stations
         // Decides what to do with the link
         switch true {
         // Ignores playlists
-        case link.contains("/playlist/") && link.contains(SearcherURL.appleMusic):
-            updateAppearance(title: "Let's do this lol", color: UIColor.blue, enabled: false)
+        case link.contains("/playlist/"):
+            updateAppearance(title: "Playlist conversion coming soon 👀", color: UIColor.darkGray, enabled: false)
 
-//            activityMonitor.stopAnimating()
-//            activityMonitor.isHidden = true
-//            convertButton.isHidden = false
+            activityMonitor.stopAnimating()
+            activityMonitor.isHidden = true
+            convertButton.isHidden = false
             break
         // Ignores radio stations
         case link.contains("/station/"):

@@ -26,7 +26,8 @@ class PlaylistTests: XCTestCase {
             XCTAssertNil(error)
             XCTAssertNotNil(trackList)
 
-            let comparisonTrackList = ["Tweakin'", "Take Me Away (feat. Syd)"]
+            let comparisonTrackList = ["Tweakin'": "Vince Staples",
+                                       "Take Me Away (feat. Syd)": "Daniel Caesar"]
             XCTAssertEqual(trackList, comparisonTrackList)
 
             expectation.fulfill()

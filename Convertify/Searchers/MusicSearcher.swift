@@ -17,7 +17,7 @@ protocol MusicSearcher {
     var serviceColor: UIColor { get }
 
     // Authentication token of the service
-    var token: String? { get set }
+//    var token: String? { get set }
 
     // Metadata for current searcher results
     var id: String? { get }
@@ -36,4 +36,5 @@ protocol MusicSearcher {
 
 enum MusicSearcherErrors: Error {
     case noSearchResultsError
+    case authenticationError
 }

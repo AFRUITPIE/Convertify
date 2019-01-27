@@ -10,6 +10,7 @@
 
 import Alamofire
 import Foundation
+import SwiftyJSON
 
 public class appleMusicSearcher: MusicSearcher {
     let serviceName: String = "Apple Music"
@@ -20,12 +21,12 @@ public class appleMusicSearcher: MusicSearcher {
     var artist: String?
     var type: String?
     var url: String?
-    var token: String?
-    private var storefront: String?
 
-    init() {
-        token = Auth.appleMusicKey
-    }
+    // Storefront for ID, see Apple Music API docs for list of storefronts
+    private var storefront: String? = "us"
+
+    // Headers for API calls
+    private let headers: HTTPHeaders = ["Authorization": "Bearer \(Auth.appleMusicKey)"]
 
     /// Searches Apple Music from a link and parses the data accordingly
     ///
@@ -42,36 +43,25 @@ public class appleMusicSearcher: MusicSearcher {
         // Get the data out of the link, since many links include names to data
         parseLinkData(link: link)
 
-        let headers = ["Authorization": "Bearer \(self.token ?? "")"]
-
         // Request the search results from Apple Music
         Alamofire.request("https://api.music.apple.com/v1/catalog/\(storefront ?? "us")/\(type!)s/\(id!)", headers: headers)
             .validate()
             .responseJSON { response in
-
                 switch response.result {
                 case .success: do {
-                    let json = response.result.value as! NSDictionary
+                    let data = JSON(response.result.value!)["data"][0]["attributes"]
 
-                    // Gets the meaty data that we want from the JSON
-                    let data: AnyObject = (((json.object(forKey: "data") as! NSArray)[0]) as AnyObject)
-                        .object(forKey: "attributes") as AnyObject
+                    self.name = data["name"].stringValue
 
-                    // Gets the name from the JSON
-                    self.name = data.object(forKey: "name") as? String
-
-                    // Gets the artist from the JSON
+                    // Only set artist name if artist isn't the type
                     if self.type != "artist" {
-                        self.artist = data.object(forKey: "artistName") as? String
+                        self.artist = data["artistName"].stringValue
                     }
 
-                    // Finally, run the completion with no errors
                     completion(nil)
                 }
 
-                case let .failure(error): do {
-                    completion(error)
-                }
+                case let .failure(error): do { completion(error) }
                 }
             }
     }
@@ -101,7 +91,7 @@ public class appleMusicSearcher: MusicSearcher {
                 id = String(link.split(separator: "=")[1])
                 type = "song"
             } else {
-                id = String(linkData[2]) // FIXME: Horrific style you asshole
+                id = String(linkData[2])
             }
         }
     }
@@ -113,38 +103,31 @@ public class appleMusicSearcher: MusicSearcher {
     ///   - type: Type to search for (example: artist)
     ///   - completion: Function to run after search is complete
     func search(name: String, type: String, completion: @escaping (Error?) -> Void) {
+        // Reset URL
         url = nil
 
         let appleMusicType = type == "track" ? "songs" : "\(type)s"
         let parameters: Parameters = ["term": name,
                                       "types": appleMusicType]
-        let headers: HTTPHeaders = ["Authorization": "Bearer \(Auth.appleMusicKey)"]
 
         Alamofire.request("https://api.music.apple.com/v1/catalog/\(storefront ?? "us")/search", parameters: parameters, headers: headers)
             .validate()
             .responseJSON { response in
                 switch response.result {
                 case .success: do {
-                    let json = response.result.value as! NSDictionary
+                    let data = JSON(response.result.value!)["results"]
 
-                    let results = json.object(forKey: "results") as! NSDictionary
-
-                    // Ensures there are search results
-                    if results.value(forKey: appleMusicType) != nil {
-                        self.url = ((((results
-                                .object(forKey: appleMusicType) as AnyObject)
-                                .object(forKey: "data") as! NSArray)[0] as AnyObject)
-                            .object(forKey: "attributes") as AnyObject)
-                            .object(forKey: "url") as? String
+                    // Ensures there are search results before setting it
+                    if data[appleMusicType].exists() {
+                        self.url = data[appleMusicType]["data"][0]["attributes"]["url"].stringValue
                         completion(nil)
                     } else {
+                        // None found, let's throw an error
                         completion(MusicSearcherErrors.noSearchResultsError)
                     }
                 }
 
-                case let .failure(error): do {
-                    completion(error)
-                }
+                case let .failure(error): do { completion(error) }
                 }
             }
     }

@@ -14,7 +14,7 @@ class ConvertifyUITests: XCTestCase {
 
     let appleMusicButton: String = "Open in Apple Music"
     let spotifyButton: String = "Open in Spotify"
-    let playlistError: String = "I cannot convert playlists ☹️"
+    let playlistError: String = "Playlist conversion coming soon 👀"
     let radioError: String = "I cannot convert radio stations ☹️"
     let noLinkError: String = "No Spotify or Apple Music link found in clipboard"
 
