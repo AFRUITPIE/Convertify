@@ -58,7 +58,7 @@ class ViewController: UIViewController {
     private func updateAppearance(title: String, color: UIColor, enabled: Bool) {
         convertButton.setTitle(title, for: .normal)
         // Animate color shift
-        UIView.animate(withDuration: 3.0, delay: 0.0, animations: {
+        UIView.animate(withDuration: 3.0, delay: 0.0, options: [.allowUserInteraction], animations: {
             self.titleLabel.textColor = UIColor.white
             self.view.backgroundColor = color
             self.convertButton.setTitleColor(UIColor.white, for: .normal)

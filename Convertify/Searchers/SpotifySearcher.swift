@@ -24,6 +24,7 @@ public class spotifySearcher: MusicSearcher {
 
     private var token: String?
 
+    /// Generate a token
     init(completion: @escaping (Error?) -> Void) {
         let parameters = ["client_id": Auth.spotifyClientID,
                           "client_secret": Auth.spotifyClientSecret,
@@ -45,6 +46,11 @@ public class spotifySearcher: MusicSearcher {
                 }
                 }
             }
+    }
+
+    /// Use a provided token
+    init(token: String) {
+        self.token = token
     }
 
     /// Searches the Spotify API from a link and extracs the information from it
