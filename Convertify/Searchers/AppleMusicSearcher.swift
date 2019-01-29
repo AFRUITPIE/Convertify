@@ -105,7 +105,6 @@ public class appleMusicSearcher: MusicSearcher {
     func search(name: String, type: String, completion: @escaping (Error?) -> Void) {
         // Reset URL and ID
         url = nil
-        id = nil
 
         let appleMusicType = type == "track" ? "songs" : "\(type)s"
         let parameters: Parameters = ["term": name,
@@ -121,7 +120,6 @@ public class appleMusicSearcher: MusicSearcher {
                     // Ensures there are search results before setting it
                     if data[appleMusicType].exists() {
                         self.url = data[appleMusicType]["data"][0]["attributes"]["url"].stringValue
-                        self.id = String(self.url!.components(separatedBy: "?i=")[1])
                         completion(nil)
                     } else {
                         // None found, let's throw an error

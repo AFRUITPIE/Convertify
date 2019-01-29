@@ -59,7 +59,6 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
             }
     }
 
-    
     /// Adds a track list to an Apple Music user's playlists as a new playlist
     ///
     /// - Parameters:
@@ -118,7 +117,8 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
             if error != nil {
                 print("Had trouble finding \(currentTrack?.key ?? "") by \(currentTrack?.value ?? "")")
             } else {
-                tempPlaylist.append(AppleMusicPlaylistItem(id: appleMusic.id!))
+                let id = String(appleMusic.url!.components(separatedBy: "?i=")[1])
+                tempPlaylist.append(AppleMusicPlaylistItem(id: id))
             }
 
             // Recursively keep searching
