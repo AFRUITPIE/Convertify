@@ -11,4 +11,5 @@ import Foundation
 
 protocol PlaylistSearcher {
     func getTrackList(link: String, completion: @escaping ([String: String]?, Error?) -> Void)
+    func addPlaylist(trackList: [String: String], completion: @escaping (Error?) -> Void)
 }

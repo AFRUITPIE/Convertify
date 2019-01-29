@@ -11,9 +11,10 @@ import Foundation
 import SwiftyJSON
 
 class SpotifyPlaylistSearcher: PlaylistSearcher {
+    func addPlaylist(trackList _: [String: String], completion _: @escaping (Error?) -> Void) {}
+
     private var playlistID: String?
 
-    
     /// Gets the track list for the shared playlist
     ///
     /// - Parameters:
@@ -71,7 +72,6 @@ class SpotifyPlaylistSearcher: PlaylistSearcher {
             }
     }
 
-    
     /// Parses the tracklist from the JSON file
     ///
     /// - Parameter data: json file

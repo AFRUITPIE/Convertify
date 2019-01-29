@@ -37,6 +37,21 @@ class PlaylistTests: XCTestCase {
         waitForExpectations(timeout: 10, handler: nil)
     }
 
+    func testCreateApplePlaylistFromSpotifyPlaylist() {
+        let expectation = self.expectation(description: "Get the tracks from the playlist")
+
+        spotify.getTrackList(link: "https://open.spotify.com/playlist/7tZmJ2AiROT9geOLhk0Lrv") { playlist, error in
+            XCTAssertNil(error)
+            XCTAssertNotNil(playlist)
+
+            self.appleMusic.addPlaylist(trackList: playlist!) { error in
+                XCTAssertNil(error)
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 10, handler: nil)
+    }
+
     func testGetSpotifyPLaylistTracks() {
         let expectation = self.expectation(description: "Get the tracks from the playlist")
 
