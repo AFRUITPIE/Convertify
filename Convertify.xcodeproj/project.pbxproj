@@ -20,6 +20,7 @@
 		CF4CB0EB2141A46000860CBB /* MusicSearcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF4CB0EA2141A46000860CBB /* MusicSearcher.swift */; };
 		CF4CB0EC2141A46000860CBB /* MusicSearcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF4CB0EA2141A46000860CBB /* MusicSearcher.swift */; };
 		CF4CB1D621249516000D9D2F /* SearcherURLs.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF4CB1D521249516000D9D2F /* SearcherURLs.swift */; };
+		CF5A3E67220252C5000DB4D9 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF5A3E66220252C5000DB4D9 /* StoreKit.framework */; };
 		CF5A3E85211BB2F400FD0A1E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CF5A3E84211BB2F400FD0A1E /* Assets.xcassets */; };
 		CF633F0921FAB57F008A6B9A /* PlaylistTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF633F0821FAB57F008A6B9A /* PlaylistTests.swift */; };
 		CF633F0A21FAB623008A6B9A /* PlaylistSearcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF28F54621FA61B000EE2057 /* PlaylistSearcher.swift */; };
@@ -87,6 +88,7 @@
 		CF2C54AD219148CB0040B383 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CF4CB0EA2141A46000860CBB /* MusicSearcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicSearcher.swift; sourceTree = "<group>"; };
 		CF4CB1D521249516000D9D2F /* SearcherURLs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearcherURLs.swift; sourceTree = "<group>"; };
+		CF5A3E66220252C5000DB4D9 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		CF5A3E84211BB2F400FD0A1E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CF633F0821FAB57F008A6B9A /* PlaylistTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistTests.swift; sourceTree = "<group>"; };
 		CF681FCA211A687000EE2CCC /* SpotifySearcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotifySearcher.swift; sourceTree = "<group>"; };
@@ -108,6 +110,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0D95C557394AD53424B7BD4A /* Pods_Convertify.framework in Frameworks */,
+				CF5A3E67220252C5000DB4D9 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -132,6 +135,7 @@
 		29A25DFF3462B2D418C99BF1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CF5A3E66220252C5000DB4D9 /* StoreKit.framework */,
 				CFEF8290211E39DF00CF98C5 /* Alamofire.framework */,
 				26E99952BFCA38D8F24CB0AB /* Pods_Convertify.framework */,
 				B954382E0A11C423F3D8B87D /* Pods_Convertify_ConvertifyTests.framework */,
@@ -320,6 +324,11 @@
 				TargetAttributes = {
 					CF01DBBF211A67750065376C = {
 						CreatedOnToolsVersion = 10.0;
+						SystemCapabilities = {
+							com.apple.InAppPurchase = {
+								enabled = 1;
+							};
+						};
 					};
 					CF2C54A8219148CA0040B383 = {
 						CreatedOnToolsVersion = 10.1;

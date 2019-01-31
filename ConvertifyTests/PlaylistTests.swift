@@ -23,7 +23,7 @@ class PlaylistTests: XCTestCase {
     func testGetAppleMusicPlaylistTracks() {
         let expectation = self.expectation(description: "Get the tracks from the playlist")
 
-        appleMusic.getTrackList(link: "https://itunes.apple.com/us/playlist/test/pl.u-KVXBD8vFZeqz7e") { trackList, error in
+        appleMusic.getTrackList(link: "https://itunes.apple.com/us/playlist/test/pl.u-KVXBD8vFZeqz7e") { trackList, _, error in
             XCTAssertNil(error)
             XCTAssertNotNil(trackList)
 
@@ -40,11 +40,10 @@ class PlaylistTests: XCTestCase {
     func testCreateApplePlaylistFromSpotifyPlaylist() {
         let expectation = self.expectation(description: "Get the tracks from the playlist")
 
-        spotify.getTrackList(link: "https://open.spotify.com/playlist/37i9dQZEVXbLRQDuF5jeBp") { playlist, error in
+        spotify.getTrackList(link: "https://open.spotify.com/playlist/37i9dQZEVXbLRQDuF5jeBp") { playlist, playlistName, error in
             XCTAssertNil(error)
             XCTAssertNotNil(playlist)
-
-            self.appleMusic.addPlaylist(trackList: playlist!) { error in
+            self.appleMusic.addPlaylist(trackList: playlist!, playlistName: playlistName!) { error in
                 XCTAssertNil(error)
                 expectation.fulfill()
             }
@@ -55,7 +54,7 @@ class PlaylistTests: XCTestCase {
     func testGetSpotifyPLaylistTracks() {
         let expectation = self.expectation(description: "Get the tracks from the playlist")
 
-        spotify.getTrackList(link: "https://open.spotify.com/playlist/5oIio8tHNn5Ud5pPKb6X9j") { trackList, error in
+        spotify.getTrackList(link: "https://open.spotify.com/playlist/5oIio8tHNn5Ud5pPKb6X9j") { trackList, _, error in
             XCTAssertNil(error)
             XCTAssertNotNil(trackList)
 

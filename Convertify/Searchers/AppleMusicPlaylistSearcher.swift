@@ -8,6 +8,7 @@
 
 import Alamofire
 import Foundation
+import StoreKit
 import SwiftyJSON
 
 class AppleMusicPlaylistSearcher: PlaylistSearcher {
@@ -20,7 +21,7 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
     /// - Parameters:
     ///   - link: playlist link
     ///   - completion: what to run when the track list is completed
-    func getTrackList(link: String, completion: @escaping ([String: String]?, Error?) -> Void) {
+    func getTrackList(link: String, completion: @escaping ([String: String]?, String?, Error?) -> Void) {
         parseLinkData(link: link)
 
         let headers = ["Authorization": "Bearer \(self.token)"]
@@ -30,6 +31,7 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
                 switch response.result {
                 case .success: do {
                     let data = JSON(response.result.value!)
+                    let playlistName = data["data"][0]["name"].stringValue
 
                     // Gets array of track objects
                     let trackObjects = data["data"][0]["relationships"]["tracks"]["data"].array
@@ -49,11 +51,11 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
                     }
 
                     // Run completion with the finished track list
-                    completion(trackList, nil)
+                    completion(trackList, playlistName, nil)
                 }
 
                 case let .failure(error): do {
-                    completion(nil, error)
+                    completion(nil, nil, error)
                 }
                 }
             }
@@ -64,13 +66,48 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
     /// - Parameters:
     ///   - trackList: list of songs to add to a new playlist
     ///   - completion: what to do when the playlist is added
-    func addPlaylist(trackList: [String: String], completion: @escaping (Error?) -> Void) {
-        getConvertedPlaylist(trackList: trackList) { playlist in
-            print(playlist)
-            // TODO: Actually add this to the playlist lol
+    func addPlaylist(trackList: [String: String], playlistName: String, completion: @escaping (Error?) -> Void) {
+        // Convert the playlist
+        getConvertedPlaylist(trackList: trackList, playlistName: playlistName) { playlist in
 
-            // TODO: this won't always be nil because errors will happen
-            completion(nil)
+            // Ensure access to user's Apple Apple Music library
+            SKCloudServiceController.requestAuthorization() { authorizationStatus in
+                switch authorizationStatus {
+                case .authorized: do {
+                    // Get Music User Token
+                    SKCloudServiceController().requestUserToken(forDeveloperToken: Auth.appleMusicKey) { musicUserToken, error in
+
+                        let parameters: Parameters = [
+                            "attributes": playlist.attributes,
+                            "relationships": [
+                                "tracks": [
+                                    "data": playlist.trackList,
+                                ],
+                            ],
+                        ]
+
+                        let headers: HTTPHeaders = ["Music-User-Token": musicUserToken ?? "", "Authorization": "Bearer \(Auth.appleMusicKey)"]
+
+                        if error == nil {
+                            // Add the playlist to the user's account
+                            Alamofire.request("https://api.music.apple.com/v1/me/library/playlists", method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+                                .validate()
+                                .responseJSON { response in
+                                    switch response.result {
+                                    case .success: do { completion(nil) }
+                                    case let .failure(error): do { completion(error) }
+                                    }
+                                }
+                        } else {
+                            completion(error)
+                        }
+                    }
+                }
+                case .notDetermined: do { print("uhhh") }
+                case .denied: do { print("uhhh") }
+                case .restricted: do { print("uhhh") }
+                }
+            }
         }
     }
 
@@ -79,11 +116,13 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
     /// - Parameters:
     ///   - trackList: list of [Song: Artist], probably from Spotify
     ///   - completion: what to do with the completed playlist with IDs
-    private func getConvertedPlaylist(trackList: [String: String],
-                                      completion: @escaping ([AppleMusicPlaylistItem]) -> Void) {
+    private func getConvertedPlaylist(trackList: [String: String], playlistName: String,
+                                      completion: @escaping (AppleMusicPlaylist) -> Void) {
         let appleMusic: MusicSearcher = appleMusicSearcher()
 
-        getConvertedPlaylistHelper(trackList: trackList, playlist: [], appleMusic: appleMusic) { playlist in
+        getConvertedPlaylistHelper(trackList: trackList,
+                                   playlist: AppleMusicPlaylist(playlistName: playlistName),
+                                   appleMusic: appleMusic) { playlist in
             completion(playlist)
         }
     }
@@ -96,29 +135,29 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
     ///   - appleMusic: apple music searcher
     ///   - completion: what to run when complete playlist is done
     private func getConvertedPlaylistHelper(trackList: [String: String],
-                                            playlist: [AppleMusicPlaylistItem],
+                                            playlist: AppleMusicPlaylist,
                                             appleMusic: MusicSearcher,
-                                            completion: @escaping ([AppleMusicPlaylistItem]) -> Void) {
+                                            completion: @escaping (AppleMusicPlaylist) -> Void) {
         // Base case, stop adding to the playlist if the tracklist is empty
         if trackList.isEmpty {
             completion(playlist)
             return
         }
 
-        // Get the current track with a mutable temp track list and playlist
+        // Get the current track with a mutable temp track list
         var tempTrackList = trackList
-        var tempPlaylist = playlist
         let currentTrack = tempTrackList.popFirst()
 
         // Search for the ID of the song
         appleMusic.search(name: "\(currentTrack?.key ?? "") \(currentTrack?.value ?? "")", type: "song") { error in
+            var tempPlaylist = playlist
 
             // Report errors or add to the current playlist
             if error != nil {
                 print("Had trouble finding \(currentTrack?.key ?? "") by \(currentTrack?.value ?? "")")
             } else {
                 let id = String(appleMusic.url!.components(separatedBy: "?i=")[1])
-                tempPlaylist.append(AppleMusicPlaylistItem(id: id))
+                tempPlaylist.addTrack(id: id)
             }
 
             // Recursively keep searching
@@ -138,11 +177,19 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
     }
 }
 
-/// Class for creating Apple Music playlists
-private class AppleMusicPlaylistItem {
-    let id: String
-    let type: String = "songs"
-    init(id: String) {
-        self.id = id
+/// Framework of an Apple Music Playlist
+private struct AppleMusicPlaylist {
+    var trackList: [[String: String]]
+    var attributes: [String: String]
+
+    init(playlistName: String?) {
+        trackList = []
+        print(playlistName)
+        attributes = ["name": playlistName ?? "New Playlist",
+                      "description": "Created with Convertify for iOS"]
+    }
+
+    mutating func addTrack(id: String) {
+        trackList.append(["id": id, "type": "songs"])
     }
 }

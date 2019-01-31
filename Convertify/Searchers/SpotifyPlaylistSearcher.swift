@@ -11,7 +11,7 @@ import Foundation
 import SwiftyJSON
 
 class SpotifyPlaylistSearcher: PlaylistSearcher {
-    func addPlaylist(trackList _: [String: String], completion _: @escaping (Error?) -> Void) {}
+    func addPlaylist(trackList _: [String: String], playlistName: String, completion _: @escaping (Error?) -> Void) {}
 
     private var playlistID: String?
 
@@ -20,12 +20,12 @@ class SpotifyPlaylistSearcher: PlaylistSearcher {
     /// - Parameters:
     ///   - link: link to the playlist
     ///   - completion: function to handle the playlist
-    func getTrackList(link: String, completion: @escaping ([String: String]?, Error?) -> Void) {
+    func getTrackList(link: String, completion: @escaping ([String: String]?, String?, Error?) -> Void) {
         parseLinkData(link: link)
 
         login { token, error in
             if error != nil {
-                completion(nil, error)
+                completion(nil, nil, error)
             } else {
                 let headers: HTTPHeaders = ["Authorization": "Bearer \(token!)"]
 
@@ -33,7 +33,12 @@ class SpotifyPlaylistSearcher: PlaylistSearcher {
                 Alamofire.request("https://api.spotify.com/v1/playlists/\(self.playlistID!)/tracks", headers: headers)
                     .validate()
                     .responseJSON { response in
-                        completion(self.getTrackListFromJSON(data: JSON(response.result.value!)), nil)
+                        let data = JSON(response.result.value!)
+                        
+                        // TODO: Must get full playlist, not just playlist tracks
+                        let playlistName = data["name"].stringValue
+
+                        completion(self.getTrackListFromJSON(data: data), "New Playlist", nil)
                     }
             }
         }

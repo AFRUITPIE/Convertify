@@ -84,23 +84,19 @@ class ViewController: UIViewController {
             activityMonitor.stopAnimating()
             activityMonitor.isHidden = true
             convertButton.isHidden = false
-            break
         // Ignores radio stations
         case link.contains("/station/"):
             updateAppearance(title: "I cannot convert radio stations ☹️", color: UIColor.red, enabled: false)
             activityMonitor.stopAnimating()
             activityMonitor.isHidden = true
             convertButton.isHidden = false
-            break
         // Extracts Spotify data and searches for Apple Music links when it includes a Spotify link
         case link.contains(SearcherURL.spotify):
             // Get the Apple Music version if the link is Spotify, double check for Spotify login
             handleSearching(link: link, source: spotify, destination: appleMusic)
-            break
         // Extracts Apple Music data and searches for Spotify links when it includes an Apple Music link
         case link.contains(SearcherURL.appleMusic):
             handleSearching(link: link, source: appleMusic, destination: spotify)
-            break
         // Lets the user know I don't know how to handle whatever is in their clipboard
         default:
             updateAppearance(title: "No Spotify or Apple Music link found in clipboard", color: UIColor.gray, enabled: false)
