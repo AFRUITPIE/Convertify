@@ -40,7 +40,7 @@ class PlaylistTests: XCTestCase {
     func testCreateApplePlaylistFromSpotifyPlaylist() {
         let expectation = self.expectation(description: "Get the tracks from the playlist")
 
-        spotify.getTrackList(link: "https://open.spotify.com/playlist/37i9dQZEVXbLRQDuF5jeBp") { playlist, playlistName, error in
+        spotify.getTrackList(link: "https://open.spotify.com/playlist/37i9dQZF1DWZtZ8vUCzche?si=pbrjXc5RRRGNjwwqycK_Qw") { playlist, playlistName, error in
             XCTAssertNil(error)
             XCTAssertNotNil(playlist)
             self.appleMusic.addPlaylist(trackList: playlist!, playlistName: playlistName!) { error in

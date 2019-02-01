@@ -16,9 +16,6 @@ protocol MusicSearcher {
     // Product color of the service
     var serviceColor: UIColor { get }
 
-    // Authentication token of the service
-//    var token: String? { get set }
-
     // Metadata for current searcher results
     var id: String? { get }
     var name: String? { get }

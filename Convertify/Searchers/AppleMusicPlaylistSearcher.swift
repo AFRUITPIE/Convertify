@@ -66,7 +66,7 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
     /// - Parameters:
     ///   - trackList: list of songs to add to a new playlist
     ///   - completion: what to do when the playlist is added
-    func addPlaylist(trackList: [String: String], playlistName: String, completion: @escaping (Error?) -> Void) {
+    func addPlaylist(trackList: [String: String], playlistName: String, completion: @escaping (String?, Error?) -> Void) {
         // Convert the playlist
         getConvertedPlaylist(trackList: trackList, playlistName: playlistName) { playlist in
 
@@ -94,12 +94,17 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
                                 .validate()
                                 .responseJSON { response in
                                     switch response.result {
-                                    case .success: do { completion(nil) }
-                                    case let .failure(error): do { completion(error) }
+                                    case .success: do {
+                                        let data = JSON(response.result.value!)
+                                        let id = data["data"][0]["id"]
+                                        let link = "https://itunes.apple.com/us/playlist/\(playlistName.replacingOccurrences(of: " ", with: "-").lowercased())/\(id)"
+                                        completion(link, nil)
+                                    }
+                                    case let .failure(error): do { completion(nil, error) }
                                     }
                                 }
                         } else {
-                            completion(error)
+                            completion(nil, error)
                         }
                     }
                 }
@@ -184,7 +189,6 @@ private struct AppleMusicPlaylist {
 
     init(playlistName: String?) {
         trackList = []
-        print(playlistName)
         attributes = ["name": playlistName ?? "New Playlist",
                       "description": "Created with Convertify for iOS"]
     }

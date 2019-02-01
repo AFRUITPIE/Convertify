@@ -79,11 +79,15 @@ class ViewController: UIViewController {
         switch true {
         // Ignores playlists
         case link.contains("/playlist/"):
-            updateAppearance(title: "Playlist conversion coming soon 👀", color: UIColor.darkGray, enabled: false)
 
-            activityMonitor.stopAnimating()
-            activityMonitor.isHidden = true
-            convertButton.isHidden = false
+            if !link.contains("open.spotify.com/playlist") {
+                handlePlaylistConversion(link: link)
+            } else {
+                updateAppearance(title: "Apple Music to Spotify playlist conversion coming soon 👀", color: UIColor.darkGray, enabled: false)
+                activityMonitor.stopAnimating()
+                activityMonitor.isHidden = true
+                convertButton.isHidden = false
+            }
         // Ignores radio stations
         case link.contains("/station/"):
             updateAppearance(title: "I cannot convert radio stations ☹️", color: UIColor.red, enabled: false)
@@ -155,6 +159,34 @@ class ViewController: UIViewController {
 
             // Deallocate feedbackGenerator
             feedbackGenerator = nil
+        }
+    }
+
+    func handlePlaylistConversion(link: String) {
+        // FOR RIGHT NOW we can assume this will be a spotify link
+
+        SpotifyPlaylistSearcher().getTrackList(link: link) { trackList, playlistName, error in
+
+            if error == nil {
+                let alert = UIAlertController(title: "Add \(playlistName ?? "") to Apple Music?", message: "This playlist will be added to your Apple Music library with the closest matches we can find.", preferredStyle: UIAlertController.Style.alert)
+
+                alert.addAction(UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) { _ in
+                    AppleMusicPlaylistSearcher().addPlaylist(trackList: trackList!, playlistName: playlistName ?? "") { link, error in
+                        if error == nil {
+                            print(link!)
+                            UIApplication.shared.open(URL(string: link!)!, options: [:])
+                        } else {
+                            self.updateAppearance(title: "We had problems converting this playlist", color: UIColor.red, enabled: false)
+                        }
+                    }
+                })
+
+                // Add no action
+
+                self.present(alert, animated: true, completion: nil)
+            } else {
+                self.updateAppearance(title: "We had problems converting this playlist", color: UIColor.red, enabled: false)
+            }
         }
     }
 

@@ -122,6 +122,8 @@ public class appleMusicSearcher: MusicSearcher {
                         self.url = data[appleMusicType]["data"][0]["attributes"]["url"].stringValue
                         completion(nil)
                     } else {
+                        // Start implementing redo here
+
                         // None found, let's throw an error
                         completion(MusicSearcherErrors.noSearchResultsError)
                     }

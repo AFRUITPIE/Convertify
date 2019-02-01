@@ -11,7 +11,7 @@ import Foundation
 import SwiftyJSON
 
 class SpotifyPlaylistSearcher: PlaylistSearcher {
-    func addPlaylist(trackList _: [String: String], playlistName: String, completion _: @escaping (Error?) -> Void) {}
+    func addPlaylist(trackList _: [String: String], playlistName _: String, completion _: @escaping (String?, Error?) -> Void) {}
 
     private var playlistID: String?
 
@@ -30,15 +30,35 @@ class SpotifyPlaylistSearcher: PlaylistSearcher {
                 let headers: HTTPHeaders = ["Authorization": "Bearer \(token!)"]
 
                 // Request the playlist data
-                Alamofire.request("https://api.spotify.com/v1/playlists/\(self.playlistID!)/tracks", headers: headers)
+                Alamofire.request("https://api.spotify.com/v1/playlists/\(self.playlistID!)", headers: headers)
                     .validate()
                     .responseJSON { response in
-                        let data = JSON(response.result.value!)
-                        
-                        // TODO: Must get full playlist, not just playlist tracks
-                        let playlistName = data["name"].stringValue
 
-                        completion(self.getTrackListFromJSON(data: data), "New Playlist", nil)
+                        switch response.result {
+                        case .success: do {
+                            let playlistData = JSON(response.result.value!)
+                            let playlistName = playlistData["name"].stringValue
+
+                            // Request the playlist's tracks
+                            Alamofire.request("https://api.spotify.com/v1/playlists/\(self.playlistID!)/tracks", headers: headers)
+                                .validate()
+                                .responseJSON { response in
+                                    switch response.result {
+                                    case .success: do {
+                                        let trackListData = JSON(response.result.value!)
+                                        completion(self.getTrackListFromJSON(data: trackListData), playlistName, nil)
+                                    }
+                                    case let .failure(error): do {
+                                        completion(nil, nil, error)
+                                    }
+                                    }
+                                }
+                        }
+                        case let .failure(error): do {
+                            // Something must have gone wrong with authentication :(
+                            completion(nil, nil, error)
+                        }
+                        }
                     }
             }
         }
@@ -69,9 +89,9 @@ class SpotifyPlaylistSearcher: PlaylistSearcher {
                     completion(token, nil)
                 }
 
-                case .failure: do {
+                case let .failure(error): do {
                     // Something must have gone wrong with authentication :(
-                    completion(nil, MusicSearcherErrors.authenticationError)
+                    completion(nil, error)
                 }
                 }
             }
@@ -103,6 +123,6 @@ class SpotifyPlaylistSearcher: PlaylistSearcher {
     ///
     /// - Parameter link: URL for Spotify playlist
     private func parseLinkData(link: String) {
-        playlistID = String(link.components(separatedBy: "/playlist/")[1])
+        playlistID = String(link.components(separatedBy: "/playlist/")[1].split(separator: "?")[0])
     }
 }

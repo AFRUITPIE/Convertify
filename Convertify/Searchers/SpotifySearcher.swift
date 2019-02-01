@@ -122,6 +122,8 @@ public class spotifySearcher: MusicSearcher {
                         self.url = data["items"][0]["external_urls"]["spotify"].stringValue
                         completion(nil)
                     } else {
+                        // TODO: Start implementing redo here
+
                         completion(MusicSearcherErrors.noSearchResultsError)
                     }
                 }
