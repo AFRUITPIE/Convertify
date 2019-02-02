@@ -43,7 +43,7 @@ class PlaylistTests: XCTestCase {
         spotify.getTrackList(link: "https://open.spotify.com/playlist/37i9dQZF1DWZtZ8vUCzche?si=pbrjXc5RRRGNjwwqycK_Qw") { playlist, playlistName, error in
             XCTAssertNil(error)
             XCTAssertNotNil(playlist)
-            self.appleMusic.addPlaylist(trackList: playlist!, playlistName: playlistName!) { error in
+            self.appleMusic.addPlaylist(trackList: playlist!, playlistName: playlistName!) { _, error in
                 XCTAssertNil(error)
                 expectation.fulfill()
             }

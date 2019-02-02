@@ -97,7 +97,7 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
                                     case .success: do {
                                         let data = JSON(response.result.value!)
                                         let id = data["data"][0]["id"]
-                                        let link = "https://itunes.apple.com/us/playlist/\(playlistName.replacingOccurrences(of: " ", with: "-").lowercased())/\(id)"
+                                        let link = "https://itunes.apple.com/me/playlist/\(playlistName.replacingOccurrences(of: " ", with: "-").lowercased())/\(id)"
                                         completion(link, nil)
                                     }
                                     case let .failure(error): do { completion(nil, error) }
@@ -154,19 +154,22 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
         let currentTrack = tempTrackList.popFirst()
 
         // Search for the ID of the song
-        appleMusic.search(name: "\(currentTrack?.key ?? "") \(currentTrack?.value ?? "")", type: "song") { error in
+        appleMusic.search(name: "\(currentTrack?.key ?? "") \(currentTrack?.value ?? "")", type: "song") { link, error in
             var tempPlaylist = playlist
 
             // Report errors or add to the current playlist
             if error != nil {
                 print("Had trouble finding \(currentTrack?.key ?? "") by \(currentTrack?.value ?? "")")
             } else {
-                let id = String(appleMusic.url!.components(separatedBy: "?i=")[1])
+                let id = String(link!.components(separatedBy: "?i=")[1])
                 tempPlaylist.addTrack(id: id)
             }
 
             // Recursively keep searching
-            self.getConvertedPlaylistHelper(trackList: tempTrackList, playlist: tempPlaylist, appleMusic: appleMusic, completion: completion)
+            self.getConvertedPlaylistHelper(trackList: tempTrackList,
+                                            playlist: tempPlaylist,
+                                            appleMusic: appleMusic,
+                                            completion: completion)
         }
     }
 
@@ -190,7 +193,7 @@ private struct AppleMusicPlaylist {
     init(playlistName: String?) {
         trackList = []
         attributes = ["name": playlistName ?? "New Playlist",
-                      "description": "Created with Convertify for iOS"]
+                      "description": "Created with Convertify for iOS, some songs might not be correct"]
     }
 
     mutating func addTrack(id: String) {

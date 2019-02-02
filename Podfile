@@ -10,11 +10,13 @@ target 'Convertify' do
   pod 'SwiftyJSON', '~> 4.0'
   source 'https://github.com/CocoaPods/Specs.git'
   pod 'SwiftFormat/CLI'
+  pod "Pastel"
 
   target 'ConvertifyTests' do
     pod 'Alamofire', '~> 4.7'
     pod 'SwiftyJSON', '~> 4.0'
     pod 'SwiftFormat/CLI'
+    pod "Pastel"
   end
   
 end

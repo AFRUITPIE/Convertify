@@ -14,6 +14,8 @@ class ConvertifyTests: XCTestCase {
     var appleMusic: MusicSearcher!
 
     override func setUp() {
+        UIPasteboard.general.string = ""
+
         let expectation = self.expectation(description: "Login spotify and Apple Music")
 
         if spotify == nil {
@@ -42,22 +44,22 @@ class ConvertifyTests: XCTestCase {
     private func testLink(link: String, name: String, type: String, artist: String?, source: MusicSearcher, destination: MusicSearcher) {
         let expectation = self.expectation(description: "HTTP request for searching")
 
-        source.search(link: link) { error in
+        source.search(link: link) { compareType, compareName, compareArtist, error in
             XCTAssertNil(error)
 
             // Verify data from source is correct
-            XCTAssertEqual(source.name?.lowercased() ?? nil, name.lowercased())
-            XCTAssertEqual(source.type?.lowercased() ?? nil, type.lowercased())
-            XCTAssertEqual(source.artist?.lowercased(), artist?.lowercased() ?? nil)
+            XCTAssertEqual(compareName?.lowercased() ?? nil, name.lowercased())
+            XCTAssertEqual(compareType?.lowercased() ?? nil, type.lowercased())
+            XCTAssertEqual(compareArtist?.lowercased(), artist?.lowercased() ?? nil)
 
             // Verify data from destination is correct
-            destination.search(name: source.name ?? "", type: source.type ?? "") { error in
+            destination.search(name: compareName ?? "", type: compareType ?? "") { destinationLink, error in
                 XCTAssertNil(error)
 
                 expectation.fulfill()
 
                 // Check destination's data
-                XCTAssertNotNil(destination.url)
+                XCTAssertNotNil(destinationLink)
             }
         }
     }
@@ -118,25 +120,25 @@ class ConvertifyTests: XCTestCase {
                  artist: "Anderson .Paak",
                  source: appleMusic,
                  destination: spotify)
-        waitForExpectations(timeout: 10, handler: nil)
+        waitForExpectations(timeout: 1000, handler: nil)
     }
 
     /// Tests involving searching with words
 
     private func testSpotifyQuery(name: String, type: String, url: String) {
         let expectation = self.expectation(description: "Testing Spotify query for url: \(url)")
-        spotify.search(name: name, type: type) { error in
+        spotify.search(name: name, type: type) { destinationLink, error in
             XCTAssertNil(error)
-            XCTAssertEqual(self.spotify.url, url)
+            XCTAssertEqual(destinationLink, url)
             expectation.fulfill()
         }
     }
 
     private func testAppleMusicQuery(name: String, type: String, url: String) {
         let expectation = self.expectation(description: "Testing Apple Music query for url: \(url)")
-        appleMusic.search(name: name, type: type) { error in
+        appleMusic.search(name: name, type: type) { destinationLink, error in
             XCTAssertNil(error)
-            XCTAssertEqual(self.appleMusic.url, url)
+            XCTAssertEqual(destinationLink, url)
             expectation.fulfill()
         }
     }
@@ -163,7 +165,7 @@ class ConvertifyTests: XCTestCase {
 
     func testAppleMusicError() {
         let am = appleMusicSearcher()
-        am.search(name: "THERE IS NO POSSIBLE WAY THIS WILL EVER BE AN ALBUM NAME", type: "album", completion: { error in
+        am.search(name: "THERE IS NO POSSIBLE WAY THIS WILL EVER BE AN ALBUM NAME", type: "album", completion: { _, error in
             XCTAssertNotNil(error)
         })
     }
@@ -192,7 +194,7 @@ class ConvertifyTests: XCTestCase {
     private func testErrorUrl(url: String, searcher: MusicSearcher) {
         let expectation = self.expectation(description: "Testing failure on incorrect URL")
 
-        searcher.search(link: url) { error in
+        searcher.search(link: url) { _, _, _, error in
             XCTAssertNotNil(error)
             expectation.fulfill()
         }
@@ -207,7 +209,7 @@ class ConvertifyTests: XCTestCase {
     private func testErrorName(name: String, searcher: MusicSearcher) {
         let expectation = self.expectation(description: "Testing failure on incorrect name")
 
-        searcher.search(name: name, type: "album") { error in
+        searcher.search(name: name, type: "album") { _, error in
             XCTAssertNotNil(error)
             expectation.fulfill()
         }

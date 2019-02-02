@@ -7,6 +7,7 @@
 //
 
 import Alamofire
+import Pastel
 import UIKit
 
 class ViewController: UIViewController {
@@ -20,20 +21,12 @@ class ViewController: UIViewController {
     @IBOutlet var convertButton: UIButton!
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var activityMonitor: UIActivityIndicatorView!
+    var pastelView: PastelView!
 
     // Mark: Functions
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
-
-    override func viewDidAppear(_: Bool) {
-        super.viewDidAppear(true)
-    }
-
     func initApp(link: String) {
         self.link = link
-        activityMonitor.startAnimating()
         spotify = spotifySearcher { error in
             if error == nil {
                 // Start the search using the new Apple Music object
@@ -41,12 +34,13 @@ class ViewController: UIViewController {
                 self.handleLink(link: self.link ?? "")
             } else {
                 // Display an error for logging in
-                self.activityMonitor.stopAnimating()
-                self.activityMonitor.isHidden = true
                 self.updateAppearance(title: "Error getting Spotify credentials", color: UIColor.red, enabled: false)
-                self.convertButton.isHidden = false
             }
         }
+    }
+
+    override func viewDidLoad() {
+        pastelView = PastelView(frame: view.bounds)
     }
 
     /// Animates the color conversion in the app
@@ -79,34 +73,27 @@ class ViewController: UIViewController {
         switch true {
         // Ignores playlists
         case link.contains("/playlist/"):
-
             if !link.contains("open.spotify.com/playlist") {
                 handlePlaylistConversion(link: link)
             } else {
                 updateAppearance(title: "Apple Music to Spotify playlist conversion coming soon 👀", color: UIColor.darkGray, enabled: false)
-                activityMonitor.stopAnimating()
-                activityMonitor.isHidden = true
-                convertButton.isHidden = false
             }
+
         // Ignores radio stations
         case link.contains("/station/"):
             updateAppearance(title: "I cannot convert radio stations ☹️", color: UIColor.red, enabled: false)
-            activityMonitor.stopAnimating()
-            activityMonitor.isHidden = true
-            convertButton.isHidden = false
+
         // Extracts Spotify data and searches for Apple Music links when it includes a Spotify link
         case link.contains(SearcherURL.spotify):
-            // Get the Apple Music version if the link is Spotify, double check for Spotify login
             handleSearching(link: link, source: spotify, destination: appleMusic)
+
         // Extracts Apple Music data and searches for Spotify links when it includes an Apple Music link
         case link.contains(SearcherURL.appleMusic):
             handleSearching(link: link, source: appleMusic, destination: spotify)
+
         // Lets the user know I don't know how to handle whatever is in their clipboard
         default:
             updateAppearance(title: "No Spotify or Apple Music link found in clipboard", color: UIColor.gray, enabled: false)
-            activityMonitor.stopAnimating()
-            activityMonitor.isHidden = true
-            convertButton.isHidden = false
         }
     }
 
@@ -117,31 +104,22 @@ class ViewController: UIViewController {
     ///   - source: Source service of the link
     ///   - destination: Destination to open the search result in
     private func handleSearching(link: String, source: MusicSearcher, destination: MusicSearcher) {
-        // Update some of the visible parts of the app to show it IS loading
-        activityMonitor.startAnimating()
-        activityMonitor.isHidden = false
-        convertButton.isHidden = true
-
         // Create feedback generator for stuff
         var feedbackGenerator: UINotificationFeedbackGenerator? = UINotificationFeedbackGenerator()
         feedbackGenerator?.prepare()
 
         // Search the source
-        source.search(link: link) { error in
+        source.search(link: link) { type, name, artist, error in
             print("Searching \(source.serviceName) \(error == nil ? "successful" : "failed")")
 
             if error == nil {
-                self.titleLabel.text = source.artist == nil ? source.name! : source.name! + " by " + source.artist!
+                self.titleLabel.text = (artist == nil ? name! : name! + " by " + artist!)
 
-                destination.search(name: source.name! + " " + (source.artist ?? ""), type: source.type!) { error in
+                destination.search(name: name! + " " + (artist ?? ""), type: type!) { link, error in
                     print("Searching \(destination.serviceName) \(error == nil ? "successful" : "failed")")
-
                     // Update some of the visible parts of the app to show it is NOT loading
-                    self.activityMonitor.stopAnimating()
-                    self.activityMonitor.isHidden = true
-                    self.convertButton.isHidden = false
-
                     if error == nil {
+                        self.link = link
                         self.updateAppearance(title: "Open in \(destination.serviceName)", color: destination.serviceColor, enabled: true)
                         feedbackGenerator?.notificationOccurred(.success)
                     } else {
@@ -149,7 +127,6 @@ class ViewController: UIViewController {
                         feedbackGenerator?.notificationOccurred(.error)
                     }
                 }
-
             } else {
                 // Display the error
                 self.titleLabel.text = "Error getting \(source.serviceName) data"
@@ -162,15 +139,45 @@ class ViewController: UIViewController {
         }
     }
 
+    /// Adds pretty animation for converting playlists
+    private func addPastelView() {
+        // Custom Direction
+        pastelView.startPastelPoint = .bottom
+        pastelView.endPastelPoint = .top
+
+        // Custom Duration
+        pastelView.animationDuration = 3.0
+
+        // Custom Color
+        pastelView.setColors([spotify.serviceColor, appleMusic.serviceColor])
+        pastelView.alpha = 0.0
+        UIView.animate(withDuration: 3.0, delay: 0.0, options: [.allowUserInteraction], animations: {
+            self.pastelView.startAnimation()
+            self.view.insertSubview(self.pastelView, at: 0)
+            self.pastelView.alpha = 1.0
+        })
+    }
+
+    /// Does the dirty work for converting playlists
+    ///
+    /// - Parameter link: playlist link to handle
     func handlePlaylistConversion(link: String) {
         // FOR RIGHT NOW we can assume this will be a spotify link
 
+        // Get the tracklist
         SpotifyPlaylistSearcher().getTrackList(link: link) { trackList, playlistName, error in
-
+            // Error handling
             if error == nil {
+                // Alert the user about adding the playlist
                 let alert = UIAlertController(title: "Add \(playlistName ?? "") to Apple Music?", message: "This playlist will be added to your Apple Music library with the closest matches we can find.", preferredStyle: UIAlertController.Style.alert)
 
+                // Yes, add the playlist
                 alert.addAction(UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) { _ in
+                    // Show some cool animations
+                    self.addPastelView()
+
+                    self.titleLabel.text = playlistName ?? ""
+                    self.updateAppearance(title: "Converting now, this might take a while", color: UIColor.darkGray, enabled: false)
                     AppleMusicPlaylistSearcher().addPlaylist(trackList: trackList!, playlistName: playlistName ?? "") { link, error in
                         if error == nil {
                             print(link!)
@@ -178,11 +185,13 @@ class ViewController: UIViewController {
                         } else {
                             self.updateAppearance(title: "We had problems converting this playlist", color: UIColor.red, enabled: false)
                         }
+                        self.pastelView.removeFromSuperview()
                     }
                 })
 
-                // Add no action
+                // TODO: Add a no action to the action thing
 
+                // Show the alert
                 self.present(alert, animated: true, completion: nil)
             } else {
                 self.updateAppearance(title: "We had problems converting this playlist", color: UIColor.red, enabled: false)
@@ -194,10 +203,8 @@ class ViewController: UIViewController {
 
     /// Opens the link in the opposite app
     @IBAction func openSong(_: Any) {
-        if link?.contains(SearcherURL.spotify) ?? false {
-            appleMusic.open()
-        } else if link?.contains(SearcherURL.appleMusic) ?? false {
-            spotify.open()
+        if link != nil {
+            UIApplication.shared.open(URL(string: link!)!, options: [:])
         }
     }
 }
