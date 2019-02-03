@@ -31,7 +31,7 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
                 switch response.result {
                 case .success: do {
                     let data = JSON(response.result.value!)
-                    let playlistName = data["data"][0]["name"].stringValue
+                    let playlistName = data["data"][0]["attributes"]["name"].stringValue
 
                     // Gets array of track objects
                     let trackObjects = data["data"][0]["relationships"]["tracks"]["data"].array

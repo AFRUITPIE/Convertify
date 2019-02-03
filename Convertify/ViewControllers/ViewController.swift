@@ -8,6 +8,7 @@
 
 import Alamofire
 import Pastel
+import SpotifyLogin
 import UIKit
 
 class ViewController: UIViewController {
@@ -73,10 +74,12 @@ class ViewController: UIViewController {
         switch true {
         // Ignores playlists
         case link.contains("/playlist/"):
-            if !link.contains("open.spotify.com/playlist") {
+            if link.contains("open.spotify.com") {
                 handlePlaylistConversion(link: link)
+            } else if link.contains("itunes.apple.com") {
+                handleSpotifyPlaylistConversion(link: link)
             } else {
-                updateAppearance(title: "Apple Music to Spotify playlist conversion coming soon 👀", color: UIColor.darkGray, enabled: false)
+                updateAppearance(title: "I don't recognize where that playlist is from ☹️", color: UIColor.red, enabled: false)
             }
 
         // Ignores radio stations
@@ -158,6 +161,50 @@ class ViewController: UIViewController {
         })
     }
 
+    func handleSpotifyPlaylistConversion(link: String) {
+        AppleMusicPlaylistSearcher().getTrackList(link: link) { trackList, playlistName, error in
+
+            if error == nil {
+                let alert = UIAlertController(title: "Add \(playlistName ?? "") to Spotify?", message: "This playlist will be added to your Spotify library with the closest matches we can find.", preferredStyle: UIAlertController.Style.alert)
+
+                // Yes, add the playlist
+                alert.addAction(UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) { _ in
+                    // Show some cool animations
+                    self.addPastelView()
+                    self.titleLabel.text = playlistName ?? ""
+                    self.updateAppearance(title: "Converting now, this might take a while", color: UIColor.darkGray, enabled: false)
+                    self.handleSpotifyLogin() { token, error in
+                        SpotifyPlaylistSearcher(token: token).addPlaylist(trackList: trackList!, playlistName: playlistName ?? "") { link, error in
+                            if error == nil {
+                                print(link!)
+                                UIApplication.shared.open(URL(string: link!)!, options: [:])
+                            } else {
+                                self.updateAppearance(title: "We had problems converting this playlist", color: UIColor.red, enabled: false)
+                            }
+                            self.pastelView.removeFromSuperview()
+                        }
+                    }
+                })
+
+                // TODO: Add a no action to the action thing
+
+                // Show the alert
+                self.present(alert, animated: true, completion: nil)
+            } else {
+                self.updateAppearance(title: "We had problems converting this playlist", color: UIColor.red, enabled: false)
+            }
+        }
+    }
+
+    private func handleSpotifyLogin(completion: @escaping (String?, Error?) -> Void) {
+        SpotifyLogin.shared.getAccessToken { token, error in
+            switch error {
+            case nil: completion(token, error)
+            default: SpotifyLoginPresenter.login(from: self, scopes: [.playlistModifyPrivate])
+            }
+        }
+    }
+
     /// Does the dirty work for converting playlists
     ///
     /// - Parameter link: playlist link to handle
@@ -165,7 +212,7 @@ class ViewController: UIViewController {
         // FOR RIGHT NOW we can assume this will be a spotify link
 
         // Get the tracklist
-        SpotifyPlaylistSearcher().getTrackList(link: link) { trackList, playlistName, error in
+        SpotifyPlaylistSearcher(token: nil).getTrackList(link: link) { trackList, playlistName, error in
             // Error handling
             if error == nil {
                 // Alert the user about adding the playlist

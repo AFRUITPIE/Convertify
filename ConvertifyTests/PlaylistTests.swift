@@ -16,7 +16,7 @@ class PlaylistTests: XCTestCase {
     var appleMusic: PlaylistSearcher!
 
     override func setUp() {
-        spotify = SpotifyPlaylistSearcher()
+        spotify = SpotifyPlaylistSearcher(token: "")
         appleMusic = AppleMusicPlaylistSearcher()
     }
 
@@ -66,5 +66,18 @@ class PlaylistTests: XCTestCase {
         }
 
         waitForExpectations(timeout: 10, handler: nil)
+    }
+
+    func testAddSpotifyPlaylistFromAppleMusicPlaylist() {
+        let expectation = self.expectation(description: "Get the tracks from the playlist")
+        appleMusic.getTrackList(link: "https://itunes.apple.com/us/playlist/the-a-list-r-b/pl.b7ae3e0a28e84c5c96c4284b6a6c70af") { playlist, playlistName, error in
+            XCTAssertNil(error)
+            XCTAssertNotNil(playlist)
+            self.spotify.addPlaylist(trackList: playlist!, playlistName: playlistName!) { _, error in
+                XCTAssertNil(error)
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 60, handler: nil)
     }
 }
