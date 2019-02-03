@@ -134,9 +134,12 @@ public class appleMusicSearcher: MusicSearcher {
                         // Redo search
                         if retry {
                             let newName = String(name.components(separatedBy: " - ")[0])
-                            self.search(name: newName, type: type, retry: false) { link, error in
-                                completion(link, error)
-                            }
+
+                            // FIXME: There is something VERY wrong with this call
+
+//                            self.search(name: newName, type: type, retry: false) { link, error in
+//                                completion(link, error)
+//                            }
                         }
                         // None found, let's throw an error
                         completion(nil, MusicSearcherErrors.noSearchResultsError)

@@ -23,7 +23,6 @@ class ViewController: UIViewController {
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var activityMonitor: UIActivityIndicatorView!
 
-    @IBOutlet var warningConvertLabel: UILabel!
     var pastelView: PastelView!
 
     // Mark: Functions
@@ -147,8 +146,8 @@ class ViewController: UIViewController {
     /// Adds pretty animation for converting playlists
     private func addPastelView() {
         // Custom Direction
-        pastelView.startPastelPoint = .bottom
-        pastelView.endPastelPoint = .top
+        pastelView.startPastelPoint = .left
+        pastelView.endPastelPoint = .right
 
         // Custom Duration
         pastelView.animationDuration = 3.0
@@ -175,7 +174,7 @@ class ViewController: UIViewController {
                     self.addPastelView()
                     self.titleLabel.text = playlistName ?? ""
                     self.updateAppearance(title: "Converting now, this might take a while", color: UIColor.darkGray, enabled: false)
-                    self.warningConvertLabel.isHidden = false
+
                     self.handleSpotifyLogin() { token, error in
                         SpotifyPlaylistSearcher(token: token).addPlaylist(trackList: trackList!, playlistName: playlistName ?? "") { link, error in
                             if error == nil {
@@ -185,7 +184,6 @@ class ViewController: UIViewController {
                                 self.updateAppearance(title: "We had problems converting this playlist", color: UIColor.red, enabled: false)
                             }
                             self.pastelView.removeFromSuperview()
-                            self.warningConvertLabel.isHidden = true
                         }
                     }
                 })
@@ -226,14 +224,13 @@ class ViewController: UIViewController {
                 alert.addAction(UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) { _ in
                     // Show some cool animations
                     self.addPastelView()
-                    self.warningConvertLabel.isHidden = false
                     self.titleLabel.text = playlistName ?? ""
                     self.updateAppearance(title: "Converting now, this might take a while", color: UIColor.darkGray, enabled: false)
                     AppleMusicPlaylistSearcher().addPlaylist(trackList: trackList!, playlistName: playlistName ?? "") { link, error in
-                        self.warningConvertLabel.isHidden = true
                         if error == nil {
                             print(link!)
-                            UIApplication.shared.open(URL(string: link!)!, options: [:])
+                            // UIApplication.shared.open(URL(string: link!)!, options: [:])
+                            self.updateAppearance(title: "Converted successfully", color: UIColor.darkGray, enabled: false)
                         } else {
                             self.updateAppearance(title: "We had problems converting this playlist", color: UIColor.red, enabled: false)
                         }
