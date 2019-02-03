@@ -102,6 +102,19 @@ public class appleMusicSearcher: MusicSearcher {
     ///   - type: Type to search for (example: artist)
     ///   - completion: Function to run after search is complete
     func search(name: String, type: String, completion: @escaping (String?, Error?) -> Void) {
+        search(name: name, type: type, retry: true) { link, error in
+            completion(link, error)
+        }
+    }
+
+    /// Recursive helper function for doing search
+    ///
+    /// - Parameters:
+    ///   - name: name of resource
+    ///   - type: type of resource
+    ///   - retry: whether or not to retry
+    ///   - completion: what to do with the link/error when done
+    private func search(name: String, type: String, retry: Bool, completion: @escaping (String?, Error?) -> Void) {
         let appleMusicType = type == "track" ? "songs" : "\(type)s"
         let parameters: Parameters = ["term": name,
                                       "types": appleMusicType]
@@ -118,8 +131,13 @@ public class appleMusicSearcher: MusicSearcher {
                         let link = data[appleMusicType]["data"][0]["attributes"]["url"].stringValue
                         completion(link, nil)
                     } else {
-                        // Start implementing redo here
-
+                        // Redo search
+                        if retry {
+                            let newName = String(name.components(separatedBy: " - ")[0])
+                            self.search(name: newName, type: type, retry: false) { link, error in
+                                completion(link, error)
+                            }
+                        }
                         // None found, let's throw an error
                         completion(nil, MusicSearcherErrors.noSearchResultsError)
                     }

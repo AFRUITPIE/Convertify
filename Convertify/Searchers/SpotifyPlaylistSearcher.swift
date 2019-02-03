@@ -18,6 +18,12 @@ class SpotifyPlaylistSearcher: PlaylistSearcher {
         self.token = token
     }
 
+    /// Add the playlist to Spotify
+    ///
+    /// - Parameters:
+    ///   - trackList: list of tracks to add, [Song, Artist]
+    ///   - playlistName: Name of the playlist
+    ///   - completion: what to do with the link to the playlist after it's done
     func addPlaylist(trackList: [String: String], playlistName: String, completion: @escaping (String?, Error?) -> Void) {
         // Get user ID
         getID(userToken: token ?? "") { id, error in
@@ -34,14 +40,17 @@ class SpotifyPlaylistSearcher: PlaylistSearcher {
                             if error == nil {
                                 completion("https://open.spotify.com/playlist/\(playlistLink ?? "")", error)
                             } else {
+                                // Something has gone wrong with adding the songs to the playlist
                                 completion(nil, error)
                             }
                         }
                     } else {
+                        // Something has gone wrong with creating the playlist
                         completion(nil, error)
                     }
                 }
             } else {
+                // Something has gone wrong with getting the user's ID
                 completion(nil, error)
             }
         }

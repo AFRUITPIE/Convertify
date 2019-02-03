@@ -22,6 +22,8 @@ class ViewController: UIViewController {
     @IBOutlet var convertButton: UIButton!
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var activityMonitor: UIActivityIndicatorView!
+
+    @IBOutlet var warningConvertLabel: UILabel!
     var pastelView: PastelView!
 
     // Mark: Functions
@@ -173,16 +175,17 @@ class ViewController: UIViewController {
                     self.addPastelView()
                     self.titleLabel.text = playlistName ?? ""
                     self.updateAppearance(title: "Converting now, this might take a while", color: UIColor.darkGray, enabled: false)
+                    self.warningConvertLabel.isHidden = false
                     self.handleSpotifyLogin() { token, error in
                         SpotifyPlaylistSearcher(token: token).addPlaylist(trackList: trackList!, playlistName: playlistName ?? "") { link, error in
                             if error == nil {
                                 print(link!)
-                                self.pastelView.removeFromSuperview()
                                 UIApplication.shared.open(URL(string: link!)!, options: [:])
                             } else {
                                 self.updateAppearance(title: "We had problems converting this playlist", color: UIColor.red, enabled: false)
                             }
                             self.pastelView.removeFromSuperview()
+                            self.warningConvertLabel.isHidden = true
                         }
                     }
                 })
@@ -223,10 +226,11 @@ class ViewController: UIViewController {
                 alert.addAction(UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) { _ in
                     // Show some cool animations
                     self.addPastelView()
-
+                    self.warningConvertLabel.isHidden = false
                     self.titleLabel.text = playlistName ?? ""
                     self.updateAppearance(title: "Converting now, this might take a while", color: UIColor.darkGray, enabled: false)
                     AppleMusicPlaylistSearcher().addPlaylist(trackList: trackList!, playlistName: playlistName ?? "") { link, error in
+                        self.warningConvertLabel.isHidden = true
                         if error == nil {
                             print(link!)
                             UIApplication.shared.open(URL(string: link!)!, options: [:])

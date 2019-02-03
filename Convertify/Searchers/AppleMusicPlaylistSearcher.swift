@@ -108,6 +108,8 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
                         }
                     }
                 }
+
+                // TODO: Figure out to do with all these uhhhh
                 case .notDetermined: do { print("uhhh") }
                 case .denied: do { print("uhhh") }
                 case .restricted: do { print("uhhh") }

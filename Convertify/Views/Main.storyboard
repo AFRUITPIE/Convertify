@@ -36,11 +36,19 @@
                                             <action selector="openSong:" destination="BYZ-38-t0r" eventType="touchUpInside" id="QNJ-cc-7zZ"/>
                                         </connections>
                                     </button>
+                                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please leave the app open while I work" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Phz-HE-3Ba">
+                                        <rect key="frame" x="0.0" y="58.5" width="296" height="0.0"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="0XO-Fd-cok" firstAttribute="centerX" secondItem="qSK-BA-mJS" secondAttribute="centerX" id="GCq-QJ-aZE"/>
                                     <constraint firstItem="0XO-Fd-cok" firstAttribute="centerX" secondItem="qSK-BA-mJS" secondAttribute="centerX" id="J4F-gI-Vbz"/>
+                                    <constraint firstAttribute="trailing" secondItem="Phz-HE-3Ba" secondAttribute="trailing" constant="8" id="QWR-C0-xTi"/>
                                     <constraint firstItem="HOe-RL-qXu" firstAttribute="centerX" secondItem="qSK-BA-mJS" secondAttribute="centerX" id="ene-XI-gFQ"/>
+                                    <constraint firstItem="Phz-HE-3Ba" firstAttribute="leading" secondItem="qSK-BA-mJS" secondAttribute="leading" constant="8" id="toT-PL-1iG"/>
                                 </constraints>
                             </stackView>
                         </subviews>
@@ -57,6 +65,7 @@
                     <connections>
                         <outlet property="convertButton" destination="HOe-RL-qXu" id="QXy-PV-ZBr"/>
                         <outlet property="titleLabel" destination="0XO-Fd-cok" id="a6n-CB-v0z"/>
+                        <outlet property="warningConvertLabel" destination="Phz-HE-3Ba" id="KVE-dG-vSX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

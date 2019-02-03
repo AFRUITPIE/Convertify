@@ -122,7 +122,9 @@ public class spotifySearcher: MusicSearcher {
                         let link = data["items"][0]["external_urls"]["spotify"].stringValue
                         completion(link, nil)
                     } else if retry {
-                        let newName = String(name.components(separatedBy: "(feat.")[0]).replacingOccurrences(of: ")", with: "")
+                        let newName = String(name.components(separatedBy: "(feat.")[0])
+                            .replacingOccurrences(of: ")", with: "")
+                            .replacingOccurrences(of: "&", with: "")
 
                         self.searchHelper(name: newName, type: type, retry: false) { link, error in
                             completion(link, error)
