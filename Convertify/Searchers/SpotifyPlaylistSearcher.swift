@@ -30,9 +30,9 @@ class SpotifyPlaylistSearcher: PlaylistSearcher {
                         // Add tracks to that playlist
                         self.addTracksToPlaylist(trackList: trackList,
                                                  playlistID: playlistID ?? "",
-                                                 userID: id ?? "") { link, error in
+                                                 userID: id ?? "") { playlistLink, error in
                             if error == nil {
-                                completion(link ?? "", error)
+                                completion("https://open.spotify.com/playlist/\(playlistLink ?? "")", error)
                             } else {
                                 completion(nil, error)
                             }
@@ -96,11 +96,10 @@ class SpotifyPlaylistSearcher: PlaylistSearcher {
     ///   - playlist: playlist's url
     ///   - completion: what to do with the playlist once adding tracks is done
     private func addTracksToPlaylist(trackList: [String: String], playlistID: String, userID: String, completion: @escaping (String?, Error?) -> Void) {
-        var tempTrackList = trackList
-
-        if trackList.count == 0 {
+        if trackList.isEmpty {
             completion(playlistID, nil)
         } else {
+            var tempTrackList = trackList
             let track = tempTrackList.popFirst()
 
             // Get the Spotify's track ID
@@ -129,7 +128,7 @@ class SpotifyPlaylistSearcher: PlaylistSearcher {
                         }
                     } else {
                         // Handle when a song isn't found (just keep searching)
-                        print("Had an issue searching for \(track?.key) by \(track?.value)")
+                        print("Had an issue searching for \(track?.key ?? "") by \(track?.value ?? "")")
                         self.addTracksToPlaylist(trackList: tempTrackList, playlistID: playlistID, userID: userID) { playlistID, error in
                             if error == nil {
                                 completion(playlistID, nil)

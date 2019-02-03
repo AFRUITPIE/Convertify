@@ -177,6 +177,7 @@ class ViewController: UIViewController {
                         SpotifyPlaylistSearcher(token: token).addPlaylist(trackList: trackList!, playlistName: playlistName ?? "") { link, error in
                             if error == nil {
                                 print(link!)
+                                self.pastelView.removeFromSuperview()
                                 UIApplication.shared.open(URL(string: link!)!, options: [:])
                             } else {
                                 self.updateAppearance(title: "We had problems converting this playlist", color: UIColor.red, enabled: false)

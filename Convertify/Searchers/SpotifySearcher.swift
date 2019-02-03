@@ -91,8 +91,20 @@ public class spotifySearcher: MusicSearcher {
     ///   - name: Name of resource to search for
     ///   - type: Type of resource to search for
     ///   - completion: What to run after searching is complete
-    /// - Returns: DataRequest from the Spotify API
     func search(name: String, type: String, completion: @escaping (String?, Error?) -> Void) {
+        searchHelper(name: name, type: type, retry: true) { link, error in
+            completion(link, error)
+        }
+    }
+
+    /// Helper for recursively retrying search, removes the "featuring" part of link
+    ///
+    /// - Parameters:
+    ///   - name: name to search for
+    ///   - type: type to search for
+    ///   - retry: whether or not to retry
+    ///   - completion: what to do when searching is either successful or errors
+    func searchHelper(name: String, type: String, retry: Bool, completion: @escaping (String?, Error?) -> Void) {
         let convertedType = (type == "song") ? "track" : type
 
         let headers: HTTPHeaders = ["Authorization": "Bearer \(self.token ?? "")"]
@@ -109,9 +121,13 @@ public class spotifySearcher: MusicSearcher {
                     if data["total"].intValue > 0 {
                         let link = data["items"][0]["external_urls"]["spotify"].stringValue
                         completion(link, nil)
-                    } else {
-                        // TODO: Start implementing redo here
+                    } else if retry {
+                        let newName = String(name.components(separatedBy: "(feat.")[0]).replacingOccurrences(of: ")", with: "")
 
+                        self.searchHelper(name: newName, type: type, retry: false) { link, error in
+                            completion(link, error)
+                        }
+                    } else {
                         completion(nil, MusicSearcherErrors.noSearchResultsError)
                     }
                 }
