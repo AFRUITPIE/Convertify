@@ -202,8 +202,10 @@ class ViewController: UIViewController {
                                      playlistName: playlistName ?? "New Playlist")
                 })
 
-                // TODO: Add a no action to the action thing
-
+                // No, do nothing
+                alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) { _ in
+                    self.updateAppearance(title: "Not converting playlist", color: UIColor.darkGray, enabled: false)
+                })
                 // Show the alert
                 self.present(alert, animated: true, completion: nil)
             } else {
