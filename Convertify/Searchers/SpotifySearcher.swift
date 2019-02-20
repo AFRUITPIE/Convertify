@@ -85,7 +85,7 @@ public class SpotifySearcher: MusicSearcher {
                 var urlComponents = URLComponents()
                 urlComponents.scheme = "https"
                 urlComponents.host = "api.spotify.com"
-                urlComponents.path = "/api/v1/\(type)s/\(id)"
+                urlComponents.path = "/v1/\(type)s/\(id)"
                 return urlComponents
             }
 
