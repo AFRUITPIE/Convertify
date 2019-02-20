@@ -12,14 +12,13 @@ import Alamofire
 import Foundation
 import SwiftyJSON
 
-public class spotifySearcher: MusicSearcher {
+public class SpotifySearcher: MusicSearcher {
     let serviceName: String = "Spotify"
     let serviceColor: UIColor = UIColor(red: 0.52, green: 0.74, blue: 0.00, alpha: 1.0)
 
     private var token: String?
 
-    /// Generate a token
-    init(completion: @escaping (Error?) -> Void) {
+    public static func login(completion: @escaping (String?, Error?) -> Void) {
         let parameters = ["client_id": Auth.spotifyClientID,
                           "client_secret": Auth.spotifyClientSecret,
                           "grant_type": "client_credentials"]
@@ -30,16 +29,23 @@ public class spotifySearcher: MusicSearcher {
                 switch response.result {
                 case .success: do {
                     let data = JSON(response.result.value!)
-                    self.token = data["access_token"].stringValue
-                    completion(nil)
+                    let token = data["access_token"].stringValue
+                    completion(token, nil)
                 }
-
                 case .failure: do {
                     // Something must have gone wrong with authentication :(
-                    completion(MusicSearcherErrors.authenticationError)
+                    completion(nil, MusicSearcherErrors.authenticationError)
                 }
                 }
             }
+    }
+
+    /// Generate a token
+    init(completion: @escaping (String?, Error?) -> Void) {
+        SpotifySearcher.login { token, error in
+            self.token = token
+            completion(token, error)
+        }
     }
 
     /// Use a provided token

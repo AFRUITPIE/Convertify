@@ -12,12 +12,12 @@ import Alamofire
 import Foundation
 import SwiftyJSON
 
-public class appleMusicSearcher: MusicSearcher {
+public class AppleMusicSearcher: MusicSearcher {
     let serviceName: String = "Apple Music"
     let serviceColor: UIColor = UIColor(red: 0.98, green: 0.34, blue: 0.76, alpha: 1.0)
 
     // Storefront for ID, see Apple Music API docs for list of storefronts
-    private var storefront: String? = "us"
+    private lazy var storefront: String = "us"
 
     // Headers for API calls
     private let headers: HTTPHeaders = ["Authorization": "Bearer \(Auth.appleMusicKey)"]
@@ -28,19 +28,43 @@ public class appleMusicSearcher: MusicSearcher {
     /// - Returns: DataRequest from querying Apple Music
     func search(link: String, completion: @escaping (String?, String?, String?, Error?) -> Void) {
         // Get the data out of the link, since many links include names to data
-        let type = getType(from: link)
-        let id = getID(from: link)
-        storefront = getStorefront(from: link)
+        var type: String = ""
+        var id: String = ""
 
-        print("\(type), \(id), \(storefront ?? "")")
+        do {
+            type = try getType(from: link)
+            id = try getID(from: link, type: type)
+            storefront = try getStorefront(from: link)
+        } catch {
+            completion(nil, nil, nil, error)
+            return
+        }
+
+        var urlComponents: URLComponents {
+            var urlComponents = URLComponents()
+            urlComponents.scheme = "https"
+            urlComponents.host = "api.music.apple.com"
+            urlComponents.path = "/v1/catalog/\(storefront)/\(type)s/\(id)"
+            return urlComponents
+        }
+
+        guard let url = urlComponents.url else {
+            completion(nil, nil, nil, MusicSearcherErrors.invalidLinkFormatError)
+            return
+        }
 
         // Request the search results from Apple Music
-        Alamofire.request("https://api.music.apple.com/v1/catalog/\(storefront ?? "us")/\(type)s/\(id)", headers: headers)
+        Alamofire.request(url, headers: headers)
             .validate()
             .responseJSON { response in
                 switch response.result {
                 case .success: do {
-                    let data = JSON(response.result.value!)["data"][0]["attributes"]
+                    guard let value = response.result.value else {
+                        completion(nil, nil, nil, MusicSearcherErrors.invalidLinkFormatError)
+                        return
+                    }
+
+                    let data = JSON(value)["data"][0]["attributes"]
 
                     let name = data["name"].stringValue
                     var artist: String?
@@ -62,37 +86,42 @@ public class appleMusicSearcher: MusicSearcher {
     ///
     /// - Parameter from: Apple Music Link to get type  from
     /// - Returns: type
-    private func getType(from: String) -> String {
-        if from.split(separator: "=").count == 2 {
-            return "song"
-        } else {
-            return String(from.replacingOccurrences(of: "\(SearcherURL.appleMusic)\(storefront ?? "us")/", with: "")
-                .split(separator: "/")[0])
+    private func getType(from: String) throws -> String {
+        if let components = URLComponents(string: from) {
+            if components.queryItems != nil {
+                return "song"
+            } else {
+                return String(components.path.split(separator: "/")[1])
+            }
         }
+        throw MusicSearcherErrors.invalidLinkFormatError
     }
 
     /// Parses the storefront code from an Apple Music Link
     ///
     /// - Parameter from: Apple Music Link to get storefront code from
     /// - Returns: storefront code
-    private func getStorefront(from: String) -> String {
-        return String(from.replacingOccurrences(of: SearcherURL.appleMusic, with: "")
-            .split(separator: "/")[0])
+    private func getStorefront(from: String) throws -> String {
+        if let components = URLComponents(string: from) {
+            return String(components.path.split(separator: "/")[0])
+        }
+        throw MusicSearcherErrors.invalidLinkFormatError
     }
 
     /// Parses the ID from an Apple Music Link
     ///
     /// - Parameter from: Apple Music Link to get ID from
+    /// - Parameter type: type of resource the link is for
     /// - Returns: ID
-    private func getID(from: String) -> String {
-        // Gets the "meat" of the URL
-        let linkData = from.split(separator: "/")
-
-        if getType(from: from) != "song" {
-            return String(linkData[linkData.count - 1])
-        } else {
-            return String(linkData[linkData.count - 1].components(separatedBy: "?i=")[1])
+    private func getID(from: String, type: String) throws -> String {
+        if let components = URLComponents(string: from) {
+            if type != "song" {
+                return String(components.path.split(separator: "/").last!)
+            } else {
+                return components.queryItems![0].value!
+            }
         }
+        throw MusicSearcherErrors.invalidLinkFormatError
     }
 
     /// Searches Apple Music for a certain type for a query
@@ -102,7 +131,7 @@ public class appleMusicSearcher: MusicSearcher {
     ///   - type: Type to search for (example: artist)
     ///   - completion: Function to run after search is complete
     func search(name: String, type: String, completion: @escaping (String?, Error?) -> Void) {
-        search(name: name, type: type, retry: true) { link, error in
+        searchHelper(name: name, type: type, retry: true) { link, error in
             completion(link, error)
         }
     }
@@ -114,12 +143,25 @@ public class appleMusicSearcher: MusicSearcher {
     ///   - type: type of resource
     ///   - retry: whether or not to retry
     ///   - completion: what to do with the link/error when done
-    private func search(name: String, type: String, retry: Bool, completion: @escaping (String?, Error?) -> Void) {
+    private func searchHelper(name: String, type: String, retry: Bool, completion: @escaping (String?, Error?) -> Void) {
         let appleMusicType = type == "track" ? "songs" : "\(type)s"
         let parameters: Parameters = ["term": name,
                                       "types": appleMusicType]
 
-        Alamofire.request("https://api.music.apple.com/v1/catalog/\(storefront ?? "us")/search", parameters: parameters, headers: headers)
+        var urlComponents: URLComponents {
+            var urlComponents = URLComponents()
+            urlComponents.scheme = "https"
+            urlComponents.host = "api.music.apple.com"
+            urlComponents.path = "/v1/catalog/\(storefront)/search"
+            return urlComponents
+        }
+
+        guard let url = urlComponents.url else {
+            completion(nil, MusicSearcherErrors.invalidLinkFormatError)
+            return
+        }
+
+        Alamofire.request(url, parameters: parameters, headers: headers)
             .validate()
             .responseJSON { response in
                 switch response.result {
@@ -130,17 +172,15 @@ public class appleMusicSearcher: MusicSearcher {
                     if data[appleMusicType].exists() {
                         let link = data[appleMusicType]["data"][0]["attributes"]["url"].stringValue
                         completion(link, nil)
-                    } else {
-                        // Redo search
-                        if retry {
-                            let newName = String(name.components(separatedBy: " - ")[0])
+                    } else if retry {
+                        // Redo search, remove the dashes and anything between the parenthesis
+                        let newName = String(name.components(separatedBy: " - ")[0])
+                            .replacingOccurrences(of: "\\s?\\([\\w\\s]*\\)", with: "", options: .regularExpression)
 
-                            // FIXME: There is something VERY wrong with this call
-
-//                            self.search(name: newName, type: type, retry: false) { link, error in
-//                                completion(link, error)
-//                            }
+                        self.searchHelper(name: newName, type: type, retry: false) { link, error in
+                            completion(link, error)
                         }
+                    } else {
                         // None found, let's throw an error
                         completion(nil, MusicSearcherErrors.noSearchResultsError)
                     }

@@ -19,14 +19,14 @@ class ConvertifyTests: XCTestCase {
         let expectation = self.expectation(description: "Login spotify and Apple Music")
 
         if spotify == nil {
-            spotify = spotifySearcher(completion: { error in
+            spotify = spotifySearcher { _, error in
                 if error == nil {
                     self.appleMusic = appleMusicSearcher()
                     expectation.fulfill()
                 } else {
                     XCTFail()
                 }
-            })
+            }
         } else {
             expectation.fulfill()
         }
@@ -56,10 +56,9 @@ class ConvertifyTests: XCTestCase {
             destination.search(name: compareName ?? "", type: compareType ?? "") { destinationLink, error in
                 XCTAssertNil(error)
 
-                expectation.fulfill()
-
                 // Check destination's data
                 XCTAssertNotNil(destinationLink)
+                expectation.fulfill()
             }
         }
     }

@@ -26,4 +26,5 @@ protocol MusicSearcher {
 enum MusicSearcherErrors: Error {
     case noSearchResultsError
     case authenticationError
+    case invalidLinkFormatError
 }

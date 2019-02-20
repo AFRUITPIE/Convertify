@@ -22,6 +22,7 @@
 		CF4CB1D621249516000D9D2F /* SearcherURLs.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF4CB1D521249516000D9D2F /* SearcherURLs.swift */; };
 		CF5A3E67220252C5000DB4D9 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CF5A3E66220252C5000DB4D9 /* StoreKit.framework */; };
 		CF5A3E85211BB2F400FD0A1E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CF5A3E84211BB2F400FD0A1E /* Assets.xcassets */; };
+		CF5F9B72221CB54100926CD9 /* FailedTrackTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF5F9B71221CB54100926CD9 /* FailedTrackTableViewController.swift */; };
 		CF633F0921FAB57F008A6B9A /* PlaylistTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF633F0821FAB57F008A6B9A /* PlaylistTests.swift */; };
 		CF633F0A21FAB623008A6B9A /* PlaylistSearcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF28F54621FA61B000EE2057 /* PlaylistSearcher.swift */; };
 		CF633F0B21FAB639008A6B9A /* AppleMusicPlaylistSearcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF28F54821FA61E000EE2057 /* AppleMusicPlaylistSearcher.swift */; };
@@ -90,6 +91,7 @@
 		CF4CB1D521249516000D9D2F /* SearcherURLs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearcherURLs.swift; sourceTree = "<group>"; };
 		CF5A3E66220252C5000DB4D9 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		CF5A3E84211BB2F400FD0A1E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		CF5F9B71221CB54100926CD9 /* FailedTrackTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailedTrackTableViewController.swift; sourceTree = "<group>"; };
 		CF633F0821FAB57F008A6B9A /* PlaylistTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistTests.swift; sourceTree = "<group>"; };
 		CF681FCA211A687000EE2CCC /* SpotifySearcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotifySearcher.swift; sourceTree = "<group>"; };
 		CF681FCB211A687000EE2CCC /* AppleMusicSearcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppleMusicSearcher.swift; sourceTree = "<group>"; };
@@ -234,6 +236,7 @@
 			isa = PBXGroup;
 			children = (
 				CF01DBC5211A67750065376C /* ViewController.swift */,
+				CF5F9B71221CB54100926CD9 /* FailedTrackTableViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -513,6 +516,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CF5F9B72221CB54100926CD9 /* FailedTrackTableViewController.swift in Sources */,
 				CF28F54721FA61B000EE2057 /* PlaylistSearcher.swift in Sources */,
 				CF4CB1D621249516000D9D2F /* SearcherURLs.swift in Sources */,
 				CF01DBC6211A67750065376C /* ViewController.swift in Sources */,

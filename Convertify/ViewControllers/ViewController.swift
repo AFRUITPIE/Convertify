@@ -21,7 +21,6 @@ class ViewController: UIViewController {
 
     @IBOutlet var convertButton: UIButton!
     @IBOutlet var titleLabel: UILabel!
-    @IBOutlet var activityMonitor: UIActivityIndicatorView!
 
     var pastelView: PastelView!
 
@@ -29,10 +28,10 @@ class ViewController: UIViewController {
 
     func initApp(link: String) {
         self.link = link
-        spotify = spotifySearcher { error in
+        spotify = SpotifySearcher { _, error in
             if error == nil {
                 // Start the search using the new Apple Music object
-                self.appleMusic = appleMusicSearcher()
+                self.appleMusic = AppleMusicSearcher()
                 self.handleLink(link: self.link ?? "")
             } else {
                 // Display an error for logging in
@@ -67,21 +66,14 @@ class ViewController: UIViewController {
     /// data from opposite source and allows the user to open links in opposite app.
     ///
     /// - Parameter link: Link to handle
-    func handleLink(link: String) {
+    private func handleLink(link: String) {
         // Resets the label text while converting
         titleLabel.text = "Convertify"
 
         // Decides what to do with the link
         switch true {
-        // Ignores playlists
-        case link.contains("/playlist/"):
-            if link.contains("open.spotify.com") {
-                handlePlaylistConversion(link: link)
-            } else if link.contains("itunes.apple.com") {
-                handleSpotifyPlaylistConversion(link: link)
-            } else {
-                updateAppearance(title: "I don't recognize where that playlist is from ☹️", color: UIColor.red, enabled: false)
-            }
+        // Converts playlists
+        case link.contains("/playlist/"): handlePlaylist(link: link)
 
         // Ignores radio stations
         case link.contains("/station/"):
@@ -108,10 +100,6 @@ class ViewController: UIViewController {
     ///   - source: Source service of the link
     ///   - destination: Destination to open the search result in
     private func handleSearching(link: String, source: MusicSearcher, destination: MusicSearcher) {
-        // Create feedback generator for stuff
-        var feedbackGenerator: UINotificationFeedbackGenerator? = UINotificationFeedbackGenerator()
-        feedbackGenerator?.prepare()
-
         // Search the source
         source.search(link: link) { type, name, artist, error in
             print("Searching \(source.serviceName) \(error == nil ? "successful" : "failed")")
@@ -125,79 +113,45 @@ class ViewController: UIViewController {
                     if error == nil {
                         self.link = link
                         self.updateAppearance(title: "Open in \(destination.serviceName)", color: destination.serviceColor, enabled: true)
-                        feedbackGenerator?.notificationOccurred(.success)
                     } else {
                         self.updateAppearance(title: "Error getting \(destination.serviceName) data", color: UIColor.red, enabled: false)
-                        feedbackGenerator?.notificationOccurred(.error)
                     }
                 }
             } else {
                 // Display the error
                 self.titleLabel.text = "Error getting \(source.serviceName) data"
                 self.updateAppearance(title: "Link might be formatted incorrectly", color: UIColor.red, enabled: false)
-                feedbackGenerator?.notificationOccurred(.error)
             }
-
-            // Deallocate feedbackGenerator
-            feedbackGenerator = nil
         }
     }
 
-    /// Adds pretty animation for converting playlists
-    private func addPastelView() {
-        // Custom Direction
-        pastelView.startPastelPoint = .left
-        pastelView.endPastelPoint = .right
-
-        // Custom Duration
-        pastelView.animationDuration = 3.0
-
-        // Custom Color
-        pastelView.setColors([spotify.serviceColor, appleMusic.serviceColor])
-        pastelView.alpha = 0.0
-        UIView.animate(withDuration: 3.0, delay: 0.0, options: [.allowUserInteraction], animations: {
-            self.pastelView.startAnimation()
-            self.view.insertSubview(self.pastelView, at: 0)
-            self.pastelView.alpha = 1.0
-        })
-    }
-
-    func handleSpotifyPlaylistConversion(link: String) {
-        AppleMusicPlaylistSearcher().getTrackList(link: link) { trackList, playlistName, error in
-
+    /// Decides how to convert and process playlist
+    ///
+    /// - Parameter link: link to playlist
+    private func handlePlaylist(link: String) {
+        // Ensure user is logged in
+        handleSpotifyLogin { token, error in
             if error == nil {
-                let alert = UIAlertController(title: "Add \(playlistName ?? "") to Spotify?", message: "This playlist will be added to your Spotify library with the closest matches we can find.", preferredStyle: UIAlertController.Style.alert)
+                let spotifyPlaylistSearcher = SpotifyPlaylistSearcher(token: token)
+                let appleMusicPlaylistSearcher = AppleMusicPlaylistSearcher()
 
-                // Yes, add the playlist
-                alert.addAction(UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) { _ in
-                    // Show some cool animations
-                    self.addPastelView()
-                    self.titleLabel.text = playlistName ?? ""
-                    self.updateAppearance(title: "Converting now, this might take a while", color: UIColor.darkGray, enabled: false)
-
-                    self.handleSpotifyLogin() { token, error in
-                        SpotifyPlaylistSearcher(token: token).addPlaylist(trackList: trackList!, playlistName: playlistName ?? "") { link, error in
-                            if error == nil {
-                                print(link!)
-                                UIApplication.shared.open(URL(string: link!)!, options: [:])
-                            } else {
-                                self.updateAppearance(title: "We had problems converting this playlist", color: UIColor.red, enabled: false)
-                            }
-                            self.pastelView.removeFromSuperview()
-                        }
-                    }
-                })
-
-                // TODO: Add a no action to the action thing
-
-                // Show the alert
-                self.present(alert, animated: true, completion: nil)
+                if link.contains("open.spotify.com") {
+                    self.convertPlaylist(link: link, source: spotifyPlaylistSearcher, destination: appleMusicPlaylistSearcher)
+                } else if link.contains("itunes.apple.com") {
+                    self.convertPlaylist(link: link, source: appleMusicPlaylistSearcher, destination: spotifyPlaylistSearcher)
+                } else {
+                    self.updateAppearance(title: "I don't recognize where that playlist is from ☹️", color: UIColor.red, enabled: false)
+                }
             } else {
-                self.updateAppearance(title: "We had problems converting this playlist", color: UIColor.red, enabled: false)
+                self.updateAppearance(title: "We had trouble logging into Spotify ☹️", color: UIColor.red, enabled: false)
             }
         }
     }
 
+    /// Ensures that the user is logged into Spotify and the application has permission to modify
+    /// private playlists
+    ///
+    /// - Parameter completion: What to do with login token after login is completed
     private func handleSpotifyLogin(completion: @escaping (String?, Error?) -> Void) {
         SpotifyLogin.shared.getAccessToken { token, error in
             switch error {
@@ -207,35 +161,46 @@ class ViewController: UIViewController {
         }
     }
 
-    /// Does the dirty work for converting playlists
+    
+    /// Adds the playlist
     ///
-    /// - Parameter link: playlist link to handle
-    func handlePlaylistConversion(link: String) {
-        // FOR RIGHT NOW we can assume this will be a spotify link
-
-        // Get the tracklist
-        SpotifyPlaylistSearcher(token: nil).getTrackList(link: link) { trackList, playlistName, error in
-            // Error handling
+    /// - Parameters:
+    ///   - destination: where to add the playlist
+    ///   - trackList: list of tracks [track name: artist name]
+    ///   - playlistName: Name of the playlist
+    private func addPlaylist(destination: PlaylistSearcher, trackList: [String: String], playlistName: String) {
+        // Show some cool animations
+        addPastelView()
+        titleLabel.text = playlistName
+        updateAppearance(title: "Converting now, this might take a while", color: UIColor.darkGray, enabled: false)
+        destination.addPlaylist(trackList: trackList, playlistName: playlistName) { _, _, error in
             if error == nil {
-                // Alert the user about adding the playlist
-                let alert = UIAlertController(title: "Add \(playlistName ?? "") to Apple Music?", message: "This playlist will be added to your Apple Music library with the closest matches we can find.", preferredStyle: UIAlertController.Style.alert)
+                self.updateAppearance(title: "Converted successfully", color: UIColor.darkGray, enabled: false)
+            } else {
+                self.updateAppearance(title: "We had problems converting this playlist", color: UIColor.red, enabled: false)
+            }
+            self.pastelView.removeFromSuperview()
+        }
+    }
+    
+    /// Converts a playlist
+    ///
+    /// - Parameters:
+    ///   - link: link of playlist
+    ///   - source: source for the playlist
+    ///   - destination: where to add the playlist
+    private func convertPlaylist(link: String, source: PlaylistSearcher, destination: PlaylistSearcher) {
+        source.getTrackList(link: link) { trackList, playlistName, error in
+            if error == nil {
+                let alert = UIAlertController(title: "Add \(playlistName ?? "") to Spotify?",
+                                              message: "This playlist will be added to your Spotify library with the closest matches we can find.",
+                                              preferredStyle: UIAlertController.Style.alert)
 
                 // Yes, add the playlist
                 alert.addAction(UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) { _ in
-                    // Show some cool animations
-                    self.addPastelView()
-                    self.titleLabel.text = playlistName ?? ""
-                    self.updateAppearance(title: "Converting now, this might take a while", color: UIColor.darkGray, enabled: false)
-                    AppleMusicPlaylistSearcher().addPlaylist(trackList: trackList!, playlistName: playlistName ?? "") { link, error in
-                        if error == nil {
-                            print(link!)
-                            // UIApplication.shared.open(URL(string: link!)!, options: [:])
-                            self.updateAppearance(title: "Converted successfully", color: UIColor.darkGray, enabled: false)
-                        } else {
-                            self.updateAppearance(title: "We had problems converting this playlist", color: UIColor.red, enabled: false)
-                        }
-                        self.pastelView.removeFromSuperview()
-                    }
+                    self.addPlaylist(destination: destination,
+                                     trackList: trackList ?? [:],
+                                     playlistName: playlistName ?? "New Playlist")
                 })
 
                 // TODO: Add a no action to the action thing
@@ -246,6 +211,23 @@ class ViewController: UIViewController {
                 self.updateAppearance(title: "We had problems converting this playlist", color: UIColor.red, enabled: false)
             }
         }
+    }
+    
+    /// Adds pretty animation for converting playlists
+    private func addPastelView() {
+        // Custom Direction
+        pastelView.startPastelPoint = .left
+        pastelView.endPastelPoint = .right
+        // Custom Duration
+        pastelView.animationDuration = 3.0
+        // Custom Color
+        pastelView.setColors([spotify.serviceColor, appleMusic.serviceColor])
+        pastelView.alpha = 0.0
+        UIView.animate(withDuration: 3.0, delay: 0.0, options: [.allowUserInteraction], animations: {
+            self.pastelView.startAnimation()
+            self.view.insertSubview(self.pastelView, at: 0)
+            self.pastelView.alpha = 1.0
+        })
     }
 
     // Mark: Actions

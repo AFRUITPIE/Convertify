@@ -24,7 +24,9 @@ class SpotifyPlaylistSearcher: PlaylistSearcher {
     ///   - trackList: list of tracks to add, [Song, Artist]
     ///   - playlistName: Name of the playlist
     ///   - completion: what to do with the link to the playlist after it's done
-    func addPlaylist(trackList: [String: String], playlistName: String, completion: @escaping (String?, Error?) -> Void) {
+    func addPlaylist(trackList: [String: String], playlistName: String, completion: @escaping (String?, [String], Error?) -> Void) {
+        // FIXME: This sure looks like the arrow anti-pattern to me
+
         // Get user ID
         getID(userToken: token ?? "") { id, error in
             if error == nil {
@@ -35,27 +37,34 @@ class SpotifyPlaylistSearcher: PlaylistSearcher {
                     if error == nil {
                         // Add tracks to that playlist
                         self.addTracksToPlaylist(trackList: trackList,
+                                                 failedTracks: [],
                                                  playlistID: playlistID ?? "",
-                                                 userID: id ?? "") { playlistLink, error in
+                                                 userID: id ?? "") { playlistLink, failedTracks, error in
                             if error == nil {
-                                completion("https://open.spotify.com/playlist/\(playlistLink ?? "")", error)
+                                completion("https://open.spotify.com/playlist/\(playlistLink ?? "")", failedTracks, error)
                             } else {
                                 // Something has gone wrong with adding the songs to the playlist
-                                completion(nil, error)
+                                completion(nil, failedTracks, error)
                             }
                         }
                     } else {
                         // Something has gone wrong with creating the playlist
-                        completion(nil, error)
+                        completion(nil, [], error)
                     }
                 }
             } else {
                 // Something has gone wrong with getting the user's ID
-                completion(nil, error)
+                completion(nil, [], error)
             }
         }
     }
 
+    
+    /// Gets ID of user
+    ///
+    /// - Parameters:
+    ///   - userToken: user's token
+    ///   - completion: what to do with user id
     private func getID(userToken: String, completion: @escaping (String?, Error?) -> Void) {
         let headers: HTTPHeaders = ["Authorization": "Bearer \(userToken)"]
         Alamofire.request("https://api.spotify.com/v1/me", headers: headers).validate().responseJSON { response in
@@ -104,15 +113,15 @@ class SpotifyPlaylistSearcher: PlaylistSearcher {
     ///   - trackList: list of tracks to add [Name: Artist]
     ///   - playlist: playlist's url
     ///   - completion: what to do with the playlist once adding tracks is done
-    private func addTracksToPlaylist(trackList: [String: String], playlistID: String, userID: String, completion: @escaping (String?, Error?) -> Void) {
+    private func addTracksToPlaylist(trackList: [String: String], failedTracks: [String], playlistID: String, userID: String, completion: @escaping (String?, [String], Error?) -> Void) {
         if trackList.isEmpty {
-            completion(playlistID, nil)
+            completion(playlistID, [], nil)
         } else {
             var tempTrackList = trackList
             let track = tempTrackList.popFirst()
 
             // Get the Spotify's track ID
-            spotifySearcher(token: token ?? "")
+            SpotifySearcher(token: token ?? "")
                 .search(name: "\(track?.key ?? "") \(track?.value ?? "")", type: "track") { trackLink, error in
                     if error == nil {
                         // Create a request for adding the track ID to the playlist
@@ -124,26 +133,23 @@ class SpotifyPlaylistSearcher: PlaylistSearcher {
                             switch response.result {
                             case .success: do {
                                 // Recursively add the rest of the tracks to the playlist
-                                self.addTracksToPlaylist(trackList: tempTrackList, playlistID: playlistID, userID: userID) { playlistID, error in
+                                self.addTracksToPlaylist(trackList: tempTrackList, failedTracks: failedTracks, playlistID: playlistID, userID: userID) { playlistID, failedTracks, error in
                                     if error == nil {
-                                        completion(playlistID, nil)
+                                        completion(playlistID, failedTracks, nil)
                                     } else {
-                                        completion(nil, error)
+                                        completion(nil, failedTracks, error)
                                     }
                                 }
                             }
-                            case let .failure(error): completion(nil, error)
+                            case let .failure(error): completion(nil, failedTracks, error)
                             }
                         }
                     } else {
                         // Handle when a song isn't found (just keep searching)
-                        print("Had an issue searching for \(track?.key ?? "") by \(track?.value ?? "")")
-                        self.addTracksToPlaylist(trackList: tempTrackList, playlistID: playlistID, userID: userID) { playlistID, error in
-                            if error == nil {
-                                completion(playlistID, nil)
-                            } else {
-                                completion(nil, error)
-                            }
+                        var failedTracks = failedTracks
+                        failedTracks.append("\(track?.key ?? "") by \(track?.value ?? "")") // ???
+                        self.addTracksToPlaylist(trackList: tempTrackList, failedTracks: failedTracks, playlistID: playlistID, userID: userID) { playlistID, failedTracks, error in
+                            completion(playlistID, failedTracks, error)
                         }
                     }
                 }
@@ -158,7 +164,7 @@ class SpotifyPlaylistSearcher: PlaylistSearcher {
     func getTrackList(link: String, completion: @escaping ([String: String]?, String?, Error?) -> Void) {
         let playlistID = getPlaylistID(link: link)
 
-        login { token, error in
+        SpotifySearcher.login { token, error in
             if error != nil {
                 completion(nil, nil, error)
             } else {
@@ -197,39 +203,6 @@ class SpotifyPlaylistSearcher: PlaylistSearcher {
                     }
             }
         }
-    }
-
-    /// Completes the login for Spotify to get credentials
-    ///
-    /// - Parameter completion: the function to be run after login is complete
-    private func login(completion: @escaping (String?, Error?) -> Void) {
-        /**
-         *
-         *
-         * FIXME: This is just straight up copied code from SpotifySearcher lol
-         *
-         *
-         */
-
-        let parameters = ["client_id": Auth.spotifyClientID,
-                          "client_secret": Auth.spotifyClientSecret,
-                          "grant_type": "client_credentials"]
-        Alamofire.request("https://accounts.spotify.com/api/token", method: .post, parameters: parameters, headers: nil)
-            .validate()
-            .responseJSON { response in
-                switch response.result {
-                case .success: do {
-                    let data = JSON(response.result.value!)
-                    let token = data["access_token"].stringValue
-                    completion(token, nil)
-                }
-
-                case let .failure(error): do {
-                    // Something must have gone wrong with authentication :(
-                    completion(nil, error)
-                }
-                }
-            }
     }
 
     /// Parses the tracklist from the JSON file
