@@ -59,7 +59,6 @@ class SpotifyPlaylistSearcher: PlaylistSearcher {
         }
     }
 
-    
     /// Gets ID of user
     ///
     /// - Parameters:
@@ -67,7 +66,21 @@ class SpotifyPlaylistSearcher: PlaylistSearcher {
     ///   - completion: what to do with user id
     private func getID(userToken: String, completion: @escaping (String?, Error?) -> Void) {
         let headers: HTTPHeaders = ["Authorization": "Bearer \(userToken)"]
-        Alamofire.request("https://api.spotify.com/v1/me", headers: headers).validate().responseJSON { response in
+
+        var urlComponents: URLComponents {
+            var urlComponents = URLComponents()
+            urlComponents.scheme = "https"
+            urlComponents.host = "api.spotify.com"
+            urlComponents.path = "/v1/me"
+            return urlComponents
+        }
+
+        guard let url = urlComponents.url else {
+            completion(nil, MusicSearcherErrors.invalidLinkFormatError)
+            return
+        }
+
+        Alamofire.request(url, headers: headers).validate().responseJSON { response in
             switch response.result {
             case .success: do {
                 // Success in getting user ID
@@ -93,7 +106,20 @@ class SpotifyPlaylistSearcher: PlaylistSearcher {
                                       "public": false]
 
         let headers: HTTPHeaders = ["Authorization": "Bearer \(token)"]
-        Alamofire.request("https://api.spotify.com/v1/users/\(userID)/playlists/", method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+        var urlComponents: URLComponents {
+            var urlComponents = URLComponents()
+            urlComponents.scheme = "https"
+            urlComponents.host = "api.spotify.com"
+            urlComponents.path = "/v1/users/\(userID)/playlists/"
+            return urlComponents
+        }
+
+        guard let url = urlComponents.url else {
+            completion(nil, MusicSearcherErrors.invalidLinkFormatError)
+            return
+        }
+
+        Alamofire.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
             .validate()
             .responseJSON { response in
                 switch response.result {
@@ -129,7 +155,21 @@ class SpotifyPlaylistSearcher: PlaylistSearcher {
 
                         let headers: HTTPHeaders = ["Authorization": "Bearer \(self.token ?? "")"]
                         let parameters: Parameters = ["uris": ["spotify:track:\(trackID)"]]
-                        Alamofire.request("https://api.spotify.com/v1/playlists/\(playlistID)/tracks", method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { response in
+
+                        var urlComponents: URLComponents {
+                            var urlComponents = URLComponents()
+                            urlComponents.scheme = "https"
+                            urlComponents.host = "api.spotify.com"
+                            urlComponents.path = "/v1/playlists/\(playlistID)/tracks"
+                            return urlComponents
+                        }
+
+                        guard let url = urlComponents.url else {
+                            completion(nil, [], MusicSearcherErrors.invalidLinkFormatError)
+                            return
+                        }
+
+                        Alamofire.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { response in
                             switch response.result {
                             case .success: do {
                                 // Recursively add the rest of the tracks to the playlist
@@ -171,7 +211,20 @@ class SpotifyPlaylistSearcher: PlaylistSearcher {
                 let headers: HTTPHeaders = ["Authorization": "Bearer \(token!)"]
 
                 // Request the playlist data
-                Alamofire.request("https://api.spotify.com/v1/playlists/\(playlistID)", method: .get, headers: headers)
+                var urlComponents: URLComponents {
+                    var urlComponents = URLComponents()
+                    urlComponents.scheme = "https"
+                    urlComponents.host = "api.spotify.com"
+                    urlComponents.path = "/v1/playlists/\(playlistID)"
+                    return urlComponents
+                }
+
+                guard let url = urlComponents.url else {
+                    completion(nil, nil, MusicSearcherErrors.invalidLinkFormatError)
+                    return
+                }
+
+                Alamofire.request(url, method: .get, headers: headers)
                     .validate()
                     .responseJSON { response in
 

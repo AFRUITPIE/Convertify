@@ -25,7 +25,21 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
         parseLinkData(link: link)
 
         let headers = ["Authorization": "Bearer \(self.token)"]
-        Alamofire.request("https://api.music.apple.com/v1/catalog/us/playlists/\(playlistID ?? "")", headers: headers)
+
+        var urlComponents: URLComponents {
+            var urlComponents = URLComponents()
+            urlComponents.scheme = "https"
+            urlComponents.host = "api.music.apple.com"
+            urlComponents.path = "/v1/catalog/us/playlists/\(playlistID ?? "")"
+            return urlComponents
+        }
+
+        guard let url = urlComponents.url else {
+            completion(nil, nil, MusicSearcherErrors.invalidLinkFormatError)
+            return
+        }
+
+        Alamofire.request(url, headers: headers)
             .validate()
             .responseJSON { response in
                 switch response.result {
@@ -90,7 +104,20 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
 
                         if error == nil {
                             // Add the playlist to the user's account
-                            Alamofire.request("https://api.music.apple.com/v1/me/library/playlists", method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+                            var urlComponents: URLComponents {
+                                var urlComponents = URLComponents()
+                                urlComponents.scheme = "https"
+                                urlComponents.host = "api.music.apple.com"
+                                urlComponents.path = "/v1/me/library/playlists"
+                                return urlComponents
+                            }
+
+                            guard let url = urlComponents.url else {
+                                completion(nil, [], MusicSearcherErrors.invalidLinkFormatError)
+                                return
+                            }
+
+                            Alamofire.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
                                 .validate()
                                 .responseJSON { response in
                                     switch response.result {

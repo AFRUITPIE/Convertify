@@ -19,9 +19,9 @@ class ConvertifyTests: XCTestCase {
         let expectation = self.expectation(description: "Login spotify and Apple Music")
 
         if spotify == nil {
-            spotify = spotifySearcher { _, error in
+            spotify = SpotifySearcher { _, error in
                 if error == nil {
-                    self.appleMusic = appleMusicSearcher()
+                    self.appleMusic = AppleMusicSearcher()
                     expectation.fulfill()
                 } else {
                     XCTFail()
@@ -163,7 +163,7 @@ class ConvertifyTests: XCTestCase {
     }
 
     func testAppleMusicError() {
-        let am = appleMusicSearcher()
+        let am = AppleMusicSearcher()
         am.search(name: "THERE IS NO POSSIBLE WAY THIS WILL EVER BE AN ALBUM NAME", type: "album", completion: { _, error in
             XCTAssertNotNil(error)
         })

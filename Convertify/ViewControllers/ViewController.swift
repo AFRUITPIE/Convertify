@@ -161,7 +161,6 @@ class ViewController: UIViewController {
         }
     }
 
-    
     /// Adds the playlist
     ///
     /// - Parameters:
@@ -182,7 +181,7 @@ class ViewController: UIViewController {
             self.pastelView.removeFromSuperview()
         }
     }
-    
+
     /// Converts a playlist
     ///
     /// - Parameters:
@@ -212,7 +211,7 @@ class ViewController: UIViewController {
             }
         }
     }
-    
+
     /// Adds pretty animation for converting playlists
     private func addPastelView() {
         // Custom Direction
