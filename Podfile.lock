@@ -1,20 +1,32 @@
 PODS:
   - Alamofire (4.7.3)
+  - Pastel (0.5.1)
+  - SpotifyLogin (0.1.6)
   - SwiftFormat/CLI (0.35.3)
+  - SwiftyJSON (4.2.0)
 
 DEPENDENCIES:
   - Alamofire (~> 4.7)
+  - Pastel
+  - SpotifyLogin (~> 0.1)
   - SwiftFormat/CLI
+  - SwiftyJSON (~> 4.0)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - Alamofire
+    - Pastel
+    - SpotifyLogin
     - SwiftFormat
+    - SwiftyJSON
 
 SPEC CHECKSUMS:
   Alamofire: c7287b6e5d7da964a70935e5db17046b7fde6568
+  Pastel: b3dd5b8d612dac06ae7c63c97c45c900829bc139
+  SpotifyLogin: 9cdf82ff13e5f37e5ddc7fd07cf9793a9ebd1124
   SwiftFormat: 9f7dd8d3a5950546e27ca75f2038a3a0b8c3091b
+  SwiftyJSON: c4bcba26dd9ec7a027fc8eade48e2c911f229e96
 
-PODFILE CHECKSUM: f228554285f3a919b01b3feb65219f9e071001d9
+PODFILE CHECKSUM: db853bdb47779987388ec2ca71e490e392b57e09
 
 COCOAPODS: 1.5.3

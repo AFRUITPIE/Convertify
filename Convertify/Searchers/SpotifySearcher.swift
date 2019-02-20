@@ -10,39 +10,60 @@
 
 import Alamofire
 import Foundation
+import SwiftyJSON
 
-public class spotifySearcher: MusicSearcher {
+public class SpotifySearcher: MusicSearcher {
     let serviceName: String = "Spotify"
     let serviceColor: UIColor = UIColor(red: 0.52, green: 0.74, blue: 0.00, alpha: 1.0)
 
-    var id: String?
-    var name: String?
-    var artist: String?
-    var type: String?
-    var url: String?
-    var token: String?
+    private var token: String?
 
-    init(completion: @escaping (Error?) -> Void) {
+    public static func login(completion: @escaping (String?, Error?) -> Void) {
         let parameters = ["client_id": Auth.spotifyClientID,
                           "client_secret": Auth.spotifyClientSecret,
                           "grant_type": "client_credentials"]
 
-        Alamofire.request("https://accounts.spotify.com/api/token", method: .post, parameters: parameters, headers: nil)
+        var urlComponents: URLComponents {
+            var urlComponents = URLComponents()
+            urlComponents.scheme = "https"
+            urlComponents.host = "accounts.spotify.com"
+            urlComponents.path = "/api/token"
+            return urlComponents
+        }
+
+        guard let url = urlComponents.url else {
+            completion(nil, MusicSearcherErrors.invalidLinkFormatError)
+            return
+        }
+
+        Alamofire.request(url, method: .post, parameters: parameters, headers: nil)
             .validate()
             .responseJSON { response in
                 switch response.result {
                 case .success: do {
-                    let result = response.result.value as! NSDictionary
-                    self.token = result.value(forKey: "access_token") as? String
-                    completion(nil)
+                    let data = JSON(response.result.value!)
+                    let token = data["access_token"].stringValue
+                    completion(token, nil)
                 }
-
                 case .failure: do {
-                    // FIXME: Add a real error here
-                    completion(MusicSearcherErrors.noSearchResultsError)
+                    // Something must have gone wrong with authentication :(
+                    completion(nil, MusicSearcherErrors.authenticationError)
                 }
                 }
             }
+    }
+
+    /// Generate a token
+    init(completion: @escaping (String?, Error?) -> Void) {
+        SpotifySearcher.login { token, error in
+            self.token = token
+            completion(token, error)
+        }
+    }
+
+    /// Use a provided token
+    init(token: String) {
+        self.token = token
     }
 
     /// Searches the Spotify API from a link and extracs the information from it
@@ -50,42 +71,47 @@ public class spotifySearcher: MusicSearcher {
     /// - Parameter link: Link to search for within the Spotify API
     /// - Parameter completion: What to run after searching is complete
     /// - Returns: DataRequest from querying the Spotify API
-    func search(link: String, completion: @escaping (Error?) -> Void) {
-        // Reset the variables
-        id = nil
-        name = nil
-        artist = nil
-        type = nil
-
+    func search(link: String, completion: @escaping (String?, String?, String?, Error?) -> Void) {
         let linkData = link.replacingOccurrences(of: SearcherURL.spotify, with: "").split(separator: "/")
         if linkData.count != 2 {
             print("It looks like the link was formatted incorrectly (link = \(link)")
-            completion(MusicSearcherErrors.noSearchResultsError)
+            completion(nil, nil, nil, MusicSearcherErrors.noSearchResultsError)
         } else {
-            type = String(linkData[0])
-            id = String(String(linkData[1]).split(separator: "?")[0])
+            let type = String(linkData[0])
+            let id = String(String(linkData[1]).split(separator: "?")[0])
             let headers: HTTPHeaders = ["Authorization": "Bearer \(token!)"]
 
+            var urlComponents: URLComponents {
+                var urlComponents = URLComponents()
+                urlComponents.scheme = "https"
+                urlComponents.host = "api.spotify.com"
+                urlComponents.path = "/v1/\(type)s/\(id)"
+                return urlComponents
+            }
+
+            guard let url = urlComponents.url else {
+                completion(nil, nil, nil, MusicSearcherErrors.invalidLinkFormatError)
+                return
+            }
+
             // Creates the request
-            Alamofire.request("https://api.spotify.com/v1/\(type!)s/\(id!)", headers: headers)
+            Alamofire.request(url, headers: headers)
                 .validate()
                 .responseJSON { response in
                     switch response.result {
                     case .success: do {
-                        let json = response.result.value as! NSDictionary
-                        // Gets the name of the content
-                        self.name = json.object(forKey: "name") as? String
+                        let data = JSON(response.result.value!)
+                        let name = data["name"].stringValue
+                        var artist: String?
 
-                        // Skips finding artist when matching artist links
-                        if self.type != "artist" {
-                            self.artist = ((json.object(forKey: "artists") as! NSArray)[0] as AnyObject).object(forKey: "name") as? String
+                        if type != "artist" {
+                            artist = data["artists"][0]["name"].stringValue
                         }
 
-                        // Run completion with no errors
-                        completion(nil)
+                        completion(type, name, artist, nil)
                     }
 
-                    case let .failure(error): do { completion(error) }
+                    case let .failure(error): do { completion(nil, nil, nil, error) }
                     }
                 }
         }
@@ -97,65 +123,64 @@ public class spotifySearcher: MusicSearcher {
     ///   - name: Name of resource to search for
     ///   - type: Type of resource to search for
     ///   - completion: What to run after searching is complete
-    /// - Returns: DataRequest from the Spotify API
-    func search(name: String, type: String, completion: @escaping (Error?) -> Void) {
-        self.type = type == "song" ? "track" : type
-
-        let headers: HTTPHeaders = ["Authorization": "Bearer \(self.token ?? "")"]
-        let parameters: Parameters = ["q": name, "type": self.type!]
-
-        Alamofire.request("https://api.spotify.com/v1/search/", parameters: parameters, headers: headers).responseJSON { response in
-            if let result = response.result.value {
-                // Gets the JSON value
-                let JSON = result as! NSDictionary
-
-                // Gets the data of the type from the JSON
-                let data = JSON.object(forKey: (self.type ?? "") + "s") as AnyObject
-
-                // Ensures there actually are search results
-                if (data.object(forKey: "total") as! Int) > 0 {
-                    // Gets the first search result
-                    let items = (data.object(forKey: "items") as! NSArray)[0] as AnyObject
-                    // Gets and sets the URL of the first search result
-                    self.url = (items.object(forKey: "external_urls") as AnyObject).object(forKey: "spotify") as? String
-                    completion(nil)
-                } else {
-                    completion(MusicSearcherErrors.noSearchResultsError)
-                }
-            }
+    func search(name: String, type: String, completion: @escaping (String?, Error?) -> Void) {
+        searchHelper(name: name, type: type, retry: true) { link, error in
+            completion(link, error)
         }
     }
 
-    /// Opens the URL
-    func open() {
-        if url != nil {
-            UIApplication.shared.open(URL(string: url!)!, options: [:])
-        }
-    }
-
-    /// Handles the "dirty work" setting the name, type, and artist
+    /// Helper for recursively retrying search, removes the "featuring" part of link
     ///
     /// - Parameters:
-    ///   - id: identifierof the Spotify resource
-    ///   - type: Type of the Spotify resource (Example: "artist")
-    /// - Returns: The DataRequest made using the Spotify API
-    private func handleSpotifyID(id: String, type: String) -> DataRequest {
-        let headers = ["Authorization": "Bearer \(token ?? "")"]
-        // Creates the request
-        return Alamofire.request("https://api.spotify.com/v1/\(type)s/\(id)", headers: headers).responseJSON { response in
-            if let result = response.result.value {
-                let JSON = result as! NSDictionary
-                // Gets the name of the content
-                self.name = JSON.object(forKey: "name") as? String
+    ///   - name: name to search for
+    ///   - type: type to search for
+    ///   - retry: whether or not to retry
+    ///   - completion: what to do when searching is either successful or errors
+    func searchHelper(name: String, type: String, retry: Bool, completion: @escaping (String?, Error?) -> Void) {
+        let convertedType = (type == "song") ? "track" : type
 
-                // Skips finding artist when matching artist links
-                if type != "artist" {
-                    self.artist = ((JSON.object(forKey: "artists") as! NSArray)[0] as AnyObject).object(forKey: "name") as? String
+        let headers: HTTPHeaders = ["Authorization": "Bearer \(self.token ?? "")"]
+        let parameters: Parameters = ["q": name, "type": convertedType]
+
+        var urlComponents: URLComponents {
+            var urlComponents = URLComponents()
+            urlComponents.scheme = "https"
+            urlComponents.host = "api.spotify.com"
+            urlComponents.path = "/v1/search/"
+            return urlComponents
+        }
+
+        guard let url = urlComponents.url else {
+            completion(nil, MusicSearcherErrors.invalidLinkFormatError)
+            return
+        }
+
+        Alamofire.request(url, parameters: parameters, headers: headers)
+            .validate()
+            .responseJSON { response in
+                switch response.result {
+                case .success: do {
+                    let data = JSON(response.result.value!)["\(type == "song" ? "track" : type)s"]
+
+                    // Ensure there are search results
+                    if data["total"].intValue > 0 {
+                        let link = data["items"][0]["external_urls"]["spotify"].stringValue
+                        completion(link, nil)
+                    } else if retry {
+                        let newName = String(name.components(separatedBy: "(feat.")[0])
+                            .replacingOccurrences(of: ")", with: "")
+                            .replacingOccurrences(of: "&", with: "")
+
+                        self.searchHelper(name: newName, type: type, retry: false) { link, error in
+                            completion(link, error)
+                        }
+                    } else {
+                        completion(nil, MusicSearcherErrors.noSearchResultsError)
+                    }
                 }
 
-                // Sets the type
-                self.type = type
+                case let .failure(error): do { completion(nil, error) }
+                }
             }
-        }
     }
 }

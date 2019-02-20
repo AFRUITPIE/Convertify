@@ -14,7 +14,7 @@ class ConvertifyUITests: XCTestCase {
 
     let appleMusicButton: String = "Open in Apple Music"
     let spotifyButton: String = "Open in Spotify"
-    let playlistError: String = "I cannot convert playlists ☹️"
+    let playlistError: String = "Playlist conversion coming soon 👀"
     let radioError: String = "I cannot convert radio stations ☹️"
     let noLinkError: String = "No Spotify or Apple Music link found in clipboard"
 
@@ -79,11 +79,6 @@ class ConvertifyUITests: XCTestCase {
         testAppUI(labelName: "Convertify", buttonLabel: radioError, buttonEnabled: false)
     }
 
-    func testAppleMusicSearchPlaylist() {
-        UIPasteboard.general.string = "https://itunes.apple.com/us/playlist/pure-focus/pl.dbd712beded846dca273d5d3259d28aa"
-        testAppUI(labelName: "Convertify", buttonLabel: playlistError, buttonEnabled: false)
-    }
-
     /*
 
      Spotify searches
@@ -103,11 +98,6 @@ class ConvertifyUITests: XCTestCase {
     func testSpotifySearchSong() {
         UIPasteboard.general.string = "https://open.spotify.com/track/2TVxnKdb3tqe1nhQWwwZCO"
         testAppUI(labelName: "Tiny Dancer by Elton John", buttonLabel: appleMusicButton, buttonEnabled: true)
-    }
-
-    func testSpotifySearchPlaylist() {
-        UIPasteboard.general.string = "https://open.spotify.com/user/spotify/playlist/37i9dQZF1DWZ0OzPeadl0h"
-        testAppUI(labelName: "Convertify", buttonLabel: playlistError, buttonEnabled: false)
     }
 
     /*

@@ -10,100 +10,118 @@
 
 import Alamofire
 import Foundation
+import SwiftyJSON
 
-public class appleMusicSearcher: MusicSearcher {
+public class AppleMusicSearcher: MusicSearcher {
     let serviceName: String = "Apple Music"
     let serviceColor: UIColor = UIColor(red: 0.98, green: 0.34, blue: 0.76, alpha: 1.0)
 
-    var id: String?
-    var name: String?
-    var artist: String?
-    var type: String?
-    var url: String?
-    var token: String?
-    private var storefront: String?
+    // Storefront for ID, see Apple Music API docs for list of storefronts
+    private lazy var storefront: String = "us"
 
-    init() {
-        token = Auth.appleMusicKey
-    }
+    // Headers for API calls
+    private let headers: HTTPHeaders = ["Authorization": "Bearer \(Auth.appleMusicKey)"]
 
     /// Searches Apple Music from a link and parses the data accordingly
     ///
     /// - Parameter link: Apple Music link to search
     /// - Returns: DataRequest from querying Apple Music
-    func search(link: String, completion: @escaping (Error?) -> Void) {
-        // Reset these fields
-        id = nil
-        name = nil
-        artist = nil
-        type = nil
-        storefront = nil
-
+    func search(link: String, completion: @escaping (String?, String?, String?, Error?) -> Void) {
         // Get the data out of the link, since many links include names to data
-        parseLinkData(link: link)
+        var type: String = ""
+        var id: String = ""
 
-        let headers = ["Authorization": "Bearer \(self.token ?? "")"]
+        do {
+            type = try getType(from: link)
+            id = try getID(from: link, type: type)
+            storefront = try getStorefront(from: link)
+        } catch {
+            completion(nil, nil, nil, error)
+            return
+        }
+
+        var urlComponents: URLComponents {
+            var urlComponents = URLComponents()
+            urlComponents.scheme = "https"
+            urlComponents.host = "api.music.apple.com"
+            urlComponents.path = "/v1/catalog/\(storefront)/\(type)s/\(id)"
+            return urlComponents
+        }
+
+        guard let url = urlComponents.url else {
+            completion(nil, nil, nil, MusicSearcherErrors.invalidLinkFormatError)
+            return
+        }
 
         // Request the search results from Apple Music
-        Alamofire.request("https://api.music.apple.com/v1/catalog/\(storefront ?? "us")/\(type!)s/\(id!)", headers: headers)
+        Alamofire.request(url, headers: headers)
             .validate()
             .responseJSON { response in
-
                 switch response.result {
                 case .success: do {
-                    let json = response.result.value as! NSDictionary
-
-                    // Gets the meaty data that we want from the JSON
-                    let data: AnyObject = (((json.object(forKey: "data") as! NSArray)[0]) as AnyObject)
-                        .object(forKey: "attributes") as AnyObject
-
-                    // Gets the name from the JSON
-                    self.name = data.object(forKey: "name") as? String
-
-                    // Gets the artist from the JSON
-                    if self.type != "artist" {
-                        self.artist = data.object(forKey: "artistName") as? String
+                    guard let value = response.result.value else {
+                        completion(nil, nil, nil, MusicSearcherErrors.invalidLinkFormatError)
+                        return
                     }
 
-                    // Finally, run the completion with no errors
-                    completion(nil)
+                    let data = JSON(value)["data"][0]["attributes"]
+
+                    let name = data["name"].stringValue
+                    var artist: String?
+
+                    // Only set artist name if artist isn't the type
+                    if type != "artist" {
+                        artist = data["artistName"].stringValue
+                    }
+
+                    completion(type, name, artist, nil)
                 }
 
-                case let .failure(error): do {
-                    completion(error)
-                }
+                case let .failure(error): do { completion(nil, nil, nil, error) }
                 }
             }
     }
 
-    /// Parses data such as id, type, and url from an Apple Music link
+    /// Parses the type from an Apple Music Link
     ///
-    /// - Parameter link: link to parse data from
-    private func parseLinkData(link: String) {
-        url = link
-        // Get the storefront
-        storefront = String(link.replacingOccurrences(of: SearcherURL.appleMusic, with: "")
-            .split(separator: "/")[0])
-
-        // Gets the "meat" of the URL
-        let linkData = link.replacingOccurrences(of: "\(SearcherURL.appleMusic)\(storefront ?? "us")/", with: "")
-            .split(separator: "/")
-
-        // Gets type
-        type = String(linkData[0])
-
-        // Handles "album" and "album -> song" issue
-        if type == "artist" {
-            id = String(linkData[2])
-        } else if type == "album" {
-            // If there's an equal sign in the link, it's a SONG within an album
-            if link.split(separator: "=").count == 2 {
-                id = String(link.split(separator: "=")[1])
-                type = "song"
+    /// - Parameter from: Apple Music Link to get type  from
+    /// - Returns: type
+    private func getType(from: String) throws -> String {
+        if let components = URLComponents(string: from) {
+            if components.queryItems != nil {
+                return "song"
             } else {
-                id = String(linkData[2]) // FIXME: Horrific style you asshole
+                return String(components.path.split(separator: "/")[1])
             }
         }
+        throw MusicSearcherErrors.invalidLinkFormatError
+    }
+
+    /// Parses the storefront code from an Apple Music Link
+    ///
+    /// - Parameter from: Apple Music Link to get storefront code from
+    /// - Returns: storefront code
+    private func getStorefront(from: String) throws -> String {
+        if let components = URLComponents(string: from) {
+            return String(components.path.split(separator: "/")[0])
+        }
+        throw MusicSearcherErrors.invalidLinkFormatError
+    }
+
+    /// Parses the ID from an Apple Music Link
+    ///
+    /// - Parameter from: Apple Music Link to get ID from
+    /// - Parameter type: type of resource the link is for
+    /// - Returns: ID
+    private func getID(from: String, type: String) throws -> String {
+        if let components = URLComponents(string: from) {
+            if type != "song" {
+                return String(components.path.split(separator: "/").last!)
+            } else {
+                return components.queryItems![0].value!
+            }
+        }
+        throw MusicSearcherErrors.invalidLinkFormatError
     }
 
     /// Searches Apple Music for a certain type for a query
@@ -112,47 +130,63 @@ public class appleMusicSearcher: MusicSearcher {
     ///   - name: Name of the thing to search for in Apple Music
     ///   - type: Type to search for (example: artist)
     ///   - completion: Function to run after search is complete
-    func search(name: String, type: String, completion: @escaping (Error?) -> Void) {
-        url = nil
+    func search(name: String, type: String, completion: @escaping (String?, Error?) -> Void) {
+        searchHelper(name: name, type: type, retry: true) { link, error in
+            completion(link, error)
+        }
+    }
 
+    /// Recursive helper function for doing search
+    ///
+    /// - Parameters:
+    ///   - name: name of resource
+    ///   - type: type of resource
+    ///   - retry: whether or not to retry
+    ///   - completion: what to do with the link/error when done
+    private func searchHelper(name: String, type: String, retry: Bool, completion: @escaping (String?, Error?) -> Void) {
         let appleMusicType = type == "track" ? "songs" : "\(type)s"
         let parameters: Parameters = ["term": name,
                                       "types": appleMusicType]
-        let headers: HTTPHeaders = ["Authorization": "Bearer \(Auth.appleMusicKey)"]
 
-        Alamofire.request("https://api.music.apple.com/v1/catalog/\(storefront ?? "us")/search", parameters: parameters, headers: headers)
+        var urlComponents: URLComponents {
+            var urlComponents = URLComponents()
+            urlComponents.scheme = "https"
+            urlComponents.host = "api.music.apple.com"
+            urlComponents.path = "/v1/catalog/\(storefront)/search"
+            return urlComponents
+        }
+
+        guard let url = urlComponents.url else {
+            completion(nil, MusicSearcherErrors.invalidLinkFormatError)
+            return
+        }
+
+        Alamofire.request(url, parameters: parameters, headers: headers)
             .validate()
             .responseJSON { response in
                 switch response.result {
                 case .success: do {
-                    let json = response.result.value as! NSDictionary
+                    let data = JSON(response.result.value!)["results"]
 
-                    let results = json.object(forKey: "results") as! NSDictionary
+                    // Ensures there are search results before setting it
+                    if data[appleMusicType].exists() {
+                        let link = data[appleMusicType]["data"][0]["attributes"]["url"].stringValue
+                        completion(link, nil)
+                    } else if retry {
+                        // Redo search, remove the dashes and anything between the parenthesis
+                        let newName = String(name.components(separatedBy: " - ")[0])
+                            .replacingOccurrences(of: "\\s?\\([\\w\\s]*\\)", with: "", options: .regularExpression)
 
-                    // Ensures there are search results
-                    if results.value(forKey: appleMusicType) != nil {
-                        self.url = ((((results
-                                .object(forKey: appleMusicType) as AnyObject)
-                                .object(forKey: "data") as! NSArray)[0] as AnyObject)
-                            .object(forKey: "attributes") as AnyObject)
-                            .object(forKey: "url") as? String
-                        completion(nil)
+                        self.searchHelper(name: newName, type: type, retry: false) { link, error in
+                            completion(link, error)
+                        }
                     } else {
-                        completion(MusicSearcherErrors.noSearchResultsError)
+                        // None found, let's throw an error
+                        completion(nil, MusicSearcherErrors.noSearchResultsError)
                     }
                 }
-
-                case let .failure(error): do {
-                    completion(error)
-                }
+                case let .failure(error): do { completion(nil, error) }
                 }
             }
-    }
-
-    /// Opens the URL in Apple Music
-    func open() {
-        if url != nil {
-            UIApplication.shared.open(URL(string: url!)!, options: [:])
-        }
     }
 }
