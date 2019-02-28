@@ -16,7 +16,7 @@ public class SpotifySearcher: MusicSearcher {
     let serviceName: String = "Spotify"
     let serviceColor: UIColor = UIColor(red: 0.52, green: 0.74, blue: 0.00, alpha: 1.0)
 
-    private var token: String?
+    var token: String = ""
 
     public static func login(completion: @escaping (String?, Error?) -> Void) {
         let parameters = ["client_id": Auth.spotifyClientID,
@@ -53,14 +53,6 @@ public class SpotifySearcher: MusicSearcher {
             }
     }
 
-    /// Generate a token
-    init(completion: @escaping (String?, Error?) -> Void) {
-        SpotifySearcher.login { token, error in
-            self.token = token
-            completion(token, error)
-        }
-    }
-
     /// Use a provided token
     init(token: String) {
         self.token = token
@@ -79,7 +71,7 @@ public class SpotifySearcher: MusicSearcher {
         } else {
             let type = String(linkData[0])
             let id = String(String(linkData[1]).split(separator: "?")[0])
-            let headers: HTTPHeaders = ["Authorization": "Bearer \(token!)"]
+            let headers: HTTPHeaders = ["Authorization": "Bearer \(token)"]
 
             var urlComponents: URLComponents {
                 var urlComponents = URLComponents()
@@ -139,7 +131,7 @@ public class SpotifySearcher: MusicSearcher {
     func searchHelper(name: String, type: String, retry: Bool, completion: @escaping (String?, Error?) -> Void) {
         let convertedType = (type == "song") ? "track" : type
 
-        let headers: HTTPHeaders = ["Authorization": "Bearer \(self.token ?? "")"]
+        let headers: HTTPHeaders = ["Authorization": "Bearer \(self.token)"]
         let parameters: Parameters = ["q": name, "type": convertedType]
 
         var urlComponents: URLComponents {

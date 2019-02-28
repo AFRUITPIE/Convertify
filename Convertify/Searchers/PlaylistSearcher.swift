@@ -10,6 +10,14 @@ import Alamofire
 import Foundation
 
 protocol PlaylistSearcher {
+    // The name of the service
+    var serviceName: String { get }
+
+    /// Gets a list of the tracks of a playlist from a given url
+    ///
+    /// - Parameters:
+    ///   - link: url of the playlist
+    ///   - completion: what to do with the tacklist: ([track name: artist name], name of playlist, error)
     func getTrackList(link: String, completion: @escaping ([String: String]?, String?, Error?) -> Void)
 
     /// Add a playlist to the source

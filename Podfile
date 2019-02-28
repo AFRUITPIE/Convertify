@@ -12,6 +12,7 @@ target 'Convertify' do
   pod 'SwiftFormat/CLI'
   pod "Pastel"
   pod 'SpotifyLogin', '~> 0.1'
+  pod 'CupertinoJWT'
 
   target 'ConvertifyTests' do
     pod 'Alamofire', '~> 4.7'
@@ -19,7 +20,7 @@ target 'Convertify' do
     pod 'SwiftFormat/CLI'
     pod "Pastel"
     pod 'SpotifyLogin', '~> 0.1'
-
+    pod 'CupertinoJWT'
   end
   
 end

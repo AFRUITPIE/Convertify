@@ -12,9 +12,15 @@ import StoreKit
 import SwiftyJSON
 
 class AppleMusicPlaylistSearcher: PlaylistSearcher {
-    private let token: String = Auth.appleMusicKey
+    var serviceName: String = "Apple Music"
+
+    private let token: String
     private var storefront: String = "us"
     private var playlistID: String?
+
+    init(token: String) {
+        self.token = token
+    }
 
     /// Gets the track list from a given playlist
     ///
@@ -89,7 +95,7 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
                 switch authorizationStatus {
                 case .authorized: do {
                     // Get Music User Token
-                    SKCloudServiceController().requestUserToken(forDeveloperToken: Auth.appleMusicKey) { musicUserToken, error in
+                    SKCloudServiceController().requestUserToken(forDeveloperToken: self.token) { musicUserToken, error in
 
                         let parameters: Parameters = [
                             "attributes": playlist.attributes,
@@ -100,7 +106,7 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
                             ],
                         ]
 
-                        let headers: HTTPHeaders = ["Music-User-Token": musicUserToken ?? "", "Authorization": "Bearer \(Auth.appleMusicKey)"]
+                        let headers: HTTPHeaders = ["Music-User-Token": musicUserToken ?? "", "Authorization": "Bearer \(self.token)"]
 
                         if error == nil {
                             // Add the playlist to the user's account
@@ -152,7 +158,8 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
     ///   - completion: what to do with the completed playlist with IDs
     private func getConvertedPlaylist(trackList: [String: String], playlistName: String,
                                       completion: @escaping (AppleMusicPlaylist, [String]) -> Void) {
-        let appleMusic: MusicSearcher = AppleMusicSearcher()
+        // FIXME: Use real token
+        let appleMusic: MusicSearcher = AppleMusicSearcher(token: "")
 
         getConvertedPlaylistHelper(trackList: trackList,
                                    playlist: AppleMusicPlaylist(playlistName: playlistName),
