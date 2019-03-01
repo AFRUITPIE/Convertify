@@ -158,8 +158,7 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
     ///   - completion: what to do with the completed playlist with IDs
     private func getConvertedPlaylist(trackList: [String: String], playlistName: String,
                                       completion: @escaping (AppleMusicPlaylist, [String]) -> Void) {
-        // FIXME: Use real token
-        let appleMusic: MusicSearcher = AppleMusicSearcher(token: "")
+        let appleMusic: MusicSearcher = AppleMusicSearcher(token: token)
 
         getConvertedPlaylistHelper(trackList: trackList,
                                    playlist: AppleMusicPlaylist(playlistName: playlistName),
