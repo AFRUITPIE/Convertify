@@ -12,6 +12,7 @@ import Foundation
 protocol MusicSearcher {
     // The name of the service
     var serviceName: String { get }
+    var token: String { get }
 
     // Product color of the service
     var serviceColor: UIColor { get }

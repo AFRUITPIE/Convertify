@@ -9,7 +9,11 @@
 import Foundation
 
 enum Auth {
-    static let appleMusicKey = ""
+    static let appleP8 = """
+    """
+
+    static let appleKeyID = ""
+    static let appleTeamID = ""
 
     static let spotifyClientID = ""
     static let spotifyClientSecret = ""

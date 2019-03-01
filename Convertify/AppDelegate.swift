@@ -21,6 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_: UIApplication, didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         SpotifyLogin.shared.configure(clientID: Auth.spotifyClientID, clientSecret: Auth.spotifyClientSecret, redirectURL: URL(string: "convertify://")!)
+
         return true
     }
 
@@ -31,6 +32,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private func resetAppLink() {
         let viewController = window?.rootViewController as! ViewController
         let pasteBoardValue = UIPasteboard.general.string
+
+        // FIXME: uhhhh this should have an exemption for playlists
 
         // Only redoes search with new links, doesn't attempt searching when there is no string in pasteboard
         if pasteBoardValue == nil {

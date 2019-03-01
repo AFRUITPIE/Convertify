@@ -9,18 +9,38 @@
 //
 
 import Alamofire
+import CupertinoJWT
 import Foundation
 import SwiftyJSON
 
 public class AppleMusicSearcher: MusicSearcher {
     let serviceName: String = "Apple Music"
+    var token: String = ""
     let serviceColor: UIColor = UIColor(red: 0.98, green: 0.34, blue: 0.76, alpha: 1.0)
 
     // Storefront for ID, see Apple Music API docs for list of storefronts
     private lazy var storefront: String = "us"
 
     // Headers for API calls
-    private let headers: HTTPHeaders = ["Authorization": "Bearer \(Auth.appleMusicKey)"]
+    private lazy var headers: HTTPHeaders = [:]
+
+    public static func login(completion: @escaping (String?, Error?) -> Void) {
+        // Assign developer information and token expiration setting
+        let jwt = JWT(keyID: Auth.appleKeyID, teamID: Auth.appleTeamID, issueDate: Date(), expireDuration: 60 * 60)
+
+        do {
+            let token = try jwt.sign(with: Auth.appleP8)
+            completion(token, nil)
+        } catch {
+            completion(nil, MusicSearcherErrors.authenticationError)
+            // Handle error
+        }
+    }
+
+    init(token: String) {
+        self.token = token
+        headers = ["Authorization": "Bearer \(token)"]
+    }
 
     /// Searches Apple Music from a link and parses the data accordingly
     ///

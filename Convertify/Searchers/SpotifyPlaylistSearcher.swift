@@ -12,6 +12,8 @@ import SpotifyLogin
 import SwiftyJSON
 
 class SpotifyPlaylistSearcher: PlaylistSearcher {
+    var serviceName: String = "Spotify"
+
     private let token: String?
 
     init(token: String?) {
