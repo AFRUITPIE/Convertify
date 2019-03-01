@@ -14,7 +14,6 @@ import UIKit
 class ViewController: UIViewController {
     private var appleMusic: MusicSearcher!
     private var spotify: MusicSearcher!
-
     private var link: String?
 
     // Mark: Properties
@@ -26,22 +25,34 @@ class ViewController: UIViewController {
 
     // Mark: Functions
 
-    func initApp(link: String) {
-        self.link = link
-        spotify = SpotifySearcher { _, error in
-            if error == nil {
-                // Start the search using the new Apple Music object
-                self.appleMusic = AppleMusicSearcher()
-                self.handleLink(link: self.link ?? "")
-            } else {
-                // Display an error for logging in
-                self.updateAppearance(title: "Error getting Spotify credentials", color: UIColor.red, enabled: false)
-            }
-        }
-    }
-
     override func viewDidLoad() {
         pastelView = PastelView(frame: view.bounds)
+    }
+
+    func initApp(link: String) {
+        self.link = link
+
+        // Ensure Spotify has credentials
+        SpotifySearcher.login { spotifyToken, _ in
+            guard let spotifyToken = spotifyToken else {
+                // Display an error for logging in
+                self.updateAppearance(title: "Error getting Spotify credentials", color: UIColor.red, enabled: false)
+                return
+            }
+            self.spotify = SpotifySearcher(token: spotifyToken)
+
+            // Ensure Apple Music has credentials
+            AppleMusicSearcher.login { appleMusicToken, _ in
+                guard let appleMusicToken = appleMusicToken else {
+                    self.updateAppearance(title: "Error getting Apple Music credentials", color: UIColor.red, enabled: false)
+                    return
+                }
+                self.appleMusic = AppleMusicSearcher(token: appleMusicToken)
+
+                // Start handling link
+                self.handleLink(link: self.link ?? "")
+            }
+        }
     }
 
     /// Animates the color conversion in the app
@@ -58,7 +69,6 @@ class ViewController: UIViewController {
             self.view.backgroundColor = color
             self.convertButton.setTitleColor(UIColor.white, for: .normal)
         })
-
         convertButton.isEnabled = enabled
     }
 
@@ -102,8 +112,6 @@ class ViewController: UIViewController {
     private func handleSearching(link: String, source: MusicSearcher, destination: MusicSearcher) {
         // Search the source
         source.search(link: link) { type, name, artist, error in
-            print("Searching \(source.serviceName) \(error == nil ? "successful" : "failed")")
-
             if error == nil {
                 self.titleLabel.text = (artist == nil ? name! : name! + " by " + artist!)
 
@@ -129,11 +137,12 @@ class ViewController: UIViewController {
     ///
     /// - Parameter link: link to playlist
     private func handlePlaylist(link: String) {
-        // Ensure user is logged in
-        handleSpotifyLogin { token, error in
+        // Ensure user is logged in to Spotify
+        handleSpotifyLogin { spotifyToken, error in
             if error == nil {
-                let spotifyPlaylistSearcher = SpotifyPlaylistSearcher(token: token)
-                let appleMusicPlaylistSearcher = AppleMusicPlaylistSearcher()
+                // Ensure Apple Music is logged in
+                let spotifyPlaylistSearcher = SpotifyPlaylistSearcher(token: spotifyToken)
+                let appleMusicPlaylistSearcher = AppleMusicPlaylistSearcher(token: self.appleMusic.token)
 
                 if link.contains("open.spotify.com") {
                     self.convertPlaylist(link: link, source: spotifyPlaylistSearcher, destination: appleMusicPlaylistSearcher)
@@ -142,6 +151,7 @@ class ViewController: UIViewController {
                 } else {
                     self.updateAppearance(title: "I don't recognize where that playlist is from ☹️", color: UIColor.red, enabled: false)
                 }
+
             } else {
                 self.updateAppearance(title: "We had trouble logging into Spotify ☹️", color: UIColor.red, enabled: false)
             }
@@ -191,8 +201,8 @@ class ViewController: UIViewController {
     private func convertPlaylist(link: String, source: PlaylistSearcher, destination: PlaylistSearcher) {
         source.getTrackList(link: link) { trackList, playlistName, error in
             if error == nil {
-                let alert = UIAlertController(title: "Add \(playlistName ?? "") to Spotify?",
-                                              message: "This playlist will be added to your Spotify library with the closest matches we can find.",
+                let alert = UIAlertController(title: "Add \(playlistName ?? "") to \(destination.serviceName)?",
+                                              message: "This playlist will be added to your \(destination.serviceName) library with the closest matches we can find.",
                                               preferredStyle: UIAlertController.Style.alert)
 
                 // Yes, add the playlist

@@ -18,13 +18,20 @@ class ConvertifyTests: XCTestCase {
 
         let expectation = self.expectation(description: "Login spotify and Apple Music")
 
-        if spotify == nil {
-            spotify = SpotifySearcher { _, error in
-                if error == nil {
-                    self.appleMusic = AppleMusicSearcher()
+        if spotify == nil || appleMusic == nil {
+            SpotifySearcher.login { token, error in
+                XCTAssertNotNil(token)
+                XCTAssertNil(error)
+
+                // Set Spotify
+                self.spotify = SpotifySearcher(token: token!)
+                AppleMusicSearcher.login { token, error in
+                    XCTAssertNotNil(token)
+                    XCTAssertNil(error)
+
+                    // Set Apple Music
+                    self.appleMusic = AppleMusicSearcher(token: token!)
                     expectation.fulfill()
-                } else {
-                    XCTFail()
                 }
             }
         } else {
@@ -163,7 +170,7 @@ class ConvertifyTests: XCTestCase {
     }
 
     func testAppleMusicError() {
-        let am = AppleMusicSearcher()
+        let am = AppleMusicSearcher(token: "") // FIXME: ADD REAL TOKEN
         am.search(name: "THERE IS NO POSSIBLE WAY THIS WILL EVER BE AN ALBUM NAME", type: "album", completion: { _, error in
             XCTAssertNotNil(error)
         })
