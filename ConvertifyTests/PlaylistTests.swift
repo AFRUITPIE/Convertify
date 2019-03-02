@@ -17,7 +17,6 @@ class PlaylistTests: XCTestCase {
 
     override func setUp() {
         spotify = SpotifyPlaylistSearcher(token: "")
-
         appleMusic = AppleMusicPlaylistSearcher(token: "")
     }
 
