@@ -151,7 +151,6 @@
 				2950B876D9BA100742BD6D38 /* Pods-Convertify-ConvertifyTests.debug.xcconfig */,
 				1EDE49022D8248FFCDB52FE5 /* Pods-Convertify-ConvertifyTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
