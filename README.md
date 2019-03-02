@@ -36,7 +36,7 @@ Test within Xcode. The included tests must be run on a device/simulator of iOS v
 
 - [AlamoFire](https://github.com/Alamofire/Alamofire) - For the HTTP requests to both Apple Music and Spotify
 - [SwiftyJSON](https://github.com/SwiftyJSON/SwiftyJSON) - For easier JSON parsing and handling
-- [Apple Music Token Generator](https://github.com/pelauimagineering/apple-music-token-generator) - For generating the Apple Music tokens securely
+- [CupertinoJWT](https://github.com/ethanhuang13/CupertinoJWT) - For generating the Apple Music tokens securely
 
 ## Authors
 
