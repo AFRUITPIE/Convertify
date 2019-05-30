@@ -328,6 +328,12 @@
 							com.apple.InAppPurchase = {
 								enabled = 1;
 							};
+							com.apple.Push = {
+								enabled = 0;
+							};
+							com.apple.iCloud = {
+								enabled = 0;
+							};
 						};
 					};
 					CF2C54A8219148CA0040B383 = {

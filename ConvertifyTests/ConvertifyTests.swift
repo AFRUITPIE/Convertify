@@ -97,13 +97,14 @@ class ConvertifyTests: XCTestCase {
                  artist: "Mac Miller",
                  source: spotify,
                  destination: appleMusic)
-        waitForExpectations(timeout: 10, handler: nil) }
+        waitForExpectations(timeout: 10, handler: nil)
+    }
 
     func testAppleLinkAlbum() {
         testLink(link: AppleMusicLinks.Album.rawValue,
-                 name: "Redemption",
+                 name: "Blonde",
                  type: "Album",
-                 artist: "Jay Rock",
+                 artist: "Frank Ocean",
                  source: appleMusic,
                  destination: spotify)
         waitForExpectations(timeout: 10, handler: nil)
@@ -153,7 +154,8 @@ class ConvertifyTests: XCTestCase {
         testSpotifyQuery(name: "Freudian",
                          type: "album",
                          url: "https://open.spotify.com/album/3xybjP7r2VsWzwvDQipdM0")
-        waitForExpectations(timeout: 10, handler: nil) }
+        waitForExpectations(timeout: 10, handler: nil)
+    }
 
     func testSpotifyQueryArtist() {
         testSpotifyQuery(name: "Simon & Garfunkel",
@@ -179,7 +181,7 @@ class ConvertifyTests: XCTestCase {
     func testAppleQueryAlbum() {
         testAppleMusicQuery(name: "Blonde",
                             type: "album",
-                            url: "https://itunes.apple.com/us/album/blonde/1146195596")
+                            url: AppleMusicLinks.Album.rawValue)
         waitForExpectations(timeout: 10, handler: nil)
     }
 

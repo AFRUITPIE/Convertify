@@ -9,7 +9,7 @@
 import Foundation
 
 enum AppleMusicLinks: String {
-    case Album = "https://itunes.apple.com/us/album/redemption/1445242293"
-    case Song = "https://itunes.apple.com/us/album/room-in-here-feat-the-game-sonyae-elise/1065681363?i=1065681767"
-    case Artist = "https://itunes.apple.com/us/artist/saba/1140260329"
+    case Album = "https://music.apple.com/us/album/blonde/1146195596"
+    case Song = "https://music.apple.com/us/album/room-in-here-feat-the-game-sonyae-elise/1065681363?i=1065681767"
+    case Artist = "https://music.apple.com/us/artist/saba/1140260329"
 }
