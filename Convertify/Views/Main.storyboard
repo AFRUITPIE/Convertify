@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
-    <device id="retina5_9" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14865.1" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina6_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14819.2"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -15,20 +13,37 @@
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Convertify" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="qSK-BA-mJS">
-                                <rect key="frame" x="8" y="377" width="359" height="58.333333333333314"/>
+                                <rect key="frame" x="32" y="268" width="350" height="120"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Convertify" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0XO-Fd-cok">
-                                        <rect key="frame" x="0.0" y="0.0" width="359" height="20.333333333333332"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="88.333333333333329" height="32"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="32" id="nbD-59-rPW"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="19"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <textField opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" verticalHuggingPriority="249" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Paste Spotify or Apple Music Link Here" textAlignment="natural" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="CiB-rb-XDP">
+                                        <rect key="frame" x="0.0" y="40" width="350" height="40"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="85J-2A-dYQ"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardAppearance="alert"/>
+                                        <connections>
+                                            <action selector="linkFieldDidChange:" destination="BYZ-38-t0r" eventType="editingChanged" id="Op7-nz-gy1"/>
+                                        </connections>
+                                    </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HOe-RL-qXu">
-                                        <rect key="frame" x="0.0" y="28.333333333333314" width="359" height="30"/>
+                                        <rect key="frame" x="0.0" y="88" width="350" height="32"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="32" id="IGb-o3-yhi"/>
+                                        </constraints>
                                         <state key="normal">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
@@ -38,30 +53,47 @@
                                     </button>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="0XO-Fd-cok" firstAttribute="centerX" secondItem="qSK-BA-mJS" secondAttribute="centerX" id="GCq-QJ-aZE"/>
-                                    <constraint firstItem="0XO-Fd-cok" firstAttribute="centerX" secondItem="qSK-BA-mJS" secondAttribute="centerX" id="J4F-gI-Vbz"/>
-                                    <constraint firstItem="HOe-RL-qXu" firstAttribute="centerX" secondItem="qSK-BA-mJS" secondAttribute="centerX" id="ene-XI-gFQ"/>
+                                    <constraint firstItem="HOe-RL-qXu" firstAttribute="leading" secondItem="qSK-BA-mJS" secondAttribute="leading" id="CXb-7o-b75"/>
+                                    <constraint firstItem="CiB-rb-XDP" firstAttribute="leading" secondItem="qSK-BA-mJS" secondAttribute="leading" id="FKU-O9-yr9"/>
+                                    <constraint firstAttribute="trailing" secondItem="CiB-rb-XDP" secondAttribute="trailing" id="MtI-dS-EgV"/>
+                                    <constraint firstItem="0XO-Fd-cok" firstAttribute="leading" secondItem="qSK-BA-mJS" secondAttribute="leading" id="SRi-3a-D5A"/>
+                                    <constraint firstAttribute="trailing" secondItem="HOe-RL-qXu" secondAttribute="trailing" id="mix-qy-fDY"/>
                                 </constraints>
                             </stackView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="APQ-N5-AFe">
+                                <rect key="frame" x="0.0" y="830" width="414" height="24"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <state key="normal" title="Help" image="Image"/>
+                                <connections>
+                                    <action selector="openHelp:" destination="BYZ-38-t0r" eventType="touchUpInside" id="OtL-de-EgP"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
                         <constraints>
-                            <constraint firstItem="qSK-BA-mJS" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="059-UI-cGu"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="qSK-BA-mJS" secondAttribute="trailing" constant="8" id="Lj5-fz-NP3"/>
-                            <constraint firstItem="qSK-BA-mJS" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="fw5-N8-9ml"/>
-                            <constraint firstItem="qSK-BA-mJS" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="h9Y-fx-YJs"/>
-                            <constraint firstItem="qSK-BA-mJS" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="8" id="jXh-Qi-Zob"/>
+                            <constraint firstItem="APQ-N5-AFe" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="0LA-1P-pTe"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="APQ-N5-AFe" secondAttribute="trailing" id="6L9-Q0-Jm9"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="qSK-BA-mJS" secondAttribute="trailing" constant="32" id="7bq-MM-5W6"/>
+                            <constraint firstItem="qSK-BA-mJS" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-120" id="SiZ-kG-Zz1"/>
+                            <constraint firstItem="qSK-BA-mJS" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="XrF-dq-CI6"/>
+                            <constraint firstItem="qSK-BA-mJS" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="32" id="dVP-sI-L5C"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="APQ-N5-AFe" secondAttribute="bottom" constant="8" id="q9Q-Ro-i54"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
                         <outlet property="convertButton" destination="HOe-RL-qXu" id="QXy-PV-ZBr"/>
+                        <outlet property="helpButton" destination="APQ-N5-AFe" id="udd-0k-2VA"/>
+                        <outlet property="linkTextField" destination="CiB-rb-XDP" id="Suh-6W-M8G"/>
                         <outlet property="titleLabel" destination="0XO-Fd-cok" id="a6n-CB-v0z"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="133.59999999999999" y="132.26600985221674"/>
+            <point key="canvasLocation" x="133.33333333333334" y="131.91964285714286"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="Image" width="24" height="24"/>
+    </resources>
 </document>

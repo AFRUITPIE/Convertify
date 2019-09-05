@@ -20,6 +20,8 @@ class ViewController: UIViewController {
 
     @IBOutlet var convertButton: UIButton!
     @IBOutlet var titleLabel: UILabel!
+    @IBOutlet var linkTextField: UITextField!
+    @IBOutlet var helpButton: UIButton!
 
     var pastelView: PastelView!
 
@@ -27,11 +29,14 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         pastelView = PastelView(frame: view.bounds)
+        // Allow multiple lines
+        convertButton.titleLabel?.numberOfLines = 0
+        // Close keyboard on background click
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+        initApp()
     }
 
-    func initApp(link: String) {
-        self.link = link
-
+    func initApp() {
         // Ensure Spotify has credentials
         SpotifySearcher.login { spotifyToken, _ in
             guard let spotifyToken = spotifyToken else {
@@ -49,8 +54,8 @@ class ViewController: UIViewController {
                 }
                 self.appleMusic = AppleMusicSearcher(token: appleMusicToken)
 
-                // Start handling link
-                self.handleLink(link: self.link ?? "")
+                // Force UI update
+                self.handleLink(link: "")
             }
         }
     }
@@ -90,16 +95,18 @@ class ViewController: UIViewController {
             updateAppearance(title: "I cannot convert radio stations ☹️", color: UIColor.red, enabled: false)
 
         // Extracts Spotify data and searches for Apple Music links when it includes a Spotify link
-        case link.contains(SearcherURL.spotify):
+        case link.range(of: SearcherURL.spotify, options: [.regularExpression, .anchored]) != nil:
             handleSearching(link: link, source: spotify, destination: appleMusic)
 
         // Extracts Apple Music data and searches for Spotify links when it includes an Apple Music link
-        case link.contains(SearcherURL.appleMusic):
+        case link.range(of: SearcherURL.appleMusic, options: [.regularExpression, .anchored]) != nil:
+            handleSearching(link: link, source: appleMusic, destination: spotify)
+        case link.range(of: SearcherURL.newAppleMusic, options: [.regularExpression, .anchored]) != nil:
             handleSearching(link: link, source: appleMusic, destination: spotify)
 
         // Lets the user know I don't know how to handle whatever is in their clipboard
         default:
-            updateAppearance(title: "No Spotify or Apple Music link found in clipboard", color: UIColor.gray, enabled: false)
+            updateAppearance(title: "No music link detected", color: UIColor.gray, enabled: false)
         }
     }
 
@@ -122,13 +129,13 @@ class ViewController: UIViewController {
                         self.link = link
                         self.updateAppearance(title: "Open in \(destination.serviceName)", color: destination.serviceColor, enabled: true)
                     } else {
-                        self.updateAppearance(title: "Error getting \(destination.serviceName) data", color: UIColor.red, enabled: false)
+                        self.updateAppearance(title: "Error getting \(destination.serviceName) data", color: UIColor.darkGray, enabled: false)
                     }
                 }
             } else {
                 // Display the error
                 self.titleLabel.text = "Error getting \(source.serviceName) data"
-                self.updateAppearance(title: "Link might be formatted incorrectly", color: UIColor.red, enabled: false)
+                self.updateAppearance(title: "Link might be formatted incorrectly", color: UIColor.darkGray, enabled: false)
             }
         }
     }
@@ -137,6 +144,7 @@ class ViewController: UIViewController {
     ///
     /// - Parameter link: link to playlist
     private func handlePlaylist(link: String) {
+        linkTextField.isEnabled = true
         // Ensure user is logged in to Spotify
         handleSpotifyLogin { spotifyToken, error in
             if error == nil {
@@ -146,14 +154,15 @@ class ViewController: UIViewController {
 
                 if link.contains("open.spotify.com") {
                     self.convertPlaylist(link: link, source: spotifyPlaylistSearcher, destination: appleMusicPlaylistSearcher)
-                } else if link.contains("itunes.apple.com") {
+                } else if link.contains("itunes.apple.com") || link.contains("music.apple.com") {
                     self.convertPlaylist(link: link, source: appleMusicPlaylistSearcher, destination: spotifyPlaylistSearcher)
                 } else {
-                    self.updateAppearance(title: "I don't recognize where that playlist is from ☹️", color: UIColor.red, enabled: false)
+                    self.updateAppearance(title: "I don't recognize that playlist ☹️", color: UIColor.darkGray, enabled: false)
                 }
-
+                self.linkTextField.isEnabled = true
             } else {
-                self.updateAppearance(title: "We had trouble logging into Spotify ☹️", color: UIColor.red, enabled: false)
+                self.updateAppearance(title: "I had trouble logging into Spotify ☹️", color: UIColor.darkGray, enabled: false)
+                self.linkTextField.isEnabled = true
             }
         }
     }
@@ -181,12 +190,12 @@ class ViewController: UIViewController {
         // Show some cool animations
         addPastelView()
         titleLabel.text = playlistName
-        updateAppearance(title: "Converting now, this might take a while", color: UIColor.darkGray, enabled: false)
+        updateAppearance(title: "DON'T CLOSE CONVERTIFY WHILE THIS IS RUNNING! This might take a while.", color: UIColor.darkGray, enabled: false)
         destination.addPlaylist(trackList: trackList, playlistName: playlistName) { _, _, error in
             if error == nil {
-                self.updateAppearance(title: "Converted successfully", color: UIColor.darkGray, enabled: false)
+                self.updateAppearance(title: "Converted successfully, check your library for the new playlist", color: UIColor.darkGray, enabled: false)
             } else {
-                self.updateAppearance(title: "We had problems converting this playlist", color: UIColor.red, enabled: false)
+                self.updateAppearance(title: "We had problems converting this playlist", color: UIColor.darkGray, enabled: false)
             }
             self.pastelView.removeFromSuperview()
         }
@@ -219,7 +228,7 @@ class ViewController: UIViewController {
                 // Show the alert
                 self.present(alert, animated: true, completion: nil)
             } else {
-                self.updateAppearance(title: "We had problems converting this playlist", color: UIColor.red, enabled: false)
+                self.updateAppearance(title: "We had problems converting this playlist. Does Convertify have access to your Apple Music library?", color: UIColor.darkGray, enabled: false)
             }
         }
     }
@@ -247,6 +256,32 @@ class ViewController: UIViewController {
     @IBAction func openSong(_: Any) {
         if link != nil {
             UIApplication.shared.open(URL(string: link!)!, options: [:])
+        }
+    }
+
+    @IBAction func linkFieldDidChange(_: Any) {
+        print(linkTextField.text ?? "NO TEXT ENTERED")
+        handleLink(link: linkTextField.text ?? "")
+    }
+
+    /// Opens the help pop-up
+    @IBAction func openHelp(_: Any) {
+        let alert = UIAlertController(title: "How to Convertify",
+                                      message: "In Spotify or Apple Music, share a song, artist, album, or playlist and copy the link to it. Paste it in the Convertify magic text box and convert away!",
+                                      preferredStyle: UIAlertController.Style.alert)
+
+        // Do nothing
+        alert.addAction(UIAlertAction(title: "Cool!", style: UIAlertAction.Style.default) { _ in
+            // Do nothing
+        })
+
+        // Show the alert
+        present(alert, animated: true, completion: nil)
+    }
+
+    func continueAfterSpotifyAuth() {
+        if !(linkTextField.text?.isEmpty ?? true) {
+            handleLink(link: linkTextField.text!)
         }
     }
 }

@@ -133,7 +133,9 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
                                         let link = "https://itunes.apple.com/me/playlist/\(playlistName.replacingOccurrences(of: " ", with: "-").lowercased())/\(id)"
                                         completion(link, failedTracks, nil)
                                     }
-                                    case let .failure(error): do { completion(nil, failedTracks, error) }
+                                    case let .failure(error): do {
+                                        completion(nil, failedTracks, error)
+                                    }
                                     }
                                 }
                         } else {
@@ -142,10 +144,10 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
                     }
                 }
 
-                // TODO: Figure out to do with all these uhhhh
-                case .notDetermined: do { print("uhhh") }
-                case .denied: do { print("uhhh") }
-                case .restricted: do { print("uhhh") }
+                // We can't do anything without the user agreeing, so we just prompt again
+                default: do {
+                    completion(nil, [], MusicSearcherErrors.notAuthorizedError)
+                }
                 }
             }
         }
@@ -221,8 +223,13 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
         playlistID = String(link.components(separatedBy: "/playlist/")[1]
             .split(separator: "/")[1])
 
-        storefront = String(link.components(separatedBy: "https://itunes.apple.com/")[1]
-            .split(separator: "/")[0])
+        if link.contains("itunes.apple.com") {
+            storefront = String(link.components(separatedBy: "https://itunes.apple.com/")[1]
+                .split(separator: "/")[0])
+        } else if link.contains("music.apple.com") {
+            storefront = String(link.components(separatedBy: "https://music.apple.com/")[1]
+                .split(separator: "/")[0])
+        }
     }
 }
 

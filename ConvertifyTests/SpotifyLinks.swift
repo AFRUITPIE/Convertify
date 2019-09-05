@@ -9,7 +9,7 @@
 import Foundation
 
 enum SpotifyLinks: String {
-    case Album = "https://open.spotify.com/album/3xybjP7r2VsWzwvDQipdM0?si=c0eZiEk9RpS15Y7vYlcqGA"
-    case Song = "https://open.spotify.com/track/5p7GiBZNL1afJJDUrOA6C8?si=TstqlH0ZSxOkp436_-gl3A"
-    case Artist = "https://open.spotify.com/artist/68kEuyFKyqrdQQLLsmiatm?si=149GzNXcSZ2izP9mRCpCuQ"
+    case Album = "https://open.spotify.com/album/3xybjP7r2VsWzwvDQipdM0"
+    case Song = "https://open.spotify.com/track/5p7GiBZNL1afJJDUrOA6C8"
+    case Artist = "https://open.spotify.com/artist/68kEuyFKyqrdQQLLsmiatm"
 }

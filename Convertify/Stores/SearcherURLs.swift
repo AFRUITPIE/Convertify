@@ -9,6 +9,7 @@
 import Foundation
 
 enum SearcherURL {
-    static let spotify = "https://open.spotify.com/"
-    static let appleMusic = "https://itunes.apple.com/"
+    static let spotify = "https://open.spotify.com/.*/\\w{22}\\b((\\?)si=\\w{22}\\b|)"
+    static let appleMusic = "https://itunes.apple.com/\\w{2}\\b/.*/.*/\\w{10}\\b((\\?)i=\\w{10}\\b|)"
+    static let newAppleMusic = "https://music.apple.com/\\w{2}\\b/.*/.*/\\w{10}\\b((\\?)i=\\w{10}\\b|)"
 }

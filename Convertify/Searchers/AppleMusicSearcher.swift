@@ -138,7 +138,11 @@ public class AppleMusicSearcher: MusicSearcher {
             if type != "song" {
                 return String(components.path.split(separator: "/").last!)
             } else {
-                return components.queryItems![0].value!
+                if !(components.queryItems?.isEmpty ?? true) {
+                    return components.queryItems?[0].value ?? ""
+                } else {
+                    return ""
+                }
             }
         }
         throw MusicSearcherErrors.invalidLinkFormatError

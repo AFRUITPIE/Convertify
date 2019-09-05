@@ -16,28 +16,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_: UIApplication, open url: URL, options _: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
         let handled = SpotifyLogin.shared.applicationOpenURL(url) { _ in }
+
+        let viewController = window?.rootViewController as! ViewController
+        viewController.continueAfterSpotifyAuth()
+
         return handled
     }
 
     func application(_: UIApplication, didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         SpotifyLogin.shared.configure(clientID: Auth.spotifyClientID, clientSecret: Auth.spotifyClientSecret, redirectURL: URL(string: "convertify://")!)
         return true
-    }
-
-    func applicationDidBecomeActive(_: UIApplication) {
-        resetAppLink()
-    }
-
-    private func resetAppLink() {
-        let viewController = window?.rootViewController as! ViewController
-        let pasteBoardValue = UIPasteboard.general.string
-
-        // Doesn't attempt searching when there is no string in pasteboard
-        if pasteBoardValue == nil {
-            viewController.initApp(link: "")
-        } else {
-            link = pasteBoardValue
-            viewController.initApp(link: pasteBoardValue ?? "")
-        }
     }
 }

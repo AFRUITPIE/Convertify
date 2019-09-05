@@ -64,7 +64,8 @@ public class SpotifySearcher: MusicSearcher {
     /// - Parameter completion: What to run after searching is complete
     /// - Returns: DataRequest from querying the Spotify API
     func search(link: String, completion: @escaping (String?, String?, String?, Error?) -> Void) {
-        let linkData = link.replacingOccurrences(of: SearcherURL.spotify, with: "").split(separator: "/")
+        // TODO: Replace this 'of' with a variable to be used elsewhere
+        let linkData = link.replacingOccurrences(of: "https://open.spotify.com/", with: "").split(separator: "/")
         if linkData.count != 2 {
             print("It looks like the link was formatted incorrectly (link = \(link)")
             completion(nil, nil, nil, MusicSearcherErrors.noSearchResultsError)
