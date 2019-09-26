@@ -18,7 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let handled = SpotifyLogin.shared.applicationOpenURL(url) { _ in }
 
         let viewController = window?.rootViewController as! ViewController
-        viewController.continueAfterSpotifyAuth()
+        // viewController.continueAfterSpotifyAuth()
 
         return handled
     }

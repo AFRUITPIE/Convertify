@@ -11,7 +11,7 @@ import Pastel
 import SpotifyLogin
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UITextFieldDelegate {
     private var appleMusic: MusicSearcher!
     private var spotify: MusicSearcher!
     private var link: String?
@@ -32,7 +32,9 @@ class ViewController: UIViewController {
         // Allow multiple lines
         convertButton.titleLabel?.numberOfLines = 0
         // Close keyboard on background click
-        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard(_:)))
+        view.addGestureRecognizer(tapGesture)
+
         initApp()
     }
 
@@ -283,5 +285,15 @@ class ViewController: UIViewController {
         if !(linkTextField.text?.isEmpty ?? true) {
             handleLink(link: linkTextField.text!)
         }
+    }
+
+    /// Dismiss the keyboard, used as a slector
+    @objc func dismissKeyboard(_: UITapGestureRecognizer) {
+        linkTextField.resignFirstResponder()
+    }
+
+    func textFieldShouldReturn(_: UITextField) -> Bool {
+        view.endEditing(true)
+        return false
     }
 }
