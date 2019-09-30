@@ -90,7 +90,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
         // Decides what to do with the link
         switch true {
         // Converts playlists
-        case link.contains("/playlist/"): handlePlaylist(link: link)
+        case link.range(of: SearcherURL.playlist, options: [.regularExpression, .anchored]) != nil:
+            handlePlaylist(link: link)
 
         // Ignores radio stations
         case link.contains("/station/"):
@@ -102,8 +103,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
 
         // Extracts Apple Music data and searches for Spotify links when it includes an Apple Music link
         case link.range(of: SearcherURL.appleMusic, options: [.regularExpression, .anchored]) != nil:
-            handleSearching(link: link, source: appleMusic, destination: spotify)
-        case link.range(of: SearcherURL.newAppleMusic, options: [.regularExpression, .anchored]) != nil:
             handleSearching(link: link, source: appleMusic, destination: spotify)
 
         // Lets the user know I don't know how to handle whatever is in their clipboard
@@ -263,7 +262,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
 
     @IBAction func linkFieldDidChange(_: Any) {
         print(linkTextField.text ?? "NO TEXT ENTERED")
-        handleLink(link: linkTextField.text ?? "")
+        handleLink(link: linkTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "")
     }
 
     /// Opens the help pop-up

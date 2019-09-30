@@ -14,15 +14,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     var link: String?
 
+    /// Handle continue after Spotify auth
     func application(_: UIApplication, open url: URL, options _: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
         let handled = SpotifyLogin.shared.applicationOpenURL(url) { _ in }
 
         let viewController = window?.rootViewController as! ViewController
-        // viewController.continueAfterSpotifyAuth()
+        viewController.continueAfterSpotifyAuth()
 
         return handled
     }
 
+    /// Launch application -- entry point
     func application(_: UIApplication, didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         SpotifyLogin.shared.configure(clientID: Auth.spotifyClientID, clientSecret: Auth.spotifyClientSecret, redirectURL: URL(string: "convertify://")!)
         return true
