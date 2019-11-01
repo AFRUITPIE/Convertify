@@ -12,5 +12,5 @@ enum SearcherURL {
     static let spotify = "https://open.spotify.com/.*/\\w{22}\\b((\\?)si=\\w{22}\\b|)"
     static let appleMusic = "https://(itunes|music).apple.com/\\w{2}\\b/.*/.*/\\w{10}\\b((\\?)i=\\w{10}\\b|)"
 
-    static let playlist = "https://open.spotify.com/playlist/.*|https://(itunes|music).apple.com/\\w{2}\\b/playlist/.*/.*"
+    static let playlist = "https://open.spotify.com.*/playlist/.*|https://(itunes|music).apple.com/\\w{2}\\b/playlist/.*/.*"
 }
