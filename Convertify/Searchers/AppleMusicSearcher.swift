@@ -74,12 +74,12 @@ public class AppleMusicSearcher: MusicSearcher {
         }
 
         // Request the search results from Apple Music
-        Alamofire.request(url, headers: headers)
+        AF.request(url, headers: headers)
             .validate()
             .responseJSON { response in
                 switch response.result {
                 case .success: do {
-                    guard let value = response.result.value else {
+                    guard let value = response.value else {
                         completion(nil, nil, nil, MusicSearcherErrors.invalidLinkFormatError)
                         return
                     }
@@ -185,12 +185,12 @@ public class AppleMusicSearcher: MusicSearcher {
             return
         }
 
-        Alamofire.request(url, parameters: parameters, headers: headers)
+        AF.request(url, parameters: parameters, headers: headers)
             .validate()
             .responseJSON { response in
                 switch response.result {
                 case .success: do {
-                    let data = JSON(response.result.value!)["results"]
+                    let data = JSON(response.value!)["results"]
 
                     // Ensures there are search results before setting it
                     if data[appleMusicType].exists() {

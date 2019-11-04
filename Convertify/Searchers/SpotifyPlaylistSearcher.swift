@@ -82,11 +82,11 @@ class SpotifyPlaylistSearcher: PlaylistSearcher {
             return
         }
 
-        Alamofire.request(url, headers: headers).validate().responseJSON { response in
+        AF.request(url, headers: headers).validate().responseJSON { response in
             switch response.result {
             case .success: do {
                 // Success in getting user ID
-                let data = JSON(response.result.value!)
+                let data = JSON(response.value!)
                 let userID = data["id"].stringValue
                 completion(userID, nil)
             }
@@ -121,13 +121,13 @@ class SpotifyPlaylistSearcher: PlaylistSearcher {
             return
         }
 
-        Alamofire.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+        AF.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
             .validate()
             .responseJSON { response in
                 switch response.result {
                 case .success: do {
                     // Successfully added playlist, use ID
-                    let data = JSON(response.result.value!)
+                    let data = JSON(response.value!)
                     completion(data["id"].stringValue, nil)
                 }
                 case let .failure(error): completion(nil, error)
@@ -171,7 +171,7 @@ class SpotifyPlaylistSearcher: PlaylistSearcher {
                             return
                         }
 
-                        Alamofire.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { response in
+                        AF.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).validate().responseJSON { response in
                             switch response.result {
                             case .success: do {
                                 // Recursively add the rest of the tracks to the playlist
@@ -226,22 +226,22 @@ class SpotifyPlaylistSearcher: PlaylistSearcher {
                     return
                 }
 
-                Alamofire.request(url, method: .get, headers: headers)
+                AF.request(url, method: .get, headers: headers)
                     .validate()
                     .responseJSON { response in
 
                         switch response.result {
                         case .success: do {
-                            let playlistData = JSON(response.result.value!)
+                            let playlistData = JSON(response.value!)
                             let playlistName = playlistData["name"].stringValue
 
                             // Request the playlist's tracks
-                            Alamofire.request("https://api.spotify.com/v1/playlists/\(playlistID)/tracks", headers: headers)
+                            AF.request("https://api.spotify.com/v1/playlists/\(playlistID)/tracks", headers: headers)
                                 .validate()
                                 .responseJSON { response in
                                     switch response.result {
                                     case .success: do {
-                                        let trackListData = JSON(response.result.value!)
+                                        let trackListData = JSON(response.value!)
                                         completion(self.getTrackListFromJSON(data: trackListData), playlistName, nil)
                                     }
                                     case let .failure(error): do {

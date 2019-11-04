@@ -36,12 +36,12 @@ public class SpotifySearcher: MusicSearcher {
             return
         }
 
-        Alamofire.request(url, method: .post, parameters: parameters, headers: nil)
+        AF.request(url, method: .post, parameters: parameters, headers: nil)
             .validate()
             .responseJSON { response in
                 switch response.result {
                 case .success: do {
-                    let data = JSON(response.result.value!)
+                    let data = JSON(response.value!)
                     let token = data["access_token"].stringValue
                     completion(token, nil)
                 }
@@ -88,12 +88,12 @@ public class SpotifySearcher: MusicSearcher {
             }
 
             // Creates the request
-            Alamofire.request(url, headers: headers)
+            AF.request(url, headers: headers)
                 .validate()
                 .responseJSON { response in
                     switch response.result {
                     case .success: do {
-                        let data = JSON(response.result.value!)
+                        let data = JSON(response.value!)
                         let name = data["name"].stringValue
                         var artist: String?
 
@@ -148,12 +148,12 @@ public class SpotifySearcher: MusicSearcher {
             return
         }
 
-        Alamofire.request(url, parameters: parameters, headers: headers)
+        AF.request(url, parameters: parameters, headers: headers)
             .validate()
             .responseJSON { response in
                 switch response.result {
                 case .success: do {
-                    let data = JSON(response.result.value!)["\(type == "song" ? "track" : type)s"]
+                    let data = JSON(response.value!)["\(type == "song" ? "track" : type)s"]
 
                     // Ensure there are search results
                     if data["total"].intValue > 0 {

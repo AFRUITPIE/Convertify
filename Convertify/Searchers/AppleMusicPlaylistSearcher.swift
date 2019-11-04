@@ -30,7 +30,7 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
     func getTrackList(link: String, completion: @escaping ([String: String]?, String?, Error?) -> Void) {
         parseLinkData(link: link)
 
-        let headers = ["Authorization": "Bearer \(self.token)"]
+        let headers: HTTPHeaders = ["Authorization": "Bearer \(self.token)"]
 
         var urlComponents: URLComponents {
             var urlComponents = URLComponents()
@@ -45,12 +45,11 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
             return
         }
 
-        Alamofire.request(url, headers: headers)
-            .validate()
+        AF.request(url, headers: headers)
             .responseJSON { response in
                 switch response.result {
                 case .success: do {
-                    let data = JSON(response.result.value!)
+                    let data = JSON(response.value as Any)
                     let playlistName = data["data"][0]["attributes"]["name"].stringValue
 
                     // Gets array of track objects
@@ -99,11 +98,6 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
 
                         let parameters: Parameters = [
                             "attributes": playlist.attributes,
-                            "relationships": [
-                                "tracks": [
-                                    "data": playlist.trackList,
-                                ],
-                            ],
                         ]
 
                         let headers: HTTPHeaders = ["Music-User-Token": musicUserToken ?? "", "Authorization": "Bearer \(self.token)"]
@@ -123,15 +117,19 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
                                 return
                             }
 
-                            Alamofire.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+                            print()
+
+                            // ONLY create the playlist
+                            AF.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
                                 .validate()
                                 .responseJSON { response in
                                     switch response.result {
                                     case .success: do {
-                                        let data = JSON(response.result.value!)
+                                        let data = JSON(response.value as Any)
                                         let id = data["data"][0]["id"]
-                                        let link = "https://itunes.apple.com/me/playlist/\(playlistName.replacingOccurrences(of: " ", with: "-").lowercased())/\(id)"
-                                        completion(link, failedTracks, nil)
+                                        
+                                        // Adds the songs to the successfully created playlist
+                                        self.addSongsToPlaylist(trackList: playlist.trackList, playlistID: id.string ?? "", musicUserToken: musicUserToken, completion: completion)
                                     }
                                     case let .failure(error): do {
                                         completion(nil, failedTracks, error)
@@ -150,6 +148,52 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
                 }
                 }
             }
+        }
+    }
+
+    
+    /// Adds songs to playlist because Apple's API does not allow arrays of tracks anymore
+    /// - Parameters:
+    ///   - trackList: the tracklist
+    ///   - playlistID: id of the playlist
+    ///   - musicUserToken: token
+    ///   - completion: what to do with the playlist afterwards
+    private func addSongsToPlaylist(trackList: [[String: String]], playlistID: String, musicUserToken: String?, completion: @escaping (String?, [String], Error?) -> Void) {
+        if !trackList.isEmpty {
+            // Remove first item from track list
+            var updatedTrackList = trackList
+            let currentTrack = updatedTrackList[0]
+            updatedTrackList.remove(at: 0)
+
+            // Build URL for the playlist that was created
+            var urlComponents: URLComponents {
+                var urlComponents = URLComponents()
+                urlComponents.scheme = "https"
+                urlComponents.host = "api.music.apple.com"
+                urlComponents.path = "/v1/me/library/playlists/\(playlistID)/tracks"
+                return urlComponents
+            }
+
+            guard let url = urlComponents.url else {
+                completion(nil, [], MusicSearcherErrors.invalidLinkFormatError)
+                return
+            }
+
+            let parameters: Parameters = [
+                "data": [currentTrack],
+            ]
+
+            let headers: HTTPHeaders = ["Music-User-Token": musicUserToken ?? "", "Authorization": "Bearer \(self.token)"]
+
+            // Request adding one song
+            AF.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+                print(response)
+                self.addSongsToPlaylist(trackList: updatedTrackList, playlistID: playlistID, musicUserToken: musicUserToken, completion: completion)
+            }
+
+        } else {
+            // Completion here
+            completion("", [], nil) // FIXME: the failedTracks should be tracked better
         }
     }
 

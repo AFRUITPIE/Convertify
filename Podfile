@@ -6,7 +6,7 @@ target 'Convertify' do
   use_frameworks!
 
   # Pods for Convertify
-  pod 'Alamofire', '~> 4.7'
+  pod 'Alamofire', '~> 5.0.0-rc.3'
   pod 'SwiftyJSON', '~> 4.0'
   source 'https://github.com/CocoaPods/Specs.git'
   pod 'SwiftFormat/CLI'
@@ -15,7 +15,7 @@ target 'Convertify' do
   pod 'CupertinoJWT'
 
   target 'ConvertifyTests' do
-    pod 'Alamofire', '~> 4.7'
+    pod 'Alamofire', '~> 5.0.0-rc.3'
     pod 'SwiftyJSON', '~> 4.0'
     pod 'SwiftFormat/CLI'
     pod "Pastel"

@@ -16,7 +16,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     private var spotify: MusicSearcher!
     private var link: String?
 
-    // Mark: Properties
+    // MARK: Properties
 
     @IBOutlet var convertButton: UIButton!
     @IBOutlet var titleLabel: UILabel!
@@ -25,7 +25,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
 
     var pastelView: PastelView!
 
-    // Mark: Functions
+    // MARK: Functions
 
     override func viewDidLoad() {
         pastelView = PastelView(frame: view.bounds)
@@ -251,7 +251,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         })
     }
 
-    // Mark: Actions
+    // MARK: Actions
 
     /// Opens the link in the opposite app
     @IBAction func openSong(_: Any) {
