@@ -15,6 +15,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
     private var appleMusic: MusicSearcher!
     private var spotify: MusicSearcher!
     private var link: String?
+    private var playlistTracks: [PlaylistTrack] = []
+    private var failedToConvertTracks: [PlaylistTrack] = []
 
     // MARK: Properties
 
@@ -34,7 +36,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
         // Close keyboard on background click
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard(_:)))
         view.addGestureRecognizer(tapGesture)
-
         initApp()
     }
 
@@ -60,6 +61,18 @@ class ViewController: UIViewController, UITextFieldDelegate {
                 self.handleLink(link: "")
             }
         }
+    }
+
+    // Hide toolbar
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+
+    // Show toolbar when hidden
+    override func viewWillDisappear(_ animated: Bool) {
+        navigationController?.setNavigationBarHidden(false, animated: animated)
+        super.viewWillDisappear(animated)
     }
 
     /// Animates the color conversion in the app
@@ -187,7 +200,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     ///   - destination: where to add the playlist
     ///   - trackList: list of tracks [track name: artist name]
     ///   - playlistName: Name of the playlist
-    private func addPlaylist(destination: PlaylistSearcher, trackList: [String: String], playlistName: String) {
+    private func addPlaylist(destination: PlaylistSearcher, trackList: [PlaylistTrack], playlistName: String) {
         // Show some cool animations
         addPastelView()
         titleLabel.text = playlistName
@@ -211,23 +224,30 @@ class ViewController: UIViewController, UITextFieldDelegate {
     private func convertPlaylist(link: String, source: PlaylistSearcher, destination: PlaylistSearcher) {
         source.getTrackList(link: link) { trackList, playlistName, error in
             if error == nil {
+                self.playlistTracks = trackList ?? []
+
+                self.performSegue(withIdentifier: "openPlaylistTracks", sender: nil)
+
                 let alert = UIAlertController(title: "Add \(playlistName ?? "") to \(destination.serviceName)?",
                                               message: "This playlist will be added to your \(destination.serviceName) library with the closest matches we can find.",
                                               preferredStyle: UIAlertController.Style.alert)
 
                 // Yes, add the playlist
-                alert.addAction(UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) { _ in
-                    self.addPlaylist(destination: destination,
-                                     trackList: trackList ?? [:],
-                                     playlistName: playlistName ?? "New Playlist")
-                })
+//                alert.addAction(UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) { _ in
+//                    self.addPlaylist(destination: destination,
+//                                     trackList: trackList,
+//                                     playlistName: playlistName ?? "New Playlist")
+//                })
 
                 // No, do nothing
                 alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) { _ in
                     self.updateAppearance(title: "Not converting playlist", color: UIColor.darkGray, enabled: false)
                 })
                 // Show the alert
-                self.present(alert, animated: true, completion: nil)
+//                self.present(alert, animated: true, completion: nil)
+
+                // Add segue to playlist view
+
             } else {
                 self.updateAppearance(title: "We had problems converting this playlist. Does Convertify have access to your Apple Music library?", color: UIColor.darkGray, enabled: false)
             }
@@ -294,5 +314,13 @@ class ViewController: UIViewController, UITextFieldDelegate {
     func textFieldShouldReturn(_: UITextField) -> Bool {
         view.endEditing(true)
         return false
+    }
+
+    /// Pass the playlist tracks to the new list
+    override func prepare(for segue: UIStoryboardSegue, sender _: Any?) {
+        if segue.identifier == "openPlaylistTracks" {
+            let vc = segue.destination as! PlaylistTableViewController
+            vc.tracks = playlistTracks
+        }
     }
 }
