@@ -26,7 +26,7 @@ class SpotifyPlaylistSearcher: PlaylistSearcher {
     ///   - trackList: list of tracks to add, [Song, Artist]
     ///   - playlistName: Name of the playlist
     ///   - completion: what to do with the link to the playlist after it's done
-    func addPlaylist(trackList: [PlaylistTrack], playlistName: String, completion: @escaping (String?, [PlaylistTrack], Error?) -> Void) {
+    func addPlaylist(trackList: [PlaylistTrack], playlistName: String, completion: @escaping (_ playlistLink: String?, _ failedTracks: [PlaylistTrack], Error?) -> Void) {
         // FIXME: This sure looks like the arrow anti-pattern to me
 
         // Get user ID
@@ -66,7 +66,7 @@ class SpotifyPlaylistSearcher: PlaylistSearcher {
     /// - Parameters:
     ///   - userToken: user's token
     ///   - completion: what to do with user id
-    private func getID(userToken: String, completion: @escaping (String?, Error?) -> Void) {
+    private func getID(userToken: String, completion: @escaping (_ id: String?, Error?) -> Void) {
         let headers: HTTPHeaders = ["Authorization": "Bearer \(userToken)"]
 
         var urlComponents: URLComponents {
@@ -102,7 +102,7 @@ class SpotifyPlaylistSearcher: PlaylistSearcher {
     ///   - token: user's access token for the playlist
     ///   - username: user's username
     ///   - completion: what to do with the playlist's link once it is created
-    private func createSpotifyPlaylist(name: String, userID: String, token: String, completion: @escaping (String?, Error?) -> Void) {
+    private func createSpotifyPlaylist(name: String, userID: String, token: String, completion: @escaping (_ id: String?, Error?) -> Void) {
         let parameters: Parameters = ["name": name,
                                       "description": "Created with Convertify for iOS",
                                       "public": false]
@@ -203,7 +203,7 @@ class SpotifyPlaylistSearcher: PlaylistSearcher {
     /// - Parameters:
     ///   - link: link to the playlist
     ///   - completion: function to handle the playlist
-    func getTrackList(link: String, completion: @escaping ([PlaylistTrack]?, String?, Error?) -> Void) {
+    func getTrackList(link: String, completion: @escaping (_ trackList: [PlaylistTrack]?, _ playlistName: String?, Error?) -> Void) {
         let playlistID = getPlaylistID(link: link)
 
         SpotifySearcher.login { token, error in
@@ -229,7 +229,6 @@ class SpotifyPlaylistSearcher: PlaylistSearcher {
                 AF.request(url, method: .get, headers: headers)
                     .validate()
                     .responseJSON { response in
-
                         switch response.result {
                         case .success: do {
                             let playlistData = JSON(response.value!)
@@ -263,7 +262,7 @@ class SpotifyPlaylistSearcher: PlaylistSearcher {
     /// Parses the tracklist from the JSON file
     ///
     /// - Parameter data: json file
-    /// - Returns: a dictionary of [String: String] that is [Song title: Main artist]
+    /// - Returns: An array of PlaylistTrack
     private func getTrackListFromJSON(data: JSON) -> [PlaylistTrack]? {
         var trackList: [PlaylistTrack] = []
 

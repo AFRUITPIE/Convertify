@@ -15,6 +15,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     private var appleMusic: MusicSearcher!
     private var spotify: MusicSearcher!
     private var link: String?
+    public var addPlaylistCallback: (() -> Void)?
     private var playlistTracks: [PlaylistTrack] = []
     private var failedToConvertTracks: [PlaylistTrack] = []
 
@@ -226,28 +227,13 @@ class ViewController: UIViewController, UITextFieldDelegate {
             if error == nil {
                 self.playlistTracks = trackList ?? []
 
+                self.addPlaylistCallback = {
+                    self.addPlaylist(destination: destination,
+                                     trackList: trackList ?? [],
+                                     playlistName: playlistName ?? "New Playlist")
+                }
+
                 self.performSegue(withIdentifier: "openPlaylistTracks", sender: nil)
-
-                let alert = UIAlertController(title: "Add \(playlistName ?? "") to \(destination.serviceName)?",
-                                              message: "This playlist will be added to your \(destination.serviceName) library with the closest matches we can find.",
-                                              preferredStyle: UIAlertController.Style.alert)
-
-                // Yes, add the playlist
-//                alert.addAction(UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) { _ in
-//                    self.addPlaylist(destination: destination,
-//                                     trackList: trackList,
-//                                     playlistName: playlistName ?? "New Playlist")
-//                })
-
-                // No, do nothing
-                alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) { _ in
-                    self.updateAppearance(title: "Not converting playlist", color: UIColor.darkGray, enabled: false)
-                })
-                // Show the alert
-//                self.present(alert, animated: true, completion: nil)
-
-                // Add segue to playlist view
-
             } else {
                 self.updateAppearance(title: "We had problems converting this playlist. Does Convertify have access to your Apple Music library?", color: UIColor.darkGray, enabled: false)
             }
@@ -322,5 +308,9 @@ class ViewController: UIViewController, UITextFieldDelegate {
             let vc = segue.destination as! PlaylistTableViewController
             vc.tracks = playlistTracks
         }
+    }
+
+    @IBAction func unwindToViewControllerWithSegue(segue _: UIStoryboardSegue) {
+        addPlaylistCallback!()
     }
 }

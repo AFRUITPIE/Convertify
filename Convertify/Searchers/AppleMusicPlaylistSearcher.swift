@@ -176,7 +176,7 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
             }
 
             let parameters: Parameters = [
-                "data": [currentTrack],
+                "data": [["id": currentTrack.id, "type": "songs"]],
             ]
 
             let headers: HTTPHeaders = ["Music-User-Token": musicUserToken ?? "", "Authorization": "Bearer \(self.token)"]

@@ -160,11 +160,22 @@ public class SpotifySearcher: MusicSearcher {
                         let link = data["items"][0]["external_urls"]["spotify"].stringValue
                         completion(link, nil)
                     } else if retry {
-                        let newName = String(name.components(separatedBy: "(feat.")[0])
-                            .replacingOccurrences(of: ")", with: "")
-                            .replacingOccurrences(of: "&", with: "")
+                        guard let featStart = name.firstIndex(of: "(") else {
+                            print("Nothing in parentheses for \(name), not attempting retry")
+                            completion(nil, MusicSearcherErrors.noSearchResultsError)
+                            return
+                        }
 
-                        self.searchHelper(name: newName, type: type, retry: false) { link, error in
+                        guard let featEnd = name.lastIndex(of: ")") else {
+                            print("Nothing in parentheses for \(name), not attempting retry")
+                            completion(nil, MusicSearcherErrors.noSearchResultsError)
+                            return
+                        }
+
+                        let nameBeforeFeat = name[..<featStart] + name[name.index(after: featEnd)...]
+                        print("Retrying search for \(name) with \(nameBeforeFeat)")
+
+                        self.searchHelper(name: String(nameBeforeFeat), type: type, retry: false) { link, error in
                             completion(link, error)
                         }
                     } else {

@@ -197,11 +197,22 @@ public class AppleMusicSearcher: MusicSearcher {
                         let link = data[appleMusicType]["data"][0]["attributes"]["url"].stringValue
                         completion(link, nil)
                     } else if retry {
-                        // Redo search, remove the dashes and anything between the parenthesis
-                        let newName = String(name.components(separatedBy: " - ")[0])
-                            .replacingOccurrences(of: "\\s?\\([\\w\\s]*\\)", with: "", options: .regularExpression)
+                        guard let featStart = name.firstIndex(of: "(") else {
+                            print("Nothing in parentheses for \(name), not attempting retry")
+                            completion(nil, MusicSearcherErrors.noSearchResultsError)
+                            return
+                        }
 
-                        self.searchHelper(name: newName, type: type, retry: false) { link, error in
+                        guard let featEnd = name.lastIndex(of: ")") else {
+                            print("Nothing in parentheses for \(name), not attempting retry")
+                            completion(nil, MusicSearcherErrors.noSearchResultsError)
+                            return
+                        }
+
+                        let nameBeforeFeat = name[..<featStart] + name[name.index(after: featEnd)...]
+                        print("Retrying search for \(name) with \(nameBeforeFeat)")
+
+                        self.searchHelper(name: String(nameBeforeFeat), type: type, retry: false) { link, error in
                             completion(link, error)
                         }
                     } else {
