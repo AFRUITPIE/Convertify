@@ -53,12 +53,15 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
                     let playlistName = data["data"][0]["attributes"]["name"].stringValue
 
                     // Gets array of track objects
-                    let trackObjects = data["data"][0]["relationships"]["tracks"]["data"].array
+                    guard let trackObjects = data["data"][0]["relationships"]["tracks"]["data"].array else {
+                        completion(nil, nil, MusicSearcherErrors.invalidLinkFormatError)
+                        return
+                    }
 
                     var trackList: [PlaylistTrack] = []
 
                     // Adds the tracks to the tracklist
-                    for track in trackObjects! {
+                    for track in trackObjects {
                         let trackName: String = track["attributes"]["name"].stringValue
                         let artistName: String = track["attributes"]["artistName"].stringValue
                         let albumArt: String = track["attributes"]["artwork"]["url"].stringValue

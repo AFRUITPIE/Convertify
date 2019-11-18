@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		7A7C405C36DC1E9154FFE648 /* Pods_Convertify_ConvertifyTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2695E21E3A1F68FEB609D703 /* Pods_Convertify_ConvertifyTests.framework */; };
 		AF99AF944B7890037092C05D /* Pods_Convertify.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFCFBF8A5CE3FCE2B007044D /* Pods_Convertify.framework */; };
+		C0455F912383471900C42B87 /* RegexTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0455F8F2383471900C42B87 /* RegexTests.swift */; };
+		C04AEDC32378B38C00C3579E /* PlaylistTrack.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0F28E5923723654002FCC08 /* PlaylistTrack.swift */; };
+		C04AEDC42378B38C00C3579E /* PlaylistTrack.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0F28E5923723654002FCC08 /* PlaylistTrack.swift */; };
 		C04C433D2371030E004EC5BC /* TrackTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04C433C2371030E004EC5BC /* TrackTableViewCell.swift */; };
 		C04C433E2371030E004EC5BC /* TrackTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04C433C2371030E004EC5BC /* TrackTableViewCell.swift */; };
 		C04C433F2371030E004EC5BC /* TrackTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04C433C2371030E004EC5BC /* TrackTableViewCell.swift */; };
@@ -81,6 +84,7 @@
 		5C6DB4D64F47E2E2CB7D6233 /* Pods-Convertify.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Convertify.release.xcconfig"; path = "Target Support Files/Pods-Convertify/Pods-Convertify.release.xcconfig"; sourceTree = "<group>"; };
 		68620245856EEDF604402C01 /* Pods-Convertify-ConvertifyTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Convertify-ConvertifyTests.release.xcconfig"; path = "Target Support Files/Pods-Convertify-ConvertifyTests/Pods-Convertify-ConvertifyTests.release.xcconfig"; sourceTree = "<group>"; };
 		90B513A48B4FFE1E5BE627B9 /* Pods-Convertify.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Convertify.debug.xcconfig"; path = "Target Support Files/Pods-Convertify/Pods-Convertify.debug.xcconfig"; sourceTree = "<group>"; };
+		C0455F8F2383471900C42B87 /* RegexTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegexTests.swift; sourceTree = "<group>"; };
 		C04C43372370DC7B004EC5BC /* Convertify.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Convertify.entitlements; sourceTree = "<group>"; };
 		C04C433C2371030E004EC5BC /* TrackTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackTableViewCell.swift; sourceTree = "<group>"; };
 		C04C434023710710004EC5BC /* PlaylistTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistTableViewController.swift; sourceTree = "<group>"; };
@@ -258,6 +262,7 @@
 			children = (
 				CFC723D1211E1EF600CA2319 /* ConvertifyTests.swift */,
 				CF633F0821FAB57F008A6B9A /* PlaylistTests.swift */,
+				C0455F8F2383471900C42B87 /* RegexTests.swift */,
 				CF9FA0E721BC77D7007C933F /* SpotifyLinks.swift */,
 				CF9FA0EB21BC795B007C933F /* AppleMusicLinks.swift */,
 				CFC723D3211E1EF600CA2319 /* Info.plist */,
@@ -536,6 +541,7 @@
 				C04C433F2371030E004EC5BC /* TrackTableViewCell.swift in Sources */,
 				CF28F54521FA4B0700EE2057 /* Auth.swift in Sources */,
 				C04C434323710710004EC5BC /* PlaylistTableViewController.swift in Sources */,
+				C04AEDC42378B38C00C3579E /* PlaylistTrack.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -552,6 +558,8 @@
 				CFC723DA211E20E200CA2319 /* AppleMusicSearcher.swift in Sources */,
 				CF9FA0EC21BC795B007C933F /* AppleMusicLinks.swift in Sources */,
 				CF633F0A21FAB623008A6B9A /* PlaylistSearcher.swift in Sources */,
+				C0455F912383471900C42B87 /* RegexTests.swift in Sources */,
+				C04AEDC32378B38C00C3579E /* PlaylistTrack.swift in Sources */,
 				C04C434223710710004EC5BC /* PlaylistTableViewController.swift in Sources */,
 				CF84C84C21321CD50086AB3A /* SearcherURLs.swift in Sources */,
 				CF633F0B21FAB639008A6B9A /* AppleMusicPlaylistSearcher.swift in Sources */,
