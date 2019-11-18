@@ -15,45 +15,108 @@ class RegexTests: XCTestCase {
 
     // MARK: Playlist regex
 
-    func regexTest(of: String, _ link: String) {
+    private func regexTestPass(of: String, _ link: String) {
         XCTAssertNotNil(link.range(of: of, options: [.regularExpression, .anchored]))
     }
 
-    func testAppleMusicValidLinkUserPlaylist() {
-        regexTest(of: .appleMusic, "")
+    private func regexTestFail(of: String, _ link: String) {
+        XCTAssertNil(link.range(of: of, options: [.regularExpression, .anchored]))
     }
 
-    func testAppleMusicValidLinkPublicPlaylist() {}
+    func testAppleMusicValidLinkUserPlaylist() {
+        regexTestPass(of: .playlist, "https://music.apple.com/us/playlist/asdf/pl.u-asdfk3xT5RvWeR")
+    }
 
-    func testAppleMusicInvalidLinkShortID() {}
+    func testAppleMusicValidLinkPublicPlaylist() {
+        regexTestPass(of: .playlist, "https://music.apple.com/us/playlist/heard-in-apple-ads/pl.b28c3a5975b04436b42680595f6983ad")
+    }
 
-    func testAppleMusicInvalidLinkLongID() {}
+    func testAppleMusicInvalidLinkShortID() {
+        regexTestFail(of: .playlist, "https://music.apple.com/us/playlist/asdf/pl.u-asdfk3xT5RvWe")
+        regexTestFail(of: .playlist, "https://music.apple.com/us/playlist/heard-in-apple-ads/pl.b28c3a5975b04436b42680595f6983a")
+    }
 
-    func testSpotifyValidLinkWithUserID() {}
+    func testAppleMusicInvalidLinkLongID() {
+        // User playlist
+        regexTestFail(of: .playlist, "https://music.apple.com/us/playlist/asdf/pl.u-asdfk3xT5RvWeee")
 
-    func testSpotifyValidLinkWithoutUserID() {}
+        // Public playlist
+        regexTestFail(of: .playlist, "https://music.apple.com/us/playlist/heard-in-apple-ads/pl.b28c3a5975b04436b42680595f6983aaa")
+    }
 
-    func testSpotifyInvalidLinkShortID() {}
+    func testSpotifyValidLinkWithUserID() {
+        regexTestPass(of: .playlist, "https://open.spotify.com/playlist/37i9dQZF1DXdPec7aLTmlC?si=NmBWf2B5SLegFyBm5xTOhA")
+    }
 
-    func testSpotifyInvalidLinkLongID() {}
+    func testSpotifyValidLinkWithoutUserID() {
+        regexTestPass(of: .playlist, "https://open.spotify.com/playlist/37i9dQZF1DXdPec7aLTmlC")
+    }
 
-    func testSpotifyInvalidLinkShortUserID() {}
+    func testSpotifyInvalidLinkShortID() {
+        regexTestFail(of: .playlist, "https://open.spotify.com/playlist/37i9dQZF1DXdPec7aLTml")
+    }
 
-    func testSpotifyInvalidLinkLongUserID() {}
+    func testSpotifyInvalidLinkLongID() {
+        regexTestFail(of: .playlist, "https://open.spotify.com/playlist/37i9dQZF1DXdPec7aLTmlll")
+    }
+
+    func testSpotifyInvalidLinkShortUserID() {
+        regexTestFail(of: .playlist, "https://open.spotify.com/playlist/37i9dQZF1DXdPec7aLTmlC?si=NmBWf2B5SLegFyBm5xTOh")
+    }
+
+    func testSpotifyInvalidLinkLongUserID() {
+        regexTestFail(of: .playlist, "https://open.spotify.com/playlist/37i9dQZF1DXdPec7aLTmlC?si=NmBWf2B5SLegFyBm5xTOhhh")
+    }
 
     // MARK: All other regex
 
-    func testAppleMusicValidTrack() {}
+    func testAppleMusicValidTrack() {
+        regexTestPass(of: .appleMusic, "https://itunes.apple.com/us/album/hurt-feelings/1408996052?i=1408996054")
+    }
 
-    func testAppleMusicValidAlbum() {}
+    func testAppleMusicValidAlbum() {
+        regexTestPass(of: .appleMusic, "https://itunes.apple.com/us/album/blonde/1146195596")
+    }
 
-    func testAppleMusicValidArtist() {}
+    func testAppleMusicValidArtist() {
+        regexTestPass(of: .appleMusic, "https://itunes.apple.com/us/artist/saba/1140260329")
+    }
 
-    func testAppleMusicInalidTrack() {}
+    func testAppleMusicInvalidTrack() {
+        regexTestFail(of: .appleMusic, "https://itunes.apple.com/us/album/hurt-feelings/1408996052?i=140899605")
+    }
 
-    func testAppleMusicInvalidAlbum() {}
+    func testAppleMusicInvalidAlbum() {
+        regexTestFail(of: .appleMusic, "https://itunes.apple.com/us/album/blonde/114619559")
+    }
 
-    func testAppleMusicInvalidArtist() {}
+    func testAppleMusicInvalidArtist() {
+        regexTestFail(of: .appleMusic, "https://itunes.apple.com/us/artist/saba/114026032")
+    }
+
+    func testSpotifyValidTrack() {
+        regexTestPass(of: .spotify, "https://open.spotify.com/track/2TVxnKdb3tqe1nhQWwwZCO")
+    }
+
+    func testSpotifyValidAlbum() {
+        regexTestPass(of: .spotify, "https://open.spotify.com/album/3xybjP7r2VsWzwvDQipdM0")
+    }
+
+    func testSpotifyValidArtist() {
+        regexTestPass(of: .spotify, "https://open.spotify.com/artist/70cRZdQywnSFp9pnc2WTCE")
+    }
+
+    func testSpotifyInvalidTrack() {
+        regexTestFail(of: .spotify, "https://open.spotify.com/track/2TVxnKdb3tqe1nhQWwwZC")
+    }
+
+    func testSpotifyInvalidArtist() {
+        regexTestFail(of: .spotify, "https://open.spotify.com/artist/70cRZdQywnSFp9pnc2WTC")
+    }
+
+    func testSpotifyInvalidAlbum() {
+        regexTestFail(of: .spotify, "https://open.spotify.com/album/3xybjP7r2VsWzwvDQipdM")
+    }
 }
 
 /// This extension cuts down on a lot of boilerplate code
