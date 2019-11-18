@@ -83,7 +83,7 @@ class RegexTests: XCTestCase {
     }
 
     func testAppleMusicInvalidTrack() {
-        regexTestFail(of: .appleMusic, "https://itunes.apple.com/us/album/hurt-feelings/1408996052?i=140899605")
+        regexTestFail(of: .appleMusic, "https://itunes.apple.com/us/album/hurt-feelings/140899605?i=140899605")
     }
 
     func testAppleMusicInvalidAlbum() {
