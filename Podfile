@@ -8,6 +8,7 @@ target 'Convertify' do
   # Pods for Convertify
   pod 'Alamofire', '~> 5.0.0-rc.3'
   pod 'SwiftyJSON', '~> 4.0'
+  pod 'SDWebImage', '~> 5.0'
   source 'https://github.com/CocoaPods/Specs.git'
   pod 'SwiftFormat/CLI'
   pod "Pastel"
@@ -17,6 +18,7 @@ target 'Convertify' do
   target 'ConvertifyTests' do
     pod 'Alamofire', '~> 5.0.0-rc.3'
     pod 'SwiftyJSON', '~> 4.0'
+    pod 'SDWebImage', '~> 5.0'
     pod 'SwiftFormat/CLI'
     pod "Pastel"
     pod 'SpotifyLogin', '~> 0.1'

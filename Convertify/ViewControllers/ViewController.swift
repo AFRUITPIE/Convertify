@@ -17,6 +17,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     private var link: String?
     @objc public var addPlaylistCallback: (() -> Void)?
     private var playlistTracks: [PlaylistTrack] = []
+    private var playlistTitle: String?
     private var failedToConvertTracks: [PlaylistTrack] = []
 
     // MARK: Properties
@@ -226,6 +227,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         source.getTrackList(link: link) { trackList, playlistName, error in
             if error == nil {
                 self.playlistTracks = trackList ?? []
+                self.playlistTitle = playlistName
 
                 self.addPlaylistCallback = {
                     // SpotifySearcher will need a Spotify music user token rather than a regular one
@@ -318,6 +320,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         if segue.identifier == "openPlaylistTracks" {
             let vc = segue.destination as! PlaylistTableViewController
             vc.tracks = playlistTracks
+            vc.playlistTitle = playlistTitle ?? "Untitled Playlist"
         }
     }
 

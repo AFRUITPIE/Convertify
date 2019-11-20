@@ -13,11 +13,7 @@
 		C04AEDC32378B38C00C3579E /* PlaylistTrack.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0F28E5923723654002FCC08 /* PlaylistTrack.swift */; };
 		C04AEDC42378B38C00C3579E /* PlaylistTrack.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0F28E5923723654002FCC08 /* PlaylistTrack.swift */; };
 		C04C433D2371030E004EC5BC /* TrackTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04C433C2371030E004EC5BC /* TrackTableViewCell.swift */; };
-		C04C433E2371030E004EC5BC /* TrackTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04C433C2371030E004EC5BC /* TrackTableViewCell.swift */; };
-		C04C433F2371030E004EC5BC /* TrackTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04C433C2371030E004EC5BC /* TrackTableViewCell.swift */; };
 		C04C434123710710004EC5BC /* PlaylistTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04C434023710710004EC5BC /* PlaylistTableViewController.swift */; };
-		C04C434223710710004EC5BC /* PlaylistTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04C434023710710004EC5BC /* PlaylistTableViewController.swift */; };
-		C04C434323710710004EC5BC /* PlaylistTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04C434023710710004EC5BC /* PlaylistTableViewController.swift */; };
 		C0F28E5A23723654002FCC08 /* PlaylistTrack.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0F28E5923723654002FCC08 /* PlaylistTrack.swift */; };
 		CF01DBC4211A67750065376C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF01DBC3211A67750065376C /* AppDelegate.swift */; };
 		CF01DBC6211A67750065376C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF01DBC5211A67750065376C /* ViewController.swift */; };
@@ -219,8 +215,6 @@
 			isa = PBXGroup;
 			children = (
 				CF681FCF211A687C00EE2CCC /* Main.storyboard */,
-				C04C434023710710004EC5BC /* PlaylistTableViewController.swift */,
-				C04C433C2371030E004EC5BC /* TrackTableViewCell.swift */,
 				CF01DBCC211A67770065376C /* LaunchScreen.storyboard */,
 			);
 			path = Views;
@@ -253,6 +247,8 @@
 			isa = PBXGroup;
 			children = (
 				CF01DBC5211A67750065376C /* ViewController.swift */,
+				C04C434023710710004EC5BC /* PlaylistTableViewController.swift */,
+				C04C433C2371030E004EC5BC /* TrackTableViewCell.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -538,9 +534,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CF2C54AC219148CB0040B383 /* ConvertifyUITests.swift in Sources */,
-				C04C433F2371030E004EC5BC /* TrackTableViewCell.swift in Sources */,
 				CF28F54521FA4B0700EE2057 /* Auth.swift in Sources */,
-				C04C434323710710004EC5BC /* PlaylistTableViewController.swift in Sources */,
 				C04AEDC42378B38C00C3579E /* PlaylistTrack.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -554,13 +548,11 @@
 				CF633F0921FAB57F008A6B9A /* PlaylistTests.swift in Sources */,
 				CF9FA0E821BC77D7007C933F /* SpotifyLinks.swift in Sources */,
 				CFC723D2211E1EF600CA2319 /* ConvertifyTests.swift in Sources */,
-				C04C433E2371030E004EC5BC /* TrackTableViewCell.swift in Sources */,
 				CFC723DA211E20E200CA2319 /* AppleMusicSearcher.swift in Sources */,
 				CF9FA0EC21BC795B007C933F /* AppleMusicLinks.swift in Sources */,
 				CF633F0A21FAB623008A6B9A /* PlaylistSearcher.swift in Sources */,
 				C0455F912383471900C42B87 /* RegexTests.swift in Sources */,
 				C04AEDC32378B38C00C3579E /* PlaylistTrack.swift in Sources */,
-				C04C434223710710004EC5BC /* PlaylistTableViewController.swift in Sources */,
 				CF84C84C21321CD50086AB3A /* SearcherURLs.swift in Sources */,
 				CF633F0B21FAB639008A6B9A /* AppleMusicPlaylistSearcher.swift in Sources */,
 				CFC723D9211E20DF00CA2319 /* SpotifySearcher.swift in Sources */,

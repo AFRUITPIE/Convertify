@@ -6,16 +6,19 @@
 //  Copyright © 2019 Hayden Hong. All rights reserved.
 //
 
+import SDWebImage
 import UIKit
 
 class PlaylistTableViewController: UITableViewController {
     // MARK: Properties
 
     var tracks: [PlaylistTrack] = []
+    var playlistTitle: String = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.allowsSelection = false
+        navigationItem.title = playlistTitle
     }
 
     // MARK: - Table view data source
@@ -44,22 +47,7 @@ class PlaylistTableViewController: UITableViewController {
             .replacingOccurrences(of: "{w}", with: "60")
             .replacingOccurrences(of: "{h}", with: "60") else { return cell }
 
-        guard let url = URL(string: urlString) else { return cell }
-        URLSession.shared.dataTask(with: url) { data, response, error in
-            if error != nil {
-                print("Failed fetching image:", error!)
-                return
-            }
-
-            guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-                print("Not a proper HTTPURLResponse or statusCode")
-                return
-            }
-
-            DispatchQueue.main.async {
-                cell.albumArtImageView.image = UIImage(data: data!)
-            }
-        }.resume()
+        cell.albumArtImageView.sd_setImage(with: URL(string: urlString))
 
         return cell
     }

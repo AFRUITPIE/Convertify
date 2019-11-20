@@ -57,11 +57,7 @@ class ConvertifyUITests: XCTestCase {
         XCTAssertEqual(app.buttons[buttonLabel].isEnabled, buttonEnabled)
     }
 
-    /*
-
-     Apple Music searches
-
-     */
+    // MARK: Apple Music searches
 
     func testAppleMusicSearchArtist() {
         testAppUI(link: "https://itunes.apple.com/us/artist/saba/1140260329", labelName: "Saba", buttonLabel: spotifyButton, buttonEnabled: true)
@@ -79,11 +75,7 @@ class ConvertifyUITests: XCTestCase {
         testAppUI(link: "https://itunes.apple.com/us/station/under-the-covers-feat-emma-sameth/ra.1160002338", labelName: "Convertify", buttonLabel: radioError, buttonEnabled: false)
     }
 
-    /*
-
-     Spotify searches
-
-     */
+    // MARK: Spotify searches
 
     func testSpotifyArtist() {
         testAppUI(link: "https://open.spotify.com/artist/70cRZdQywnSFp9pnc2WTCE", labelName: "Simon & Garfunkel", buttonLabel: appleMusicButton, buttonEnabled: true)
@@ -96,16 +88,4 @@ class ConvertifyUITests: XCTestCase {
     func testSpotifySearchSong() {
         testAppUI(link: "https://open.spotify.com/track/2TVxnKdb3tqe1nhQWwwZCO", labelName: "Tiny Dancer by Elton John", buttonLabel: appleMusicButton, buttonEnabled: true)
     }
-
-    /*
-
-     Other errors here:
-
-     */
-
-    //    func testSearchNil() {
-    //        // Nil the pasteboard
-    //        UIPasteboard.general.items = []
-    //        testAppUI(labelName: "Convertify", buttonLabel: noLinkError, buttonEnabled: false)
-    //    }
 }
