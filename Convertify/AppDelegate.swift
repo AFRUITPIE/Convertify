@@ -18,9 +18,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_: UIApplication, open url: URL, options _: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
         let handled = SpotifyLogin.shared.applicationOpenURL(url) { _ in }
 
-        let viewController = window?.rootViewController as! ViewController
-        viewController.continueAfterSpotifyAuth()
-
         return handled
     }
 

@@ -15,6 +15,10 @@ class ViewController: UIViewController, UITextFieldDelegate {
     private var appleMusic: MusicSearcher!
     private var spotify: MusicSearcher!
     private var link: String?
+    @objc public var addPlaylistCallback: (() -> Void)?
+    private var playlistTracks: [PlaylistTrack] = []
+    private var playlistTitle: String?
+    private var failedToConvertTracks: [PlaylistTrack] = []
 
     // MARK: Properties
 
@@ -34,7 +38,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
         // Close keyboard on background click
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard(_:)))
         view.addGestureRecognizer(tapGesture)
-
         initApp()
     }
 
@@ -60,6 +63,18 @@ class ViewController: UIViewController, UITextFieldDelegate {
                 self.handleLink(link: "")
             }
         }
+    }
+
+    // Hide toolbar
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+
+    // Show toolbar when hidden
+    override func viewWillDisappear(_ animated: Bool) {
+        navigationController?.setNavigationBarHidden(false, animated: animated)
+        super.viewWillDisappear(animated)
     }
 
     /// Animates the color conversion in the app
@@ -147,7 +162,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     private func handlePlaylist(link: String) {
         linkTextField.isEnabled = true
         // Ensure user is logged in to Spotify
-        handleSpotifyLogin { spotifyToken, error in
+        SpotifySearcher.login { spotifyToken, error in
             if error == nil {
                 // Ensure Apple Music is logged in
                 let spotifyPlaylistSearcher = SpotifyPlaylistSearcher(token: spotifyToken)
@@ -172,7 +187,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     /// private playlists
     ///
     /// - Parameter completion: What to do with login token after login is completed
-    private func handleSpotifyLogin(completion: @escaping (String?, Error?) -> Void) {
+    private func handleSpotifyLogin(completion: @escaping (_ token: String?, Error?) -> Void) {
         SpotifyLogin.shared.getAccessToken { token, error in
             switch error {
             case nil: completion(token, error)
@@ -187,7 +202,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     ///   - destination: where to add the playlist
     ///   - trackList: list of tracks [track name: artist name]
     ///   - playlistName: Name of the playlist
-    private func addPlaylist(destination: PlaylistSearcher, trackList: [String: String], playlistName: String) {
+    private func addPlaylist(destination: PlaylistSearcher, trackList: [PlaylistTrack], playlistName: String) {
         // Show some cool animations
         addPastelView()
         titleLabel.text = playlistName
@@ -211,27 +226,37 @@ class ViewController: UIViewController, UITextFieldDelegate {
     private func convertPlaylist(link: String, source: PlaylistSearcher, destination: PlaylistSearcher) {
         source.getTrackList(link: link) { trackList, playlistName, error in
             if error == nil {
-                let alert = UIAlertController(title: "Add \(playlistName ?? "") to \(destination.serviceName)?",
-                                              message: "This playlist will be added to your \(destination.serviceName) library with the closest matches we can find.",
-                                              preferredStyle: UIAlertController.Style.alert)
+                self.playlistTracks = trackList ?? []
+                self.playlistTitle = playlistName
 
-                // Yes, add the playlist
-                alert.addAction(UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) { _ in
-                    self.addPlaylist(destination: destination,
-                                     trackList: trackList ?? [:],
-                                     playlistName: playlistName ?? "New Playlist")
-                })
+                self.addPlaylistCallback = {
+                    // SpotifySearcher will need a Spotify music user token rather than a regular one
+                    if destination is SpotifyPlaylistSearcher {
+                        // Add observer to handle the setup for Spotify browser authentication
+                        NotificationCenter.default.addObserver(self, selector: #selector(self.runAddPlaylistCallback), name: .SpotifyLoginSuccessful, object: nil)
 
-                // No, do nothing
-                alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) { _ in
-                    self.updateAppearance(title: "Not converting playlist", color: UIColor.darkGray, enabled: false)
-                })
-                // Show the alert
-                self.present(alert, animated: true, completion: nil)
+                        self.handleSpotifyLogin { musicUserToken, _ in
+                            self.addPlaylist(destination: SpotifyPlaylistSearcher(token: musicUserToken),
+                                             trackList: trackList ?? [],
+                                             playlistName: playlistName ?? "New Playlist")
+                        }
+                    } else {
+                        self.addPlaylist(destination: destination,
+                                         trackList: trackList ?? [],
+                                         playlistName: playlistName ?? "New Playlist")
+                    }
+                }
+
+                self.performSegue(withIdentifier: "openPlaylistTracks", sender: nil)
             } else {
                 self.updateAppearance(title: "We had problems converting this playlist. Does Convertify have access to your Apple Music library?", color: UIColor.darkGray, enabled: false)
             }
         }
+    }
+
+    /// Selector method for running the addPlaylistCallback -- Useful for post-Spotify login through the browser
+    @objc private func runAddPlaylistCallback() {
+        addPlaylistCallback?()
     }
 
     /// Adds pretty animation for converting playlists
@@ -280,12 +305,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
         present(alert, animated: true, completion: nil)
     }
 
-    func continueAfterSpotifyAuth() {
-        if !(linkTextField.text?.isEmpty ?? true) {
-            handleLink(link: linkTextField.text!)
-        }
-    }
-
     /// Dismiss the keyboard, used as a slector
     @objc func dismissKeyboard(_: UITapGestureRecognizer) {
         linkTextField.resignFirstResponder()
@@ -294,5 +313,18 @@ class ViewController: UIViewController, UITextFieldDelegate {
     func textFieldShouldReturn(_: UITextField) -> Bool {
         view.endEditing(true)
         return false
+    }
+
+    /// Pass the playlist tracks to the new list
+    override func prepare(for segue: UIStoryboardSegue, sender _: Any?) {
+        if segue.identifier == "openPlaylistTracks" {
+            let vc = segue.destination as! PlaylistTableViewController
+            vc.tracks = playlistTracks
+            vc.playlistTitle = playlistTitle ?? "Untitled Playlist"
+        }
+    }
+
+    @IBAction func unwindToViewControllerWithSegue(segue _: UIStoryboardSegue) {
+        addPlaylistCallback!()
     }
 }

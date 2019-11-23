@@ -26,7 +26,7 @@ class SpotifyPlaylistSearcher: PlaylistSearcher {
     ///   - trackList: list of tracks to add, [Song, Artist]
     ///   - playlistName: Name of the playlist
     ///   - completion: what to do with the link to the playlist after it's done
-    func addPlaylist(trackList: [String: String], playlistName: String, completion: @escaping (String?, [String], Error?) -> Void) {
+    func addPlaylist(trackList: [PlaylistTrack], playlistName: String, completion: @escaping (_ playlistLink: String?, _ failedTracks: [PlaylistTrack], Error?) -> Void) {
         // FIXME: This sure looks like the arrow anti-pattern to me
 
         // Get user ID
@@ -66,7 +66,7 @@ class SpotifyPlaylistSearcher: PlaylistSearcher {
     /// - Parameters:
     ///   - userToken: user's token
     ///   - completion: what to do with user id
-    private func getID(userToken: String, completion: @escaping (String?, Error?) -> Void) {
+    private func getID(userToken: String, completion: @escaping (_ id: String?, Error?) -> Void) {
         let headers: HTTPHeaders = ["Authorization": "Bearer \(userToken)"]
 
         var urlComponents: URLComponents {
@@ -102,7 +102,7 @@ class SpotifyPlaylistSearcher: PlaylistSearcher {
     ///   - token: user's access token for the playlist
     ///   - username: user's username
     ///   - completion: what to do with the playlist's link once it is created
-    private func createSpotifyPlaylist(name: String, userID: String, token: String, completion: @escaping (String?, Error?) -> Void) {
+    private func createSpotifyPlaylist(name: String, userID: String, token: String, completion: @escaping (_ id: String?, Error?) -> Void) {
         let parameters: Parameters = ["name": name,
                                       "description": "Created with Convertify for iOS",
                                       "public": false]
@@ -141,16 +141,16 @@ class SpotifyPlaylistSearcher: PlaylistSearcher {
     ///   - trackList: list of tracks to add [Name: Artist]
     ///   - playlist: playlist's url
     ///   - completion: what to do with the playlist once adding tracks is done
-    private func addTracksToPlaylist(trackList: [String: String], failedTracks: [String], playlistID: String, userID: String, completion: @escaping (String?, [String], Error?) -> Void) {
+    private func addTracksToPlaylist(trackList: [PlaylistTrack], failedTracks: [PlaylistTrack], playlistID: String, userID: String, completion: @escaping (String?, [PlaylistTrack], Error?) -> Void) {
         if trackList.isEmpty {
             completion(playlistID, [], nil)
         } else {
             var tempTrackList = trackList
-            let track = tempTrackList.popFirst()
+            let track = tempTrackList.remove(at: 0)
 
             // Get the Spotify's track ID
             SpotifySearcher(token: token ?? "")
-                .search(name: "\(track?.key ?? "") \(track?.value ?? "")", type: "track") { trackLink, error in
+                .search(name: "\(track.trackName) \(track.artistName)", type: "track") { trackLink, error in
                     if error == nil {
                         // Create a request for adding the track ID to the playlist
                         let trackID = String(trackLink!.split(separator: "/").last!)
@@ -189,7 +189,7 @@ class SpotifyPlaylistSearcher: PlaylistSearcher {
                     } else {
                         // Handle when a song isn't found (just keep searching)
                         var failedTracks = failedTracks
-                        failedTracks.append("\(track?.key ?? "") by \(track?.value ?? "")") // ???
+                        failedTracks.append(PlaylistTrack(trackName: track.trackName, artistName: track.artistName, trackURL: nil, albumArt: nil))
                         self.addTracksToPlaylist(trackList: tempTrackList, failedTracks: failedTracks, playlistID: playlistID, userID: userID) { playlistID, failedTracks, error in
                             completion(playlistID, failedTracks, error)
                         }
@@ -203,7 +203,7 @@ class SpotifyPlaylistSearcher: PlaylistSearcher {
     /// - Parameters:
     ///   - link: link to the playlist
     ///   - completion: function to handle the playlist
-    func getTrackList(link: String, completion: @escaping ([String: String]?, String?, Error?) -> Void) {
+    func getTrackList(link: String, completion: @escaping (_ trackList: [PlaylistTrack]?, _ playlistName: String?, Error?) -> Void) {
         let playlistID = getPlaylistID(link: link)
 
         SpotifySearcher.login { token, error in
@@ -229,7 +229,6 @@ class SpotifyPlaylistSearcher: PlaylistSearcher {
                 AF.request(url, method: .get, headers: headers)
                     .validate()
                     .responseJSON { response in
-
                         switch response.result {
                         case .success: do {
                             let playlistData = JSON(response.value!)
@@ -263,20 +262,18 @@ class SpotifyPlaylistSearcher: PlaylistSearcher {
     /// Parses the tracklist from the JSON file
     ///
     /// - Parameter data: json file
-    /// - Returns: a dictionary of [String: String] that is [Song title: Main artist]
-    private func getTrackListFromJSON(data: JSON) -> [String: String]? {
-        var trackList: [String: String] = [:]
+    /// - Returns: An array of PlaylistTrack
+    private func getTrackListFromJSON(data: JSON) -> [PlaylistTrack]? {
+        var trackList: [PlaylistTrack] = []
 
         let trackObjects = data["items"].array
         for track in trackObjects! {
             let trackName: String = track["track"]["name"].stringValue
             let artistName: String = track["track"]["artists"][0]["name"].stringValue
+            let trackURL: String = track["track"]["external_urls"]["spotify"].stringValue
+            let albumArtURL: String = track["track"]["album"]["images"][0]["url"].stringValue
 
-            if trackList[trackName] == nil {
-                trackList[trackName] = artistName
-            } else {
-                print("Duplicate track found: \(trackName)")
-            }
+            trackList.append(PlaylistTrack(trackName: trackName, artistName: artistName, trackURL: trackURL, albumArt: albumArtURL))
         }
 
         return trackList

@@ -27,7 +27,7 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
     /// - Parameters:
     ///   - link: playlist link
     ///   - completion: what to run when the track list is completed
-    func getTrackList(link: String, completion: @escaping ([String: String]?, String?, Error?) -> Void) {
+    func getTrackList(link: String, completion: @escaping ([PlaylistTrack]?, String?, Error?) -> Void) {
         parseLinkData(link: link)
 
         let headers: HTTPHeaders = ["Authorization": "Bearer \(self.token)"]
@@ -53,20 +53,20 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
                     let playlistName = data["data"][0]["attributes"]["name"].stringValue
 
                     // Gets array of track objects
-                    let trackObjects = data["data"][0]["relationships"]["tracks"]["data"].array
+                    guard let trackObjects = data["data"][0]["relationships"]["tracks"]["data"].array else {
+                        completion(nil, nil, MusicSearcherErrors.invalidLinkFormatError)
+                        return
+                    }
 
-                    var trackList: [String: String] = [:]
+                    var trackList: [PlaylistTrack] = []
 
                     // Adds the tracks to the tracklist
-                    for track in trackObjects! {
+                    for track in trackObjects {
                         let trackName: String = track["attributes"]["name"].stringValue
                         let artistName: String = track["attributes"]["artistName"].stringValue
-
-                        if trackList[trackName] == nil {
-                            trackList[trackName] = artistName
-                        } else {
-                            print("Duplicate track found: \(trackName)")
-                        }
+                        let albumArt: String = track["attributes"]["artwork"]["url"].stringValue
+                        let url: String = track["attributes"]["url"].stringValue
+                        trackList.append(PlaylistTrack(trackName: trackName, artistName: artistName, trackURL: url, albumArt: albumArt))
                     }
 
                     // Run completion with the finished track list
@@ -85,7 +85,7 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
     /// - Parameters:
     ///   - trackList: list of songs to add to a new playlist
     ///   - completion: what to do when the playlist is added
-    func addPlaylist(trackList: [String: String], playlistName: String, completion: @escaping (String?, [String], Error?) -> Void) {
+    func addPlaylist(trackList: [PlaylistTrack], playlistName: String, completion: @escaping (String?, [PlaylistTrack], Error?) -> Void) {
         // Convert the playlist
         getConvertedPlaylist(trackList: trackList, playlistName: playlistName) { playlist, failedTracks in
 
@@ -127,7 +127,7 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
                                     case .success: do {
                                         let data = JSON(response.value as Any)
                                         let id = data["data"][0]["id"]
-                                        
+
                                         // Adds the songs to the successfully created playlist
                                         self.addSongsToPlaylist(trackList: playlist.trackList, playlistID: id.string ?? "", musicUserToken: musicUserToken, completion: completion)
                                     }
@@ -151,14 +151,13 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
         }
     }
 
-    
     /// Adds songs to playlist because Apple's API does not allow arrays of tracks anymore
     /// - Parameters:
     ///   - trackList: the tracklist
     ///   - playlistID: id of the playlist
     ///   - musicUserToken: token
     ///   - completion: what to do with the playlist afterwards
-    private func addSongsToPlaylist(trackList: [[String: String]], playlistID: String, musicUserToken: String?, completion: @escaping (String?, [String], Error?) -> Void) {
+    private func addSongsToPlaylist(trackList: [PlaylistTrack], playlistID: String, musicUserToken: String?, completion: @escaping (String?, [PlaylistTrack], Error?) -> Void) {
         if !trackList.isEmpty {
             // Remove first item from track list
             var updatedTrackList = trackList
@@ -180,7 +179,7 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
             }
 
             let parameters: Parameters = [
-                "data": [currentTrack],
+                "data": [["id": currentTrack.id, "type": "songs"]],
             ]
 
             let headers: HTTPHeaders = ["Music-User-Token": musicUserToken ?? "", "Authorization": "Bearer \(self.token)"]
@@ -202,8 +201,8 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
     /// - Parameters:
     ///   - trackList: list of [Song: Artist], probably from Spotify
     ///   - completion: what to do with the completed playlist with IDs
-    private func getConvertedPlaylist(trackList: [String: String], playlistName: String,
-                                      completion: @escaping (AppleMusicPlaylist, [String]) -> Void) {
+    private func getConvertedPlaylist(trackList: [PlaylistTrack], playlistName: String,
+                                      completion: @escaping (AppleMusicPlaylist, [PlaylistTrack]) -> Void) {
         let appleMusic: MusicSearcher = AppleMusicSearcher(token: token)
 
         getConvertedPlaylistHelper(trackList: trackList,
@@ -222,11 +221,11 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
     ///   - failedTracks: list of failed tracks for adding
     ///   - appleMusic: apple music searcher
     ///   - completion: what to run when complete playlist is done
-    private func getConvertedPlaylistHelper(trackList: [String: String],
+    private func getConvertedPlaylistHelper(trackList: [PlaylistTrack],
                                             playlist: AppleMusicPlaylist,
-                                            failedTracks: [String],
+                                            failedTracks: [PlaylistTrack],
                                             appleMusic: MusicSearcher,
-                                            completion: @escaping (AppleMusicPlaylist, [String]) -> Void) {
+                                            completion: @escaping (AppleMusicPlaylist, [PlaylistTrack]) -> Void) {
         // Base case, stop adding to the playlist if the tracklist is empty
         if trackList.isEmpty {
             completion(playlist, failedTracks)
@@ -236,19 +235,20 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
         // Get the current track with a mutable temp track list
         var trackList = trackList
         var failedTracks = failedTracks
-        let currentTrack = trackList.popFirst()
+        let currentTrack = trackList.remove(at: 0)
 
         // Search for the ID of the song
-        appleMusic.search(name: "\(currentTrack?.key ?? "") \(currentTrack?.value ?? "")", type: "song") { link, error in
+        appleMusic.search(name: "\(currentTrack.trackName) \(currentTrack.artistName)", type: "song") { link, error in
             var playlist = playlist
 
             // Report errors or add to the current playlist
             if error != nil {
-                print("Had trouble finding \(currentTrack?.key ?? "") by \(currentTrack?.value ?? "")")
-                failedTracks.append("\(currentTrack?.key ?? "") by \(currentTrack?.value ?? "") ")
+                print("Had trouble finding \(currentTrack.trackName) by \(currentTrack.artistName)")
+                failedTracks.append(currentTrack)
             } else {
                 let id = String(link!.components(separatedBy: "?i=")[1])
-                playlist.addTrack(id: id)
+                currentTrack.id = id
+                playlist.addTrack(currentTrack)
             }
 
             // Recursively keep searching
@@ -279,7 +279,7 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
 
 /// Framework of an Apple Music Playlist
 private struct AppleMusicPlaylist {
-    var trackList: [[String: String]]
+    public private(set) var trackList: [PlaylistTrack]
     var attributes: [String: String]
 
     init(playlistName: String?) {
@@ -288,7 +288,7 @@ private struct AppleMusicPlaylist {
                       "description": "Created with Convertify for iOS, some songs might not be correct"]
     }
 
-    mutating func addTrack(id: String) {
-        trackList.append(["id": id, "type": "songs"])
+    mutating func addTrack(_ track: PlaylistTrack) {
+        trackList.append(track)
     }
 }
