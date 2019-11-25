@@ -35,6 +35,7 @@ Test within Xcode. The included tests must be run on a device/simulator of iOS v
 ## Built With
 
 - [AlamoFire](https://github.com/Alamofire/Alamofire) - For the HTTP requests to both Apple Music and Spotify
+- [SDWebImage](https://github.com/SDWebImage/SDWebImage) - For loading of album art in the playlist view
 - [SwiftyJSON](https://github.com/SwiftyJSON/SwiftyJSON) - For easier JSON parsing and handling
 - [CupertinoJWT](https://github.com/ethanhuang13/CupertinoJWT) - For generating the Apple Music tokens securely
 
