@@ -90,7 +90,7 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
         getConvertedPlaylist(trackList: trackList, playlistName: playlistName) { playlist, failedTracks in
 
             // Ensure access to user's Apple Apple Music library
-            SKCloudServiceController.requestAuthorization() { authorizationStatus in
+            SKCloudServiceController.requestAuthorization { authorizationStatus in
                 switch authorizationStatus {
                 case .authorized: do {
                     // Get Music User Token

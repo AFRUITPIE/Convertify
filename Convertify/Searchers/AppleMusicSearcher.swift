@@ -24,6 +24,7 @@ public class AppleMusicSearcher: MusicSearcher {
     // Headers for API calls
     private lazy var headers: HTTPHeaders = [:]
 
+    
     public static func login(completion: @escaping (String?, Error?) -> Void) {
         // Assign developer information and token expiration setting
         let jwt = JWT(keyID: Auth.appleKeyID, teamID: Auth.appleTeamID, issueDate: Date(), expireDuration: 60 * 60)

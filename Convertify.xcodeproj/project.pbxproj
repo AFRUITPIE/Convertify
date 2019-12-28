@@ -7,8 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		7A7C405C36DC1E9154FFE648 /* Pods_Convertify_ConvertifyTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2695E21E3A1F68FEB609D703 /* Pods_Convertify_ConvertifyTests.framework */; };
-		AF99AF944B7890037092C05D /* Pods_Convertify.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFCFBF8A5CE3FCE2B007044D /* Pods_Convertify.framework */; };
+		3160781C004C671CAE142726 /* Pods_Convertify.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44FF3074025403E92D0B2EDF /* Pods_Convertify.framework */; };
 		C0455F912383471900C42B87 /* RegexTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0455F8F2383471900C42B87 /* RegexTests.swift */; };
 		C04AEDC32378B38C00C3579E /* PlaylistTrack.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0F28E5923723654002FCC08 /* PlaylistTrack.swift */; };
 		C04AEDC42378B38C00C3579E /* PlaylistTrack.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0F28E5923723654002FCC08 /* PlaylistTrack.swift */; };
@@ -43,6 +42,7 @@
 		CFC723D9211E20DF00CA2319 /* SpotifySearcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF681FCA211A687000EE2CCC /* SpotifySearcher.swift */; };
 		CFC723DA211E20E200CA2319 /* AppleMusicSearcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF681FCB211A687000EE2CCC /* AppleMusicSearcher.swift */; };
 		CFD8E39021FD34370051116A /* SpotifyPlaylistSearcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD8E38F21FD34370051116A /* SpotifyPlaylistSearcher.swift */; };
+		DD5BAF4AFC15369FE026116C /* Pods_Convertify_ConvertifyTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33EF5EA23E41CD174AD21279 /* Pods_Convertify_ConvertifyTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,15 +76,17 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		2695E21E3A1F68FEB609D703 /* Pods_Convertify_ConvertifyTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Convertify_ConvertifyTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		5C6DB4D64F47E2E2CB7D6233 /* Pods-Convertify.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Convertify.release.xcconfig"; path = "Target Support Files/Pods-Convertify/Pods-Convertify.release.xcconfig"; sourceTree = "<group>"; };
-		68620245856EEDF604402C01 /* Pods-Convertify-ConvertifyTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Convertify-ConvertifyTests.release.xcconfig"; path = "Target Support Files/Pods-Convertify-ConvertifyTests/Pods-Convertify-ConvertifyTests.release.xcconfig"; sourceTree = "<group>"; };
-		90B513A48B4FFE1E5BE627B9 /* Pods-Convertify.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Convertify.debug.xcconfig"; path = "Target Support Files/Pods-Convertify/Pods-Convertify.debug.xcconfig"; sourceTree = "<group>"; };
+		044E4B6107F69A1199164ACE /* Pods-Convertify.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Convertify.debug.xcconfig"; path = "Target Support Files/Pods-Convertify/Pods-Convertify.debug.xcconfig"; sourceTree = "<group>"; };
+		33EF5EA23E41CD174AD21279 /* Pods_Convertify_ConvertifyTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Convertify_ConvertifyTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		44FF3074025403E92D0B2EDF /* Pods_Convertify.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Convertify.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		45DB123FC59996C68FF14D3D /* Pods-Convertify.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Convertify.release.xcconfig"; path = "Target Support Files/Pods-Convertify/Pods-Convertify.release.xcconfig"; sourceTree = "<group>"; };
+		46FFD9E3F789AA584D349F08 /* Pods-Convertify-ConvertifyTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Convertify-ConvertifyTests.release.xcconfig"; path = "Target Support Files/Pods-Convertify-ConvertifyTests/Pods-Convertify-ConvertifyTests.release.xcconfig"; sourceTree = "<group>"; };
 		C0455F8F2383471900C42B87 /* RegexTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegexTests.swift; sourceTree = "<group>"; };
 		C04C43372370DC7B004EC5BC /* Convertify.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Convertify.entitlements; sourceTree = "<group>"; };
 		C04C433C2371030E004EC5BC /* TrackTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackTableViewCell.swift; sourceTree = "<group>"; };
 		C04C434023710710004EC5BC /* PlaylistTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistTableViewController.swift; sourceTree = "<group>"; };
 		C0F28E5923723654002FCC08 /* PlaylistTrack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistTrack.swift; sourceTree = "<group>"; };
+		C2ADE957DB73F1843A79BAD7 /* Pods-Convertify-ConvertifyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Convertify-ConvertifyTests.debug.xcconfig"; path = "Target Support Files/Pods-Convertify-ConvertifyTests/Pods-Convertify-ConvertifyTests.debug.xcconfig"; sourceTree = "<group>"; };
 		CF01DBC0211A67750065376C /* Convertify.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Convertify.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF01DBC3211A67750065376C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CF01DBC5211A67750065376C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -111,8 +113,6 @@
 		CFC723D3211E1EF600CA2319 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CFD8E38F21FD34370051116A /* SpotifyPlaylistSearcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyPlaylistSearcher.swift; sourceTree = "<group>"; };
 		CFEF8290211E39DF00CF98C5 /* Alamofire.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Alamofire.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		DFCFBF8A5CE3FCE2B007044D /* Pods_Convertify.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Convertify.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		E61FC7E7C4EE61BD21F2F5C8 /* Pods-Convertify-ConvertifyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Convertify-ConvertifyTests.debug.xcconfig"; path = "Target Support Files/Pods-Convertify-ConvertifyTests/Pods-Convertify-ConvertifyTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,7 +121,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CF5A3E67220252C5000DB4D9 /* StoreKit.framework in Frameworks */,
-				AF99AF944B7890037092C05D /* Pods_Convertify.framework in Frameworks */,
+				3160781C004C671CAE142726 /* Pods_Convertify.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -136,7 +136,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7A7C405C36DC1E9154FFE648 /* Pods_Convertify_ConvertifyTests.framework in Frameworks */,
+				DD5BAF4AFC15369FE026116C /* Pods_Convertify_ConvertifyTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -148,8 +148,8 @@
 			children = (
 				CF5A3E66220252C5000DB4D9 /* StoreKit.framework */,
 				CFEF8290211E39DF00CF98C5 /* Alamofire.framework */,
-				DFCFBF8A5CE3FCE2B007044D /* Pods_Convertify.framework */,
-				2695E21E3A1F68FEB609D703 /* Pods_Convertify_ConvertifyTests.framework */,
+				44FF3074025403E92D0B2EDF /* Pods_Convertify.framework */,
+				33EF5EA23E41CD174AD21279 /* Pods_Convertify_ConvertifyTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -157,10 +157,10 @@
 		42D6006E704D72BC8ABAD92A /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				90B513A48B4FFE1E5BE627B9 /* Pods-Convertify.debug.xcconfig */,
-				5C6DB4D64F47E2E2CB7D6233 /* Pods-Convertify.release.xcconfig */,
-				E61FC7E7C4EE61BD21F2F5C8 /* Pods-Convertify-ConvertifyTests.debug.xcconfig */,
-				68620245856EEDF604402C01 /* Pods-Convertify-ConvertifyTests.release.xcconfig */,
+				044E4B6107F69A1199164ACE /* Pods-Convertify.debug.xcconfig */,
+				45DB123FC59996C68FF14D3D /* Pods-Convertify.release.xcconfig */,
+				C2ADE957DB73F1843A79BAD7 /* Pods-Convertify-ConvertifyTests.debug.xcconfig */,
+				46FFD9E3F789AA584D349F08 /* Pods-Convertify-ConvertifyTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -273,13 +273,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CF01DBD2211A67770065376C /* Build configuration list for PBXNativeTarget "Convertify" */;
 			buildPhases = (
-				580B48A7D927B1682AF950F7 /* [CP] Check Pods Manifest.lock */,
+				34DED59F5E26C41AEB94006C /* [CP] Check Pods Manifest.lock */,
 				CF01DBBC211A67750065376C /* Sources */,
 				CF01DBBD211A67750065376C /* Frameworks */,
 				CF01DBBE211A67750065376C /* Resources */,
 				CF11AB392120E6E7003ABE4B /* Embed App Extensions */,
-				CFA27EC3213B7527000C237E /* Swift Format  */,
-				E42603612495197FA7F7AAAD /* [CP] Embed Pods Frameworks */,
+				2BAE91023C7EDDD7B5EAFE15 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -312,11 +311,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CFC723D6211E1EF600CA2319 /* Build configuration list for PBXNativeTarget "ConvertifyTests" */;
 			buildPhases = (
-				C56A3321CC4234B0B30E30C3 /* [CP] Check Pods Manifest.lock */,
+				3FF9B4A24CAFEF9BC97915A3 /* [CP] Check Pods Manifest.lock */,
 				CFC723CB211E1EF600CA2319 /* Sources */,
 				CFC723CC211E1EF600CA2319 /* Frameworks */,
 				CFC723CD211E1EF600CA2319 /* Resources */,
-				9C9BF85770842638E33D0F78 /* [CP] Embed Pods Frameworks */,
+				934C3486271D88A7D6827799 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -410,7 +409,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		580B48A7D927B1682AF950F7 /* [CP] Check Pods Manifest.lock */ = {
+		2BAE91023C7EDDD7B5EAFE15 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Convertify/Pods-Convertify-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Convertify/Pods-Convertify-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Convertify/Pods-Convertify-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		34DED59F5E26C41AEB94006C /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -432,24 +448,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		9C9BF85770842638E33D0F78 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Convertify-ConvertifyTests/Pods-Convertify-ConvertifyTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Convertify-ConvertifyTests/Pods-Convertify-ConvertifyTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Convertify-ConvertifyTests/Pods-Convertify-ConvertifyTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		C56A3321CC4234B0B30E30C3 /* [CP] Check Pods Manifest.lock */ = {
+		3FF9B4A24CAFEF9BC97915A3 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -471,39 +470,21 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		CFA27EC3213B7527000C237E /* Swift Format  */ = {
+		934C3486271D88A7D6827799 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Swift Format ";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftformat >/dev/null; then\nswiftformat .\nelse\necho \"warning: SwiftFormat not installed, download from https://github.com/nicklockwood/SwiftFormat\"\nfi\n";
-		};
-		E42603612495197FA7F7AAAD /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Convertify/Pods-Convertify-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Convertify-ConvertifyTests/Pods-Convertify-ConvertifyTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Convertify/Pods-Convertify-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Convertify-ConvertifyTests/Pods-Convertify-ConvertifyTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Convertify/Pods-Convertify-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Convertify-ConvertifyTests/Pods-Convertify-ConvertifyTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -705,7 +686,7 @@
 		};
 		CF01DBD3211A67770065376C /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 90B513A48B4FFE1E5BE627B9 /* Pods-Convertify.debug.xcconfig */;
+			baseConfigurationReference = 044E4B6107F69A1199164ACE /* Pods-Convertify.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -730,7 +711,7 @@
 		};
 		CF01DBD4211A67770065376C /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5C6DB4D64F47E2E2CB7D6233 /* Pods-Convertify.release.xcconfig */;
+			baseConfigurationReference = 45DB123FC59996C68FF14D3D /* Pods-Convertify.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -795,7 +776,7 @@
 		};
 		CFC723D7211E1EF600CA2319 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E61FC7E7C4EE61BD21F2F5C8 /* Pods-Convertify-ConvertifyTests.debug.xcconfig */;
+			baseConfigurationReference = C2ADE957DB73F1843A79BAD7 /* Pods-Convertify-ConvertifyTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -816,7 +797,7 @@
 		};
 		CFC723D8211E1EF600CA2319 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 68620245856EEDF604402C01 /* Pods-Convertify-ConvertifyTests.release.xcconfig */;
+			baseConfigurationReference = 46FFD9E3F789AA584D349F08 /* Pods-Convertify-ConvertifyTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
