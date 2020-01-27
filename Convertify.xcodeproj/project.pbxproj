@@ -340,6 +340,7 @@
 				TargetAttributes = {
 					CF01DBBF211A67750065376C = {
 						CreatedOnToolsVersion = 10.0;
+						LastSwiftMigration = 1130;
 						SystemCapabilities = {
 							com.apple.InAppPurchase = {
 								enabled = 1;
@@ -354,10 +355,12 @@
 					};
 					CF2C54A8219148CA0040B383 = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1130;
 						TestTargetID = CF01DBBF211A67750065376C;
 					};
 					CFC723CE211E1EF600CA2319 = {
 						CreatedOnToolsVersion = 10.0;
+						LastSwiftMigration = 1130;
 						TestTargetID = CF01DBBF211A67750065376C;
 					};
 				};
@@ -652,7 +655,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.haydenhong.Convertify;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = YES;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -676,7 +679,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.haydenhong.Convertify;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = YES;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -695,7 +698,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.haydenhong.ConvertifyUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = Convertify;
 			};
@@ -715,7 +718,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.haydenhong.ConvertifyUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = Convertify;
 			};
@@ -735,7 +738,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.haydenhong.ConvertifyTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Convertify.app/Convertify";
 			};
@@ -755,7 +758,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.haydenhong.ConvertifyTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Convertify.app/Convertify";
 			};
