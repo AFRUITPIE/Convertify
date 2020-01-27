@@ -12,6 +12,7 @@ import Alamofire
 import CupertinoJWT
 import Foundation
 import SwiftyJSON
+import UIKit
 
 public class AppleMusicSearcher: MusicSearcher {
     let serviceName: String = "Apple Music"

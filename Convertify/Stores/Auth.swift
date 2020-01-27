@@ -11,7 +11,7 @@ import Foundation
 enum Auth {
     static let appleP8 = """
 
-                         """
+    """
 
     static let appleKeyID = ""
     static let appleTeamID = ""

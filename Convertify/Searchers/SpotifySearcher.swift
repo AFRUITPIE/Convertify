@@ -11,6 +11,7 @@
 import Alamofire
 import Foundation
 import SwiftyJSON
+import UIKit
 
 public class SpotifySearcher: MusicSearcher {
     let serviceName: String = "Spotify"
@@ -132,7 +133,7 @@ public class SpotifySearcher: MusicSearcher {
     func searchHelper(name: String, type: String, retry: Bool, completion: @escaping (String?, Error?) -> Void) {
         let convertedType = (type == "song") ? "track" : type
 
-        let headers: HTTPHeaders = ["Authorization": "Bearer \(self.token)"]
+        let headers: HTTPHeaders = ["Authorization": "Bearer \(token)"]
         let parameters: Parameters = ["q": name, "type": convertedType]
 
         var urlComponents: URLComponents {

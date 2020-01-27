@@ -30,7 +30,7 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
     func getTrackList(link: String, completion: @escaping ([PlaylistTrack]?, String?, Error?) -> Void) {
         parseLinkData(link: link)
 
-        let headers: HTTPHeaders = ["Authorization": "Bearer \(self.token)"]
+        let headers: HTTPHeaders = ["Authorization": "Bearer \(token)"]
 
         var urlComponents: URLComponents {
             var urlComponents = URLComponents()
@@ -182,7 +182,7 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
                 "data": [["id": currentTrack.id, "type": "songs"]],
             ]
 
-            let headers: HTTPHeaders = ["Music-User-Token": musicUserToken ?? "", "Authorization": "Bearer \(self.token)"]
+            let headers: HTTPHeaders = ["Music-User-Token": musicUserToken ?? "", "Authorization": "Bearer \(token)"]
 
             // Request adding one song
             AF.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { response in

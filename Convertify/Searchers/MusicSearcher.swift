@@ -8,6 +8,7 @@
 
 import Alamofire
 import Foundation
+import UIKit
 
 protocol MusicSearcher {
     // The name of the service
