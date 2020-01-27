@@ -6,7 +6,7 @@
 
 [![Build Status](https://travis-ci.org/AFRUITPIE/Convertify.svg?branch=master)](https://travis-ci.org/AFRUITPIE/Convertify)
 
-A new iOS app that open Spotify links in Apple Music and Apple Music links in Spotify like magic!
+Convert Apple Music and Spotify playlists with ease, and more easily open links from one service in the other. Just copy, paste, Convertify!
 
 ## How to use
 
@@ -18,15 +18,13 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-- [Cocoapods](https://cocoapods.org)
+- [Xcode 11](https://apps.apple.com/us/app/xcode/id497799835?mt=12) or newer 
 - [Spotify Account](https://www.spotify.com/) (Premium **not** required, app not required. Developer console IS required)
 - [Apple developer account](https://developer.apple.com)
 
 ### Installing
 
-1. `pod install` inside the repository directory
-2. Open `Convertify.xcworkspace`
-3. Complete `Stores/Auth.swift` with your information from Spotify's developer console and Apple Developer's web console. Remember to use the JWT from Apple Music. I used [this tool](https://github.com/pelauimagineering/apple-music-token-generator)) to get the JWT.
+Thanks to [Swift Package Manager](https://github.com/apple/swift-package-manager) in Xcode 11, all you have to do is open `Convertify.xcodeproj` in Xcode 11.
 
 ## Running the tests
 
@@ -38,6 +36,8 @@ Test within Xcode. The included tests must be run on a device/simulator of iOS v
 - [SDWebImage](https://github.com/SDWebImage/SDWebImage) - For loading of album art in the playlist view
 - [SwiftyJSON](https://github.com/SwiftyJSON/SwiftyJSON) - For easier JSON parsing and handling
 - [CupertinoJWT](https://github.com/ethanhuang13/CupertinoJWT) - For generating the Apple Music tokens securely
+- [Pastel](https://github.com/cruisediary/Pastel) – For the pretty conversion screen
+- [SpotifyLogin](https://github.com/spotify/SpotifyLogin) – For Spotify credential management
 
 ## Authors
 
