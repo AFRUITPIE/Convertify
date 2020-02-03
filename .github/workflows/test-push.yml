@@ -1,10 +1,10 @@
-name: Test Push
+name: Tests
 
 on: [push]
 
 jobs:
   test:
-    name: Test
+    name: Run Tests on push
     runs-on: macos-latest
     strategy:
         matrix:
