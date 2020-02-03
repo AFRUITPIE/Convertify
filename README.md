@@ -4,8 +4,7 @@
 
 <a href="https://itunes.apple.com/us/app/convertify-share-music/id1424728187"><img src="https://user-images.githubusercontent.com/20470485/45723747-a3dd1200-bb67-11e8-9eca-eeec88a833ca.png" height="40px"></img></a>
 
-[![Build Status](https://travis-ci.org/AFRUITPIE/Convertify.svg?branch=master)](https://travis-ci.org/AFRUITPIE/Convertify)
-
+![Tests](https://github.com/AFRUITPIE/Convertify/workflows/Tests/badge.svg?branch=master&event=push)
 Convert Apple Music and Spotify playlists with ease, and more easily open links from one service in the other. Just copy, paste, Convertify!
 
 ## How to use
