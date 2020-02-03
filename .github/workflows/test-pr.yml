@@ -1,0 +1,24 @@
+name: Test Pull Request
+
+on: [pull_request]
+
+jobs:
+  test:
+    name: Test Pull Request
+    runs-on: macos-latest
+    strategy:
+        matrix:
+          destination: ['platform=iOS Simulator,OS=13.2.2,name=iPhone 11']
+    steps:
+      - name: Check out merge commit of pull request
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
+      - name: Create Auth.swift
+        run: echo "${auth}" > "Convertify/Stores/Auth.swift"
+        env:
+          auth: ${{ secrets.auth }}
+      - name: Build and Test
+        run: xcodebuild clean test -project Convertify.xcodeproj -scheme Convertify -destination "${destination}" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO ONLY_ACTIVE_ARCH=NO
+        env:
+         destination: ${{ matrix.destination }}
