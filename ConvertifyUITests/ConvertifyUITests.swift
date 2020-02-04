@@ -60,19 +60,19 @@ class ConvertifyUITests: XCTestCase {
     // MARK: Apple Music searches
 
     func testAppleMusicSearchArtist() {
-        testAppUI(link: "https://itunes.apple.com/us/artist/saba/1140260329", labelName: "Saba", buttonLabel: spotifyButton, buttonEnabled: true)
+        testAppUI(link: "https://music.apple.com/us/artist/saba/1140260329", labelName: "Saba", buttonLabel: spotifyButton, buttonEnabled: true)
     }
 
     func testAppleMusicSearchAlbum() {
-        testAppUI(link: "https://itunes.apple.com/us/album/blonde/1146195596", labelName: "Blonde by Frank Ocean", buttonLabel: spotifyButton, buttonEnabled: true)
+        testAppUI(link: "https://music.apple.com/us/album/blonde/1146195596", labelName: "Blonde by Frank Ocean", buttonLabel: spotifyButton, buttonEnabled: true)
     }
 
     func testAppleMusicSearchSong() {
-        testAppUI(link: "https://itunes.apple.com/us/album/hurt-feelings/1408996052?i=1408996054", labelName: "Hurt Feelings by Mac Miller", buttonLabel: spotifyButton, buttonEnabled: true)
+        testAppUI(link: "https://music.apple.com/us/album/hurt-feelings/1408996052?i=1408996054", labelName: "Hurt Feelings by Mac Miller", buttonLabel: spotifyButton, buttonEnabled: true)
     }
 
     func testAppleMusicSearchStation() {
-        testAppUI(link: "https://itunes.apple.com/us/station/under-the-covers-feat-emma-sameth/ra.1160002338", labelName: "Convertify", buttonLabel: radioError, buttonEnabled: false)
+        testAppUI(link: "https://music.apple.com/us/station/everybody/ra.1494022983", labelName: "Convertify", buttonLabel: radioError, buttonEnabled: false)
     }
 
     // MARK: Spotify searches
