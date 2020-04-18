@@ -242,13 +242,18 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
             var playlist = playlist
 
             // Report errors or add to the current playlist
-            if error != nil {
+            if error != nil || link == nil {
                 print("Had trouble finding \(currentTrack.trackName) by \(currentTrack.artistName)")
                 failedTracks.append(currentTrack)
             } else {
-                let id = String(link!.components(separatedBy: "?i=")[1])
-                currentTrack.id = id
-                playlist.addTrack(currentTrack)
+                let linkComponents = link!.components(separatedBy: "?i=")
+                if linkComponents.count == 2 {
+                    currentTrack.id = linkComponents[1]
+                    playlist.addTrack(currentTrack)
+                } else {
+                    print("Something is wrong with the link returned for \(currentTrack.trackName) \(currentTrack.artistName)")
+                    failedTracks.append(currentTrack)
+                }
             }
 
             // Recursively keep searching
