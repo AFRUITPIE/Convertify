@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C017580024E9BC730004E481 /* UrlArbitrator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C01757FF24E9BC730004E481 /* UrlArbitrator.swift */; };
+		C017580224E9C1DA0004E481 /* UrlArbitratorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C017580124E9C1DA0004E481 /* UrlArbitratorTest.swift */; };
+		C017580324E9C2470004E481 /* UrlArbitrator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C01757FF24E9BC730004E481 /* UrlArbitrator.swift */; };
+		C017580424E9C29A0004E481 /* UrlArbitrator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C01757FF24E9BC730004E481 /* UrlArbitrator.swift */; };
 		C0455F912383471900C42B87 /* RegexTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0455F8F2383471900C42B87 /* RegexTests.swift */; };
 		C04AEDC32378B38C00C3579E /* PlaylistTrack.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0F28E5923723654002FCC08 /* PlaylistTrack.swift */; };
 		C04AEDC42378B38C00C3579E /* PlaylistTrack.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0F28E5923723654002FCC08 /* PlaylistTrack.swift */; };
@@ -80,6 +84,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C01757FF24E9BC730004E481 /* UrlArbitrator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrlArbitrator.swift; sourceTree = "<group>"; };
+		C017580124E9C1DA0004E481 /* UrlArbitratorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrlArbitratorTest.swift; sourceTree = "<group>"; };
 		C0455F8F2383471900C42B87 /* RegexTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegexTests.swift; sourceTree = "<group>"; };
 		C04C43372370DC7B004EC5BC /* Convertify.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Convertify.entitlements; sourceTree = "<group>"; };
 		C04C433C2371030E004EC5BC /* TrackTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackTableViewCell.swift; sourceTree = "<group>"; };
@@ -235,6 +241,7 @@
 				CF4CB1D521249516000D9D2F /* SearcherURLs.swift */,
 				CF28F54221FA4AD400EE2057 /* Auth.swift */,
 				C0F28E5923723654002FCC08 /* PlaylistTrack.swift */,
+				C01757FF24E9BC730004E481 /* UrlArbitrator.swift */,
 			);
 			path = Stores;
 			sourceTree = "<group>";
@@ -257,6 +264,7 @@
 				C0455F8F2383471900C42B87 /* RegexTests.swift */,
 				CF9FA0E721BC77D7007C933F /* SpotifyLinks.swift */,
 				CF9FA0EB21BC795B007C933F /* AppleMusicLinks.swift */,
+				C017580124E9C1DA0004E481 /* UrlArbitratorTest.swift */,
 				CFC723D3211E1EF600CA2319 /* Info.plist */,
 			);
 			path = ConvertifyTests;
@@ -459,6 +467,7 @@
 				CF28F54921FA61E000EE2057 /* AppleMusicPlaylistSearcher.swift in Sources */,
 				CF4CB0EB2141A46000860CBB /* MusicSearcher.swift in Sources */,
 				C04C433D2371030E004EC5BC /* TrackTableViewCell.swift in Sources */,
+				C017580024E9BC730004E481 /* UrlArbitrator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -469,6 +478,7 @@
 				CF2C54AC219148CB0040B383 /* ConvertifyUITests.swift in Sources */,
 				CF28F54521FA4B0700EE2057 /* Auth.swift in Sources */,
 				C04AEDC42378B38C00C3579E /* PlaylistTrack.swift in Sources */,
+				C017580424E9C29A0004E481 /* UrlArbitrator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -482,10 +492,12 @@
 				CF9FA0E821BC77D7007C933F /* SpotifyLinks.swift in Sources */,
 				CFC723D2211E1EF600CA2319 /* ConvertifyTests.swift in Sources */,
 				CFC723DA211E20E200CA2319 /* AppleMusicSearcher.swift in Sources */,
+				C017580224E9C1DA0004E481 /* UrlArbitratorTest.swift in Sources */,
 				CF9FA0EC21BC795B007C933F /* AppleMusicLinks.swift in Sources */,
 				CF633F0A21FAB623008A6B9A /* PlaylistSearcher.swift in Sources */,
 				C0455F912383471900C42B87 /* RegexTests.swift in Sources */,
 				C04AEDC32378B38C00C3579E /* PlaylistTrack.swift in Sources */,
+				C017580324E9C2470004E481 /* UrlArbitrator.swift in Sources */,
 				CF84C84C21321CD50086AB3A /* SearcherURLs.swift in Sources */,
 				CF633F0B21FAB639008A6B9A /* AppleMusicPlaylistSearcher.swift in Sources */,
 				CFC723D9211E20DF00CA2319 /* SpotifySearcher.swift in Sources */,
@@ -643,14 +655,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Convertify/Convertify.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 33;
+				CURRENT_PROJECT_VERSION = 36;
 				DEVELOPMENT_TEAM = K4M2TD6G2A;
 				INFOPLIST_FILE = Convertify/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.6.1;
+				MARKETING_VERSION = 0.7.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.haydenhong.Convertify;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = NO;
@@ -666,14 +678,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Convertify/Convertify.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 33;
+				CURRENT_PROJECT_VERSION = 36;
 				DEVELOPMENT_TEAM = K4M2TD6G2A;
 				INFOPLIST_FILE = Convertify/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.6.1;
+				MARKETING_VERSION = 0.7.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.haydenhong.Convertify;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = NO;

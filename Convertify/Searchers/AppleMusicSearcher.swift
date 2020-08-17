@@ -52,9 +52,13 @@ public class AppleMusicSearcher: MusicSearcher {
         var type: String = ""
         var id: String = ""
 
+        var urlArbitrator = UrlArbitrator(for: link)
+
+        id = urlArbitrator.id
+
         do {
             type = try getType(from: link)
-            id = try getID(from: link, type: type)
+//            id = try getID(from: link, type: type)
             storefront = try getStorefront(from: link)
         } catch {
             completion(nil, nil, nil, error)

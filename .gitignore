@@ -15,5 +15,5 @@ xcuserdata/
 Pods/
 
 # Auth files
-Auth.swift
+**/Auth.swift
 Convertify/Stores/Auth.swift

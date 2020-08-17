@@ -202,7 +202,8 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
     ///   - trackList: list of [Song: Artist], probably from Spotify
     ///   - completion: what to do with the completed playlist with IDs
     private func getConvertedPlaylist(trackList: [PlaylistTrack], playlistName: String,
-                                      completion: @escaping (AppleMusicPlaylist, [PlaylistTrack]) -> Void) {
+                                      completion: @escaping (AppleMusicPlaylist, [PlaylistTrack]) -> Void)
+    {
         let appleMusic: MusicSearcher = AppleMusicSearcher(token: token)
 
         getConvertedPlaylistHelper(trackList: trackList,
@@ -225,7 +226,8 @@ class AppleMusicPlaylistSearcher: PlaylistSearcher {
                                             playlist: AppleMusicPlaylist,
                                             failedTracks: [PlaylistTrack],
                                             appleMusic: MusicSearcher,
-                                            completion: @escaping (AppleMusicPlaylist, [PlaylistTrack]) -> Void) {
+                                            completion: @escaping (AppleMusicPlaylist, [PlaylistTrack]) -> Void)
+    {
         // Base case, stop adding to the playlist if the tracklist is empty
         if trackList.isEmpty {
             completion(playlist, failedTracks)

@@ -102,23 +102,24 @@ class ViewController: UIViewController, UITextFieldDelegate {
         // Resets the label text while converting
         titleLabel.text = "Convertify"
 
-        // Decides what to do with the link
-        switch true {
+        let urlArbitrator = UrlArbitrator(for: link)
+
+        switch urlArbitrator.musicType {
         // Converts playlists
-        case link.range(of: SearcherURL.playlist, options: [.regularExpression, .anchored]) != nil:
+        case .playlist:
             handlePlaylist(link: link)
 
-        // Ignores radio stations
-        case link.contains("/station/"):
-            updateAppearance(title: "I cannot convert radio stations ☹️", color: UIColor.red, enabled: false)
-
-        // Extracts Spotify data and searches for Apple Music links when it includes a Spotify link
-        case link.range(of: SearcherURL.spotify, options: [.regularExpression, .anchored]) != nil:
-            handleSearching(link: link, source: spotify, destination: appleMusic)
-
-        // Extracts Apple Music data and searches for Spotify links when it includes an Apple Music link
-        case link.range(of: SearcherURL.appleMusic, options: [.regularExpression, .anchored]) != nil:
-            handleSearching(link: link, source: appleMusic, destination: spotify)
+        case .album, .artist, .track:
+            switch urlArbitrator.service {
+            case .appleMusic:
+                handleSearching(link: link, source: appleMusic, destination: spotify)
+            case .spotify:
+                handleSearching(link: link, source: spotify, destination: appleMusic)
+            default:
+                break
+            }
+        case .station:
+            updateAppearance(title: "I cannot convert radio stations ☹️", color: UIColor.gray, enabled: false)
 
         // Lets the user know I don't know how to handle whatever is in their clipboard
         default:
